@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guxian.meeting.mapper.UserMeetingMapper">
+
+    <resultMap id="BaseResultMap" type="com.guxian.meeting.entity.UserMeeting">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="uid" column="uid" jdbcType="BIGINT"/>
+            <result property="mid" column="mid" jdbcType="BIGINT"/>
+            <result property="type" column="type" jdbcType="VARCHAR"/>
+            <result property="joinTime" column="join_time" jdbcType="TIMESTAMP"/>
+            <result property="exitTime" column="exit_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,uid,mid,
+        type,join_time,exit_time
+    </sql>
+</mapper>
