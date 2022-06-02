@@ -1,19 +1,19 @@
 package com.guxian.meeting.controller;
 
-import com.guxian.meeting.entity.Meeting;
-import com.guxian.meeting.service.MeetingService;
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.guxian.common.entity.R;
+import com.guxian.meeting.entity.vo.MeetingVo;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Setter(onMethod_ = @Autowired)
+@RequestMapping("/meeting")
 public class MeetingController {
-    MeetingService meetingService;
-
-    @PostMapping("/add-meeting")
-    public  addMeeting(Meeting meeting) {
-        meetingService.save(meeting);
+    @PostMapping("/create")
+    public R createMeeting(@RequestBody MeetingVo meeting) {
+        return R.success().data("data",meeting);
     }
 }
+
+
