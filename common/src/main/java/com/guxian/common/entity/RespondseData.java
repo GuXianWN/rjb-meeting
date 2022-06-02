@@ -18,61 +18,61 @@ import java.util.Map;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class R {
+public class RespondseData {
     private Integer code;
     private String message;
     private Map<String, Object> data = new HashMap<>();
 
-    public static R atBizCodeEnum(BizCodeEnum bizCodeEnum) {
-        R respBean = new R();
+    public static RespondseData atBizCodeEnum(BizCodeEnum bizCodeEnum) {
+        RespondseData respBean = new RespondseData();
         respBean.setCode(bizCodeEnum.getCode())
                 .setMessage(bizCodeEnum.getMsg());
         return respBean;
     }
 
-    public static R success(Integer code, String message) {
-        R respBean = new R();
+    public static RespondseData success(Integer code, String message) {
+        RespondseData respData = new RespondseData();
+        respData.setCode(code);
+        respData.setMessage(message);
+        return respData;
+    }
+
+    public static RespondseData error(Integer code, String message) {
+        RespondseData respBean = new RespondseData();
         respBean.setCode(code);
         respBean.setMessage(message);
         return respBean;
     }
 
-    public static R error(Integer code, String message) {
-        R respBean = new R();
-        respBean.setCode(code);
-        respBean.setMessage(message);
-        return respBean;
-    }
-
-    public static R success(String message) {
-        R respBean = new R();
+    public static RespondseData success(String message) {
+        RespondseData respBean = new RespondseData();
         respBean.setCode(0);
         respBean.setMessage(message);
         return respBean;
     }
 
-    public static R error(String message) {
-        R respBean = new R();
+    public static RespondseData error(String message) {
+        RespondseData respBean = new RespondseData();
         respBean.setCode(-1);
         respBean.setMessage(message);
         return respBean;
     }
 
-    public static R success() {
-        R respBean = new R();
+    public static RespondseData success() {
+        RespondseData respBean = new RespondseData();
         respBean.setCode(0);
         respBean.setMessage("success");
         return respBean;
     }
 
-    public static R error() {
-        R respBean = new R();
+    public static RespondseData error() {
+        RespondseData respBean = new RespondseData();
         respBean.setCode(-1);
         respBean.setMessage("error");
         return respBean;
     }
 
-    public R data(String key, Object value) {
+    public RespondseData data(String key, Object value) {
         this.data.put(key, value);
         return this;
     }
