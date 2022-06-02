@@ -1,0 +1,5 @@
+FROM openjdk:11
+MAINTAINER GuXianWN
+ADD target/auth-0.0.1-SNAPSHOT.jar auth.jar
+RUN bash -c 'touch /auth.jar'
+ENTRYPOINT ["java","-jar","auth.jar"]
