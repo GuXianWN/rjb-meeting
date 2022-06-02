@@ -76,4 +76,9 @@ public class RespondseData {
         this.data.put(key, value);
         return this;
     }
+
+    public RespondseData data(Object value) {
+        this.data.put("data", value);
+        return this;
+    }
 }

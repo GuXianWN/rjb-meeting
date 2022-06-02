@@ -7,46 +7,25 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 /**
- * 
- * @TableName meeting
+ * 会议发起的签到记录，统计每一场会议发起的签到，
+ * 主要解决的是一场会议发起了多次签到的问题
+ * @TableName meeting_check
  */
-@TableName(value ="meeting")
+@TableName(value ="meeting_check")
 @Data
-@Accessors(chain = true)
-public class Meeting implements Serializable {
+public class MeetingCheck implements Serializable {
     /**
-     * id
+     * 
      */
     @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
-     * 会议创建者
+     * 
      */
-    private Integer createUid;
-
-    /**
-     * 会议名称
-     */
-    private String name;
-
-    /**
-     * 说明
-     */
-    private String explain;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 开始时间
-     */
-    private Date beginTime;
+    private Long meetingId;
 
     /**
      * 签到方式
@@ -54,14 +33,15 @@ public class Meeting implements Serializable {
     private Integer checkWay;
 
     /**
-     * 结束时间
+     * 该签到方式的 开始时间
+
      */
-    private Date endTime;
+    private Date beginTime;
 
     /**
-     * 状态
+     * 该签到方式的截至时间
      */
-    private Integer state;
+    private Date endTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
