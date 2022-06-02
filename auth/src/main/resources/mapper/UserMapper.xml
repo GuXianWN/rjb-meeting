@@ -10,10 +10,10 @@
             <result property="password" column="password" jdbcType="VARCHAR"/>
             <result property="account" column="account" jdbcType="VARCHAR"/>
             <result property="email" column="email" jdbcType="VARCHAR"/>
-            <result property="portraitUrl" column="portrait_url" jdbcType="VARCHAR"/>
+            <result property="portrait_url" column="portrait_url" jdbcType="VARCHAR"/>
             <result property="mobile" column="mobile" jdbcType="VARCHAR"/>
             <result property="status" column="status" jdbcType="INTEGER"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">

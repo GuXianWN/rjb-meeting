@@ -4,19 +4,28 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
+
 import lombok.Data;
+import lombok.experimental.Accessors;
+import org.checkerframework.checker.units.qual.C;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 /**
- * 
  * @TableName user
  */
-@TableName(value ="user")
+@TableName(value = "user")
 @Data
-public class User implements Serializable {
+@Accessors(chain = true)
+@Component
+public class User implements Serializable, UserDetails {
     /**
-     * 
+     *
      */
     @TableId
     private Long id;
@@ -44,6 +53,7 @@ public class User implements Serializable {
     /**
      * 头像
      */
+    @TableField(value = "portrait_url")
     private String portraitUrl;
 
     /**
@@ -54,13 +64,43 @@ public class User implements Serializable {
     /**
      * 状态
      */
-    private Integer status;
+    private UserStatus status;
 
     /**
-     * 
+     *
      */
+    @TableField(value = "create_time")
     private Date createTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+//        return this.status.value.intValue() != UserStatus.FREEZE.value;
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+//        return this.status.value.intValue() != UserStatus.DELETE.value;
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+//        return this.status.value.intValue() != UserStatus.DELETE.value;
+        return true;
+    }
 }
