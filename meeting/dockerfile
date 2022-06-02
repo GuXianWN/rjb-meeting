@@ -1,0 +1,5 @@
+FROM openjdk:11
+MAINTAINER GuXianWN
+ADD target/meeting-0.0.1-SNAPSHOT.jar meeting.jar
+RUN bash -c 'touch /meeting.jar'
+ENTRYPOINT ["java","-jar","meeting.jar"]
