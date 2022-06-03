@@ -15,18 +15,17 @@ import java.util.Map;
  * @author GuXianWN
  */
 @ToString
-@Setter
+@Data
 @Accessors(chain = true)
 public class ResponseData {
 
     private ResponseData() {
     }
 
+    @JsonProperty("code")
     private Integer code;
+    @JsonProperty("msg")
     private String message;
-
-
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @JsonProperty("data")
     private Object data = null;
 
@@ -43,6 +42,24 @@ public class ResponseData {
         respData.setCode(code);
         respData.setMessage(message);
         return respData;
+    }
+
+    public static  ResponseData success(Object data) {
+        ResponseData respBean = new ResponseData();
+        respBean.setCode(0);
+        respBean.setMessage("success");
+        respBean.setData(data);
+        return respBean;
+    }
+
+    public static ResponseData success(String key, Object data) {
+        ResponseData respBean = new ResponseData();
+        respBean.setCode(0);
+        respBean.setMessage("success");
+        var tmp = new HashMap<>();
+        tmp.put(key, data);
+        respBean.setData(tmp);
+        return respBean;
     }
 
     public static ResponseData error(Integer code, String message) {
@@ -73,6 +90,8 @@ public class ResponseData {
         return respBean;
     }
 
+
+
     public static ResponseData error() {
         ResponseData respBean = new ResponseData();
         respBean.setCode(-1);
@@ -80,7 +99,9 @@ public class ResponseData {
         return respBean;
     }
 
-    public ResponseData data(String key, Object value) {
+
+
+    public  ResponseData data(String key, Object value) {
         if (data == null) {
             var tmp = new HashMap<>();
             tmp.put(key, value);
@@ -92,5 +113,9 @@ public class ResponseData {
     public ResponseData data(Object value) {
         this.data = value;
         return this;
+    }
+
+    public static  ResponseData is(boolean bool) {
+        return bool ? success() : error();
     }
 }

@@ -1,6 +1,5 @@
 package com.guxian.common;
 
-import com.guxian.common.entity.R;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 

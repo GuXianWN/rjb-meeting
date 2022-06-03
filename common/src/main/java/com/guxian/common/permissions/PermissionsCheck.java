@@ -6,13 +6,17 @@ import com.guxian.common.RoleType;
 import com.guxian.common.entity.UserSession;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
+import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.common.utils.JwtUtils;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.catalina.User;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -41,6 +45,8 @@ public class PermissionsCheck implements HandlerInterceptor {
     private RedisTemplate<String, String> redisTemplate;
     AntPathMatcher antPathMatcher = new AntPathMatcher();
 
+    @Value("${close-token-check}")
+    private boolean closed = false;
 
     @Autowired
     public PermissionsCheck(JwtUtils jwtUtils, RedisTemplate<String, String> redisTemplate) {
@@ -50,13 +56,19 @@ public class PermissionsCheck implements HandlerInterceptor {
 
 
     @Override
-    public boolean preHandle(HttpServletRequest request,  HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if (closed) {
+            log.warn("token check closed");
+            return true;
+        }
         var ops = redisTemplate.opsForValue();
         var currentRole = RoleType.ROLE_GUEST;
         var requestURI = request.getRequestURI();
+        var uid = 0L;
+        var user = new UserSession();
         if (jwtUtils.hasToken(request)) { // 如果有token 有权限
-            var uid = jwtUtils.getUid(request);
-            var user = JSON.parseObject(ops.get(USER_PREFIX + uid.toString()), UserSession.class);
+            uid = jwtUtils.getUid(request);
+            user = JSON.parseObject(ops.get(USER_PREFIX + uid), UserSession.class);
 
             if (user == null) {
                 log.error("user is not UserSession");
@@ -69,9 +81,17 @@ public class PermissionsCheck implements HandlerInterceptor {
 
         assert accessUrls != null;
 
+
+        CurrentUserSession.setUserSession(user,closed);
+
+        // 放行白名单
         if (accessUrls.stream().anyMatch(url -> antPathMatcher.match(url, requestURI))) {
             return true;
         }
+
+
         throw new ServiceException(BizCodeEnum.NO_ACCESS);
     }
+
 }
+

@@ -2,6 +2,7 @@ package com.guxian.meeting.service;
 
 import com.guxian.meeting.entity.CheckIn;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.cloud.client.loadbalancer.RequestData;
 
 /**
 * @author GuXian
@@ -10,4 +11,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface CheckInService extends IService<CheckIn> {
 
+    boolean checkIn(Long meetingId);
 }
