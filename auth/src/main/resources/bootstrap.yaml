@@ -14,15 +14,9 @@ spring:
   profiles:
     active: dev
 
-auth:
+guxian:
   jwt:
     secret: 123456
     expire: 3600
     issuer: auth
     audience: auth
-  url:
-    - dev
-    - test
-    - prod
-    - 1
-    - 2
