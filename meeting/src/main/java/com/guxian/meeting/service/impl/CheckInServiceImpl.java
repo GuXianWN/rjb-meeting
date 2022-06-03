@@ -15,6 +15,10 @@ import org.springframework.stereotype.Service;
 public class CheckInServiceImpl extends ServiceImpl<CheckInMapper, CheckIn>
     implements CheckInService{
 
+    @Override
+    public boolean checkIn(Long meetingId) {
+        return true;
+    }
 }
 
 

@@ -4,6 +4,7 @@ import com.guxian.common.entity.ResponseData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.valid.AddGroup;
+import com.guxian.common.valid.UpdateGroup;
 import com.guxian.meeting.entity.vo.MeetingVo;
 import com.guxian.meeting.service.MeetingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,12 @@ public class MeetingController {
         this.meetingService = meetingService;
     }
 
-    @PostMapping("/create")
+    /**
+     * 添加会议
+     * @param meeting
+     * @return
+     */
+    @PostMapping("/")
     public ResponseData createMeeting(@RequestBody @Validated(AddGroup.class) MeetingVo meeting) {
         return ResponseData.success()
                 .data(meetingService.addMeeting(meeting.toMeeting())
@@ -33,18 +39,42 @@ public class MeetingController {
     }
 
 
-    @PatchMapping("/update")
-    public ResponseData updateMeeting(@RequestBody MeetingVo meeting) {
+
+    @PatchMapping("/")
+    public ResponseData updateMeeting(@RequestBody @Validated(UpdateGroup.class)  MeetingVo meeting) {
         return ResponseData.success()
                 .data(
                         meetingService.updateMeeting(meeting.toMeeting())
                                 .orElseThrow(() -> new ServiceException(BizCodeEnum.UPDATE_MEETING_FAILED)));
     }
 
-    @GetMapping("/test")
-    public String test(){
-        return "1wedwewfwrf";
+
+    @DeleteMapping("/{id}")
+    public ResponseData deleteMeeting(@PathVariable("id") Long id) {
+        return ResponseData.is(meetingService.removeById(id));
     }
+
+
+    @GetMapping("/{id}")
+    public ResponseData getMeeting(@PathVariable("id") Long id) {
+        return ResponseData.success()
+                .data(meetingService.getMeetingById(id)
+                        .orElseThrow(() -> new ServiceException(BizCodeEnum.MEETING_NOT_EXIST)));
+    }
+
+    @GetMapping("/")
+    public ResponseData getMeetingByName(String name) {
+        return ResponseData.success()
+                .data(meetingService.getMeetingByName(name).orElseThrow(() -> new ServiceException(BizCodeEnum.MEETING_NOT_EXIST)));
+    }
+
+    @GetMapping("/list")
+    public ResponseData getMeetingList(int page, int size) {
+        return ResponseData.success()
+                .data(meetingService.getAll(page, size));
+    }
+
+
 }
 
 

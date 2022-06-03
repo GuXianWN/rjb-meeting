@@ -6,15 +6,22 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+
+import com.google.errorprone.annotations.NoAllocation;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 /**
- * 会议发起的签到记录，统计每一场会议发起的签到，
- * 主要解决的是一场会议发起了多次签到的问题
+ * 会议发起的签到记录，统计每一场会议发起的签到，主要解决的是一场会议发起了多次签到的问题
  * @TableName meeting_check
  */
 @TableName(value ="meeting_check")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Accessors(chain = true)
 public class MeetingCheck implements Serializable {
     /**
      * 

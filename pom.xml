@@ -12,6 +12,7 @@
         <module>auth</module>
         <module>meeting</module>
         <module>gateway</module>
+        <module>face-check</module>
     </modules>
 
     <packaging>pom</packaging>
