@@ -9,7 +9,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients
 @EnableDiscoveryClient
 @MapperScan("com.guxian.meeting.mapper")
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.guxian.*")
 public class MeetingApplication {
 
 	public static void main(String[] args) {
