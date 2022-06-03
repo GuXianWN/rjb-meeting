@@ -36,8 +36,6 @@ public class MeetingController {
                         meetingService.updateMeeting(meeting.toMeeting())
                                 .orElseThrow(() -> new ServiceException(BizCodeEnum.UPDATE_MEETING_FAILED)));
     }
-
-
 }
 
 

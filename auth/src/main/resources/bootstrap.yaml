@@ -13,10 +13,3 @@ spring:
         ext-config[0].data-id: db.yaml
   profiles:
     active: dev
-
-guxian:
-  jwt:
-    secret: 123456
-    expire: 3600
-    issuer: auth
-    audience: auth
