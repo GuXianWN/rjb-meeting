@@ -10,7 +10,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @EnableFeignClients
 @EnableDiscoveryClient
 @MapperScan("com.guxian.meeting.mapper")
-@SpringBootApplication(scanBasePackages = "com.guxian.*")
+@SpringBootApplication(scanBasePackages = "com.guxian")
 public class MeetingApplication {
 
     public static void main(String[] args) {

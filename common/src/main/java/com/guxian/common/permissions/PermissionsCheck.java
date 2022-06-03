@@ -22,19 +22,17 @@ import javax.servlet.http.HttpServletResponse;
 
 @Log4j2
 @Component
-@AllArgsConstructor
-@Setter(onMethod_ = @Autowired)
-@NoArgsConstructor
 public class PermissionsCheck implements HandlerInterceptor {
 
     static final String USER_PREFIX = "user:";
+    @Autowired
     private JwtUtils jwtUtils;
+    @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        new Test().test();
         String role = "";
         UserSession userSession = null;
         if (!jwtUtils.hasToken(request)) { // 如果没有token 是游客 没有权限
@@ -46,18 +44,6 @@ public class PermissionsCheck implements HandlerInterceptor {
                 userSession = (UserSession) user;
             }
         }
-
-
         return HandlerInterceptor.super.preHandle(request, response, handler);
-    }
-
-    @Configuration
-    class InterceptorConfig implements WebMvcConfigurer {
-
-        @Override
-        public void addInterceptors(InterceptorRegistry registry) {
-            //&emsp;如果有多个拦截器，继续registry.add往下添加就可以啦
-            registry.addInterceptor(new PermissionsCheck()).addPathPatterns("/**");
-        }
     }
 }
