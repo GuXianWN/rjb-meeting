@@ -19,17 +19,16 @@ import java.util.Map;
 @Accessors(chain = true)
 public class ResponseData {
 
-    private  ResponseData() {}
+    private ResponseData() {
+    }
 
     private Integer code;
     private String message;
 
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private Map<String, Object> data = null;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @JsonProperty("data")
-    private Object useInObject = null;
+    private Object data = null;
 
 
     public static ResponseData atBizCodeEnum(BizCodeEnum bizCodeEnum) {
@@ -83,15 +82,15 @@ public class ResponseData {
 
     public ResponseData data(String key, Object value) {
         if (data == null) {
-            data = new HashMap<>();
+            var tmp = new HashMap<>();
+            tmp.put(key, value);
+            data = tmp;
         }
-
-        data.put(key, value);
         return this;
     }
 
     public ResponseData data(Object value) {
-        this.useInObject = value;
+        this.data = value;
         return this;
     }
 }

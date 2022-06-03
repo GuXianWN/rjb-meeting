@@ -38,7 +38,7 @@ public class MeetingController {
 
     @GetMapping("/test")
     public String test(){
-        return "1";
+        return "1wedwewfwrf";
     }
 }
 
