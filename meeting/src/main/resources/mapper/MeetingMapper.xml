@@ -8,10 +8,9 @@
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="createUid" column="create_uid" jdbcType="INTEGER"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="explain" column="explain" jdbcType="VARCHAR"/>
+            <result property="explain" column="instruction" jdbcType="VARCHAR"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="beginTime" column="begin_time" jdbcType="TIMESTAMP"/>
-            <result property="checkWay" column="check_way" jdbcType="INTEGER"/>
             <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
             <result property="state" column="state" jdbcType="INTEGER"/>
     </resultMap>
@@ -19,6 +18,6 @@
     <sql id="Base_Column_List">
         id,create_uid,name,
         explain,create_time,begin_time,
-        check_way,end_time,state
+        end_time,state
     </sql>
 </mapper>

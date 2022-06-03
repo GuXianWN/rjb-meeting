@@ -61,7 +61,7 @@ public class JwtUtils {
 
     public Long getUid(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
-        if (StringUtils.hasText(token) || !token.startsWith("Bearer ") || token.split(" ").length != 2) {
+        if (!StringUtils.hasText(token) || !token.startsWith("Bearer ") || token.split(" ").length != 2) {
             throw new ServiceException(BizCodeEnum.GET_OAUTH_TOKEN_EXCEPTION);
         }
         String body = token.split(" ")[1];

@@ -30,12 +30,6 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
     private TokenStore tokenStore;
 
 
-//    @Autowired
-//    public Oauth2ServerConfig(DataSource dataSource, PasswordEncoder passwordEncoder) {
-//        this.dataSource = dataSource;
-//        this.passwordEncoder = passwordEncoder;
-//    }
-
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {

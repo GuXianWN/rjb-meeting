@@ -6,7 +6,10 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
@@ -15,6 +18,8 @@ import lombok.experimental.Accessors;
  */
 @TableName(value ="meeting")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Accessors(chain = true)
 public class Meeting implements Serializable {
     /**
@@ -36,7 +41,7 @@ public class Meeting implements Serializable {
     /**
      * 说明
      */
-    private String explain;
+    private String instruction;
 
     /**
      * 创建时间
@@ -48,10 +53,6 @@ public class Meeting implements Serializable {
      */
     private Date beginTime;
 
-    /**
-     * 签到方式
-     */
-    private Integer checkWay;
 
     /**
      * 结束时间

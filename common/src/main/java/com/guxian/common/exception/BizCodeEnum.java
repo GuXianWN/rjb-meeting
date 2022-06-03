@@ -15,7 +15,12 @@ public enum BizCodeEnum {
     USER_EXIST_EXCEPTION(15001, "用户已存在"),
     PHONE_EXIST_EXCEPTION(15002, "手机号已存在"),
     LOGIN_ACCOUNT_PASSWORD_EXCEPTION(15003, "账号或密码错误"),
-    GET_OAUTH_TOKEN_EXCEPTION(15004, "认证失败");
+    GET_OAUTH_TOKEN_EXCEPTION(15004, "认证失败"),
+    CREATE_MEETING_FAILED(11001, "创建会议失败"),
+    UPDATE_MEETING_FAILED(11002, "更新会议失败"),
+
+
+    ;
 
     private int code;
     private String msg;

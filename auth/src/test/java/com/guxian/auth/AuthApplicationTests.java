@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @Log4j2
 class AuthApplicationTests {
 
-
     @Autowired
     private InitAuth initAuth;
 
