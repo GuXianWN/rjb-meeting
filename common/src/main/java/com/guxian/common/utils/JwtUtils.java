@@ -32,7 +32,7 @@ public class JwtUtils {
     /**
      * 生成jwt token
      */
-    public String generateToken(Integer userId) {
+    public String generateToken(Long userId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
 
@@ -68,6 +68,12 @@ public class JwtUtils {
         return getClaimByToken(body)
                 .orElseThrow(() -> new ServiceException(BizCodeEnum.GET_OAUTH_TOKEN_EXCEPTION))
                 .get("userId", Long.class);
+    }
+
+
+    public boolean hasToken(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        return StringUtils.hasText(token) && token.startsWith("Bearer ");
     }
 
     /**

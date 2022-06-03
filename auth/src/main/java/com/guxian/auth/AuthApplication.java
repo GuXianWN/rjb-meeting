@@ -9,7 +9,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients
 @EnableDiscoveryClient
 @MapperScan("com.guxian.auth.mapper")
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.guxian.*")
 public class AuthApplication {
 
 	public static void main(String[] args) {
