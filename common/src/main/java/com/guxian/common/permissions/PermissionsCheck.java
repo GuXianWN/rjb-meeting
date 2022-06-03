@@ -50,28 +50,29 @@ public class PermissionsCheck implements HandlerInterceptor {
 
 
     @Override
-    public boolean preHandle(HttpServletRequest request,  HttpServletResponse response, Object handler) throws Exception {
-        var ops = redisTemplate.opsForValue();
-        var currentRole = RoleType.ROLE_GUEST;
-        var requestURI = request.getRequestURI();
-        if (jwtUtils.hasToken(request)) { // 如果有token 有权限
-            var uid = jwtUtils.getUid(request);
-            var user = JSON.parseObject(ops.get(USER_PREFIX + uid.toString()), UserSession.class);
-
-            if (user == null) {
-                log.error("user is not UserSession");
-                throw new ServiceException(BizCodeEnum.USER_NOT_EXIST);
-            }
-
-            currentRole = user.getRole();
-        }
-        List<String> accessUrls = JSON.parseArray(ops.get(ROLE_PREFIX + currentRole.toString()), String.class);
-
-        assert accessUrls != null;
-
-        if (accessUrls.stream().anyMatch(url -> antPathMatcher.match(url, requestURI))) {
-            return true;
-        }
-        throw new ServiceException(BizCodeEnum.NO_ACCESS);
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        return true;
+//        var ops = redisTemplate.opsForValue();
+//        var currentRole = RoleType.ROLE_GUEST;
+//        var requestURI = request.getRequestURI();
+//        if (jwtUtils.hasToken(request)) { // 如果有token 有权限
+//            var uid = jwtUtils.getUid(request);
+//            var user = JSON.parseObject(ops.get(USER_PREFIX + uid.toString()), UserSession.class);
+//
+//            if (user == null) {
+//                log.error("user is not UserSession");
+//                throw new ServiceException(BizCodeEnum.USER_NOT_EXIST);
+//            }
+//
+//            currentRole = user.getRole();
+//        }
+//        List<String> accessUrls = JSON.parseArray(ops.get(ROLE_PREFIX + currentRole.toString()), String.class);
+//
+//        assert accessUrls != null;
+//
+//        if (accessUrls.stream().anyMatch(url -> antPathMatcher.match(url, requestURI))) {
+//            return true;
+//        }
+//        throw new ServiceException(BizCodeEnum.NO_ACCESS);
     }
 }
