@@ -19,17 +19,17 @@ import java.util.Map;
 @Accessors(chain = true)
 public class ResponseData {
 
-    private  ResponseData() {}
+    private ResponseData() {
+    }
 
+    @JsonProperty("code")
     private Integer code;
+    @JsonProperty("msg")
     private String message;
 
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private Map<String, Object> data = null;
 
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @JsonProperty("data")
-    private Object useInObject = null;
+    private Object data = null;
 
 
     public static ResponseData atBizCodeEnum(BizCodeEnum bizCodeEnum) {
@@ -44,6 +44,24 @@ public class ResponseData {
         respData.setCode(code);
         respData.setMessage(message);
         return respData;
+    }
+
+    public static  ResponseData success(Object data) {
+        ResponseData respBean = new ResponseData();
+        respBean.setCode(0);
+        respBean.setMessage("success");
+        respBean.setData(data);
+        return respBean;
+    }
+
+    public static ResponseData success(String key, Object data) {
+        ResponseData respBean = new ResponseData();
+        respBean.setCode(0);
+        respBean.setMessage("success");
+        var tmp = new HashMap<>();
+        tmp.put(key, data);
+        respBean.setData(tmp);
+        return respBean;
     }
 
     public static ResponseData error(Integer code, String message) {
@@ -74,6 +92,8 @@ public class ResponseData {
         return respBean;
     }
 
+
+
     public static ResponseData error() {
         ResponseData respBean = new ResponseData();
         respBean.setCode(-1);
@@ -81,17 +101,19 @@ public class ResponseData {
         return respBean;
     }
 
-    public ResponseData data(String key, Object value) {
-        if (data == null) {
-            data = new HashMap<>();
-        }
 
-        data.put(key, value);
+
+    public  ResponseData data(String key, Object value) {
+        if (data == null) {
+            var tmp = new HashMap<>();
+            tmp.put(key, value);
+            data = tmp;
+        }
         return this;
     }
 
     public ResponseData data(Object value) {
-        this.useInObject = value;
+        this.data = value;
         return this;
     }
 }
