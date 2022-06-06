@@ -15,4 +15,6 @@ public interface UserService extends IService<User> {
     Optional<User> findByUsernameLimitOne(String username);
 
     String login(LoginVo loginVo, HttpServletRequest request);
+
+    void logout(HttpServletRequest request);
 }

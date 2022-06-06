@@ -64,6 +64,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         opsForValue.set("user:" + user.getId(), JSONObject.toJSONString(userSession), expire, TimeUnit.SECONDS);
         return token;
     }
+
+    @Override
+    public void logout(HttpServletRequest request) {
+        Long uid = jwtUtils.getUid(request);
+        //todo: qwq 可以加匹配token再删除
+        redisTemplate.delete("user:" + uid);
+    }
 }
 
 
