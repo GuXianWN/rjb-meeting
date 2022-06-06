@@ -20,10 +20,10 @@ public enum BizCodeEnum {
     LOGIN_ACCOUNT_PASSWORD_EXCEPTION(15003, "账号或密码错误"),
     GET_OAUTH_TOKEN_EXCEPTION(15004, "认证失败"),
     USER_NOT_EXIST(15005, "用户不存在"),
-    NO_ACCESS(15006, "无权限访问"),
+    NO_ACCESS(15006, "无权限访问");
 
 
-    ;
+
     private int code;
     private String msg;
 

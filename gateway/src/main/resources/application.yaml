@@ -8,3 +8,7 @@ spring:
           uri: lb://meeting
           predicates:
             - Path=/meeting/*
+        - id: auth
+          uri: lb://auth
+          predicates:
+            - Path=/auth/*
