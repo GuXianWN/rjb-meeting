@@ -26,8 +26,7 @@ public class JwtUtils {
     private String secret;
     @Value("${guxian.jwt.expire}")
     private long expire;
-    @Value("${guxian.jwt.header}")
-    private String header;
+
 
     /**
      * 生成jwt token

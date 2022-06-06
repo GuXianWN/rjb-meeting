@@ -1,5 +1,6 @@
 package com.guxian.common.exception;
 
+import com.guxian.common.entity.R;
 import com.guxian.common.entity.ResponseData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -31,9 +32,9 @@ public class ExceptionHandle {
     }
 
     @ExceptionHandler(ServiceException.class)
-    public ResponseEntity<ResponseData> handleValidException(ServiceException e) {
+    public ResponseEntity<R> handleValidException(ServiceException e) {
         log.error("业务异常: {},类型: {}", e.getMessage(), e.getClass());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ResponseData.error(e.getMessage()).setCode(e.getStatus()));
+        return ResponseEntity.badRequest().body(R.error(e.getMessage())
+                .setCode(e.getStatus()));
     }
 }
