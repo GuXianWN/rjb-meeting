@@ -33,6 +33,11 @@ public class MeetingController {
                         .orElseThrow(() -> new ServiceException(BizCodeEnum.CREATE_MEETING_FAILED)));
     }
 
+    @PostMapping("/test2")
+    public ResponseData test2(){
+        return ResponseData.success("1", "2");
+    }
+
 
 
     @PatchMapping("/")
