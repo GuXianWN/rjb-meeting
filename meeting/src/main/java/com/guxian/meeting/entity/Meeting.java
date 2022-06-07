@@ -31,7 +31,7 @@ public class Meeting implements Serializable {
     /**
      * 会议创建者
      */
-    private Integer createUid;
+    private Long createUid;
 
     /**
      * 会议名称

@@ -12,9 +12,9 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class UserSession {
-    private String userId;
+    private Long userId;
     private String userName;
-    private Integer role;
+    private RoleType role;
     private String token;
     private String ip;
 }

@@ -15,7 +15,7 @@ import java.util.Map;
  * @author GuXianWN
  */
 @ToString
-@Setter
+@Data
 @Accessors(chain = true)
 public class ResponseData {
 
@@ -26,8 +26,6 @@ public class ResponseData {
     private Integer code;
     @JsonProperty("msg")
     private String message;
-
-
     @JsonProperty("data")
     private Object data = null;
 
@@ -115,5 +113,9 @@ public class ResponseData {
     public ResponseData data(Object value) {
         this.data = value;
         return this;
+    }
+
+    public static  ResponseData is(boolean bool) {
+        return bool ? success() : error();
     }
 }

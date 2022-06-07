@@ -8,10 +8,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.CreatedDate;
 
-import javax.validation.constraints.Future;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
+import javax.validation.constraints.*;
 import java.util.Date;
 
 @Data
@@ -26,23 +23,25 @@ public class MeetingVo {
     private Long createId;
 
 
-    private Integer createUid; // 创建人uid
+    private Long createUid; // 创建人uid
     @NotNull(message = "会议名称不能为空",groups = {AddGroup.class, UpdateGroup.class})
     @NotBlank(message = "会议名称不能为空白",groups = {AddGroup.class,UpdateGroup.class})
     private String name;
 
     private String explain;
+
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @CreatedDate
     private Date createTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @Future(message = "开始时间必须大于当前时间",groups = {AddGroup.class})
+    @FutureOrPresent(message = "开始时间必须大于当前时间",groups = {AddGroup.class})
     private Date beginTime;
 
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @Future(message = "结束时间必须大于开始时间",groups = {AddGroup.class})
+    @FutureOrPresent(message = "结束时间必须大于开始时间",groups = {AddGroup.class})
     private Date endTime;
     private Integer state;
 
