@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Main {
+public class FaceCheckBootStrap {
     public static void main(String[] args) {
-        var d=SpringApplication.run(Main.class, args).getBeanFactory();
+         SpringApplication.run(FaceCheckBootStrap.class, args).getBeanFactory();
     }
 }

@@ -8,8 +8,6 @@ import org.springframework.stereotype.Component;
 
 @Log4j2
 public class CurrentUserSession {
-
-
     private CurrentUserSession() {
     }
 

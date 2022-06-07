@@ -17,16 +17,16 @@ public enum BizCodeEnum {
 
     MEETING_NOT_EXIST(11003, "会议不存在"),
 
+    CHECK_IN_CODE_NOT_EXIST(12001,"签到码不存在" ),
+
     USER_EXIST_EXCEPTION(15001, "用户已存在"),
     PHONE_EXIST_EXCEPTION(15002, "手机号已存在"),
     LOGIN_ACCOUNT_PASSWORD_EXCEPTION(15003, "账号或密码错误"),
     GET_OAUTH_TOKEN_EXCEPTION(15004, "认证失败"),
     USER_NOT_EXIST(15005, "用户不存在"),
-    NO_ACCESS(15006, "无权限访问"),
+    NO_ACCESS(15006, "无权限访问");
 
 
-
-    ;
     private int code;
     private String msg;
 

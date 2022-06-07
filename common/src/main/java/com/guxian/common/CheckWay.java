@@ -9,7 +9,7 @@ public enum CheckWay {
     /**
      * 密码识别
      */
-    PASSWORD,
+    CODE,
 
     /**
      * 无需签到
