@@ -2,7 +2,7 @@ package com.guxian.auth.controller;
 
 import com.guxian.auth.entity.vo.LoginVo;
 import com.guxian.auth.service.UserService;
-import com.guxian.common.entity.R;
+import com.guxian.common.entity.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -18,15 +18,15 @@ public class LoginController {
     private RedisTemplate<String, String> redisTemplate;
 
     @PostMapping("/login")
-    public R login(@RequestBody LoginVo loginVo, HttpServletRequest request) {
+    public ResponseData login(@RequestBody LoginVo loginVo, HttpServletRequest request) {
         String token = userService.login(loginVo, request);
-        return R.success("登录成功")
+        return ResponseData.success("登录成功")
                 .data("token", token);
     }
 
     @PostMapping("/logout")
-    public R logout(HttpServletRequest request) {
+    public ResponseData logout(HttpServletRequest request) {
         userService.logout(request);
-        return R.success("退出成功");
+        return ResponseData.success("退出成功");
     }
 }

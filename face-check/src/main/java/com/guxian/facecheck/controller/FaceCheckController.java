@@ -19,9 +19,9 @@ public class FaceCheckController {
     public ResponseData check(String url) {
         var check=faceCheckService.checkFace(url);
         if(check){
-            return ResponseData.success("失败程度高");
+            return ResponseData.success("识别程度高");
         }else {
-            return ResponseData.success("失败程度低");
+            return ResponseData.success("识别程度低");
         }
     }
 
