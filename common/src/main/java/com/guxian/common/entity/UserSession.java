@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 public class UserSession {
     private Long userId;
     private String userName;
-    private Integer role;
+    private RoleType role;
     private String token;
     private String ip;
 }
