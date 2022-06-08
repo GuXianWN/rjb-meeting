@@ -26,6 +26,7 @@ public class MeetingController {
      * @param meeting
      * @return
      */
+
     @PostMapping("/")
     public ResponseData createMeeting(@RequestBody @Validated(AddGroup.class) MeetingVo meeting) {
         return ResponseData.success()
