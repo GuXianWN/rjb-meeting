@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 @Setter(onMethod_ = @Autowired)
 public class CheckInController {
     private CheckInService checkInService;
-    private MeetingService meetingService;
 
     @RequestMapping("/")
     public ResponseData check(

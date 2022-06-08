@@ -12,7 +12,6 @@ import javax.annotation.PostConstruct;
 @Component
 public class RedisUtils {
 
-
     public  static ValueOperations<String, Object> ops;
     private final RedisTemplate<String, Object> redisTemplate;
 
