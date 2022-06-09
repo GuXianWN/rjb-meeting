@@ -19,4 +19,5 @@ public enum CheckWay {
     public int getValue() {
         return ordinal();
     }
+
 }

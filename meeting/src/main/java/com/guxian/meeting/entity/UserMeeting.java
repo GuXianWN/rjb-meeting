@@ -6,7 +6,10 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+
+import com.guxian.common.UserCheckInStatus;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * 
@@ -14,6 +17,7 @@ import lombok.Data;
  */
 @TableName(value ="user_meeting")
 @Data
+@Accessors(chain = true)
 public class UserMeeting implements Serializable {
     /**
      * 
@@ -48,4 +52,13 @@ public class UserMeeting implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+    public UserMeeting setType(String type) {
+        this.type = type;
+        return this;
+    }
+
+    public UserMeeting setType(UserCheckInStatus type) {
+        this.type = type.getValue();
+        return this;
+    }
 }

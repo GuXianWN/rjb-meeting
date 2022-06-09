@@ -1,13 +1,18 @@
 package com.guxian.meeting.service;
 
+import com.guxian.common.CheckWay;
+import com.guxian.meeting.entity.MeetingCheck;
 import com.guxian.meeting.entity.UserMeeting;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.guxian.meeting.entity.vo.CheckDataVo;
+
+import java.util.Optional;
 
 /**
-* @author GuXian
-* @description 针对表【user_meeting】的数据库操作Service
-* @createDate 2022-05-31 21:08:48
-*/
+ *
+ */
 public interface UserMeetingService extends IService<UserMeeting> {
+    Optional<MeetingCheck> addCheckType(MeetingCheck meetingCheck, String code);
 
+    void checkIn(Long meetingId, CheckWay code);
 }

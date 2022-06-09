@@ -14,6 +14,7 @@ import com.guxian.meeting.entity.MeetingCheck;
 import com.guxian.meeting.entity.vo.CheckDataVo;
 import com.guxian.meeting.service.CheckInService;
 import com.guxian.meeting.mapper.CheckInMapper;
+import com.guxian.meeting.service.UserMeetingService;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +30,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Log4j2
+@Setter(onMethod_ = @Autowired)
 public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn>
         implements CheckInService {
 
+    private UserMeetingService userMeetingService;
 
     /**
      * @param checkDataVo
@@ -62,10 +65,14 @@ public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn>
         }
 
         var code = getCodeByRedis.toString();
-        log.error("code {} ,get code in redis is{} ", code, checkDataVo.getCode());
-        return code.equals(checkDataVo.getCode());
-    }
 
+        if (!code.equals(checkDataVo.getCode())) {
+            throw new ServiceException(BizCodeEnum.CHECK_IN_CODE_ERROR);
+        }
+
+        userMeetingService.checkIn(checkDataVo.getMeetingId(), CheckWay.CODE);
+        return true;
+    }
 }
 
 
