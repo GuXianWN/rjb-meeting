@@ -10,10 +10,12 @@ import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.redis.RedisUtils;
 import com.guxian.meeting.entity.CheckIn;
+import com.guxian.meeting.entity.MeetingCheck;
 import com.guxian.meeting.entity.vo.CheckDataVo;
 import com.guxian.meeting.service.CheckInService;
 import com.guxian.meeting.mapper.CheckInMapper;
 import lombok.*;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -26,10 +28,9 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
+@Log4j2
 public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn>
         implements CheckInService {
-
-
 
 
     /**
@@ -53,21 +54,16 @@ public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn>
         return false;
     }
 
-    /*todo
-     * 此处从redis 中获取数据的格式为：
-     * K : CHECK_IN_CODE_PREFIX-meetingId_checkWay
-     * V : code
-     */
 
     public boolean checkInUseCode(CheckDataVo checkDataVo) {
-        Object getCodeByRedis = RedisUtils.ops.get(RedisPrefix.CHECK_IN_CODE_PREFIX + checkDataVo.getMeetingId().toString());
+        Object getCodeByRedis = RedisUtils.ops.get(MeetingCheck.buildKey(checkDataVo.getMeetingId()));
         if (getCodeByRedis == null) {
             throw new ServiceException(BizCodeEnum.CHECK_IN_CODE_NOT_EXIST);
         }
-        var code = JSON.parseArray(
-                getCodeByRedis.toString(),
-                String.class).get(0);
-        return code == checkDataVo.getCode();
+
+        var code = getCodeByRedis.toString();
+        log.error("code {} ,get code in redis is{} ", code, checkDataVo.getCode());
+        return code.equals(checkDataVo.getCode());
     }
 
 }

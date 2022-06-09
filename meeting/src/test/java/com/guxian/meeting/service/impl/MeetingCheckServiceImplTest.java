@@ -37,7 +37,7 @@ class MeetingCheckServiceImplTest {
     @Autowired
     private RedisConnectionFactory redisConnectionFactory;
 
-    @Mock
+    @Autowired
     private MeetingCheckServiceImpl meetingCheckService;
 
 
@@ -55,22 +55,15 @@ class MeetingCheckServiceImplTest {
         Instant beginTime = Instant.now();
         Instant endTime = Instant.now().plusSeconds(1000);
         // Setup
-        final MeetingCheck meetingCheck = new MeetingCheck(0L, 0L, 0,
+        final MeetingCheck meetingCheck = new MeetingCheck(null, 0L, 0,
                 Date.from(beginTime),
                 Date.from(endTime));
-
-
-        final Optional<MeetingCheck> expectedResult = Optional.of(
-                new MeetingCheck(0L, 0L, 0, Date.from(beginTime), Date.from(endTime)));
-
-        when(meetingCheckService.addCheckType(meetingCheck)).thenCallRealMethod();
-
-
 
         // Run the test
         final Optional<MeetingCheck> result = meetingCheckService.addCheckType(meetingCheck);
 
         // Verify the results
-        assertThat(result).isEqualTo(expectedResult);
+        assertThat(result.get().getMeetingId()).isNotNull();
+
     }
 }

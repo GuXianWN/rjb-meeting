@@ -9,5 +9,5 @@ import java.util.Optional;
  *
  */
 public interface MeetingCheckService extends IService<MeetingCheck> {
-    Optional<MeetingCheck> addCheckType(MeetingCheck meetingCheck);
+    Optional<MeetingCheck> addCheckType(MeetingCheck meetingCheck,String code);
 }

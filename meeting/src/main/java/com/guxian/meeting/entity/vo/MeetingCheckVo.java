@@ -60,6 +60,5 @@ public class MeetingCheckVo implements Serializable {
                 .setCheckWay(this.checkWay.getValue())
                 .setBeginTime(this.beginTime)
                 .setEndTime(this.endTime);
-
     }
 }

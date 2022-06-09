@@ -28,9 +28,9 @@ public class MeetingCheckController {
         return ResponseData.success(meetingCheckService.getById(id));
     }
 
-    @PostMapping("/")
-    public ResponseData createMeetingCheck(@RequestBody @Validated(AddGroup.class) MeetingCheckVo meetingCheck) {
-        return ResponseData.success(meetingCheckService.addCheckType(meetingCheck.toMeetingCheck()));
+    @PostMapping("/{code}")
+    public ResponseData createMeetingCheck(@RequestBody @Validated(AddGroup.class) MeetingCheckVo meetingCheck, @PathVariable String code) {
+        return ResponseData.success(meetingCheckService.addCheckType(meetingCheck.toMeetingCheck(), code));
     }
 
 

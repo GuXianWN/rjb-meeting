@@ -21,13 +21,17 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
         implements MeetingCheckService {
 
     @Override
-    public Optional<MeetingCheck> addCheckType(MeetingCheck meetingCheck) {
+    public Optional<MeetingCheck> addCheckType(MeetingCheck meetingCheck, String code) {
         var ms = meetingCheck.getEndTime().toInstant().toEpochMilli() - Instant.now().toEpochMilli();
         this.save(meetingCheck);
         RedisUtils.ops.set(MeetingCheck.buildKey(meetingCheck.getMeetingId()),
-                SomeUtils.randomString(6),
+                code == null ? SomeUtils.randomString(6) : code, //默认随机6位字符串 作为签到码 如果传入了签到码则使用传入的签到码
                 ms, TimeUnit.MILLISECONDS);
         return Optional.of(meetingCheck);
+    }
+
+    public Optional<MeetingCheck> addCheckType(MeetingCheck meetingCheck) {
+        return addCheckType(meetingCheck, null);
     }
 }
 
