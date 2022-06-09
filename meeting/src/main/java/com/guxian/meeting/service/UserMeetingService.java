@@ -14,5 +14,5 @@ import java.util.Optional;
 public interface UserMeetingService extends IService<UserMeeting> {
     Optional<MeetingCheck> addCheckType(MeetingCheck meetingCheck, String code);
 
-    void checkIn(Long meetingId, CheckWay code);
+    void checkIn(Long meetingId, CheckWay way);
 }

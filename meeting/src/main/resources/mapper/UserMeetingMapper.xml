@@ -17,4 +17,5 @@
         id,uid,mid,
         type,join_time,exit_time
     </sql>
+
 </mapper>
