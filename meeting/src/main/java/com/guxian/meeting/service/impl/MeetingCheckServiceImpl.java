@@ -30,6 +30,7 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
         return Optional.of(meetingCheck);
     }
 
+
     public Optional<MeetingCheck> addCheckType(MeetingCheck meetingCheck) {
         return addCheckType(meetingCheck, null);
     }
