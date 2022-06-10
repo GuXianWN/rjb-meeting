@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 用户签到操作
+ */
 @RestController
 @RequestMapping("/check-in")
 @Setter(onMethod_ = @Autowired)
@@ -29,5 +32,4 @@ public class CheckInController {
         }
         return ResponseData.success("签到失败");
     }
-
 }

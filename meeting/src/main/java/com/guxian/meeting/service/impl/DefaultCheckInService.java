@@ -36,6 +36,7 @@ public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn>
 
     private UserMeetingService userMeetingService;
 
+
     /**
      * @param checkDataVo
      * @return boolean 是否签到成功
@@ -71,6 +72,12 @@ public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn>
         }
 
         userMeetingService.checkIn(checkDataVo.getMeetingId(), CheckWay.CODE);
+        return true;
+    }
+
+    public boolean checkInUseFace(CheckDataVo checkDataVo) {
+        String face = checkDataVo.getFaceUrl();
+
         return true;
     }
 }

@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+/**
+ * 对会议签到进行操作
+ */
 @RestController
 @RequestMapping("/meeting-check")
 public class MeetingCheckController {

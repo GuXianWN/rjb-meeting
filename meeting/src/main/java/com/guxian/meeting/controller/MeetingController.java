@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 对会议的操作
+ */
 @RestController
 @RequestMapping("/meeting")
 public class MeetingController {

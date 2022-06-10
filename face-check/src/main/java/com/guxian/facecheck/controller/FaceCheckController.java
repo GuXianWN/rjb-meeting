@@ -3,7 +3,6 @@ package com.guxian.facecheck.controller;
 import com.guxian.common.entity.ResponseData;
 import com.guxian.facecheck.service.FaceCheckService;
 import lombok.Setter;
-import org.bouncycastle.cert.ocsp.RespData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,13 +16,15 @@ public class FaceCheckController {
 
     @PostMapping("/")
     public ResponseData check(String url) {
-        var check=faceCheckService.checkFace(url);
-        if(check){
-            return ResponseData.success("识别程度高");
-        }else {
-            return ResponseData.success("识别程度低");
-        }
+        var check = faceCheckService.checkFace(url);
+        return ResponseData.is(check);
     }
 
+
+    @PostMapping("/upload")
+    public ResponseData upload(String url) {
+        var check = faceCheckService.upload(url);
+        return ResponseData.is(check);
+    }
 
 }
