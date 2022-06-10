@@ -1,13 +1,17 @@
 package com.guxian.auth.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.guxian.auth.entity.User;
 import com.guxian.auth.entity.UserSession;
+import com.guxian.auth.entity.UserStatus;
 import com.guxian.auth.entity.vo.LoginVo;
+import com.guxian.auth.entity.vo.RegisterVo;
 import com.guxian.auth.service.UserService;
 import com.guxian.auth.mapper.UserMapper;
+import com.guxian.common.RoleType;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.utils.JwtUtils;
@@ -19,6 +23,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.Instant;
+import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -61,7 +67,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         //用户放入redis 并且设置过期时间
         ValueOperations<String, String> opsForValue = redisTemplate.opsForValue();
         UserSession userSession = UserSession.forUser(user, request, token);
-        opsForValue.set("user:" + user.getId(), JSONObject.toJSONString(userSession), expire, TimeUnit.SECONDS);
+        opsForValue.set("user:" + user.getId(), JSON.toJSONString(userSession), expire, TimeUnit.SECONDS);
         return token;
     }
 
@@ -70,6 +76,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         Long uid = jwtUtils.getUid(request);
         //todo: qwq 可以加匹配token再删除
         redisTemplate.delete("user:" + uid);
+    }
+
+
+    //todo : add email to check user.
+    @Override
+    public Optional<User> register(RegisterVo user) {
+        User user1 = new User()
+                .setUsername(user.getUsername())
+                .setPassword(passwordEncoder.encode(user.getPassword()))
+                .setAccount(user.getAccount())
+                .setCreateTime(Date.from(Instant.now()))
+                .setStatus(UserStatus.NORMAL)
+                .setRoleId(RoleType.ROLE_USER);
+        this.save(user1);
+        return Optional.of(user1);
     }
 }
 

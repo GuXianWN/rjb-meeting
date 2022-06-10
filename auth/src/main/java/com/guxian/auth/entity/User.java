@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.util.Date;
 
+import com.guxian.common.RoleType;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Data
 @Accessors(chain = true)
 @Component
-public class User{
+public class User {
     /**
      *
      */
@@ -72,4 +73,9 @@ public class User{
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
+    public User setRoleId(RoleType roleId) {
+        this.roleId = roleId.name();
+        return this;
+    }
 }

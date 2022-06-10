@@ -9,4 +9,7 @@ public class FaceCheckService {
     }
 
 
+    public boolean upload(String url) {
+        return true;
+    }
 }
