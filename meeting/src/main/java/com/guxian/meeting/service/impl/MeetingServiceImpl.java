@@ -34,8 +34,8 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     UserSession user = CurrentUserSession.getUserSession();
 
     @Override
-    public Optional<Meeting> addMeeting(Meeting meeting) {
-        this.save(meeting.setCreateUid(user.getUserId()));
+    public Optional<Meeting> addMeeting(Meeting meeting,Long id) {
+        this.save(meeting.setCreateUid(id));
         return Optional.ofNullable(meeting.getId()!=null?meeting:null);
     }
 
@@ -52,12 +52,12 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
 
     @Override
     public Optional<Meeting> getMeetingByName(String name) {
-        return Optional.ofNullable(new QueryWrapper<Meeting>().select("*").eq("name", name).last("limit 1").getEntity());
+        return Optional.ofNullable(baseMapper.selectOne(new QueryWrapper<Meeting>().like("name",name)));
     }
 
     @Override
     public List<Meeting> getAll(int page, int size) {
-        Page<Meeting> meetingPage = new Page<>();
+        Page<Meeting> meetingPage = new Page<>(page,size);
         IPage<Meeting> iPage = baseMapper.selectPage(meetingPage,new QueryWrapper<Meeting>());
         return iPage.getRecords();
     }
