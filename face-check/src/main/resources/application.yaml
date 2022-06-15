@@ -1,0 +1,33 @@
+server:
+  port: 10013
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://k423.xyz:3306/rjb_auth?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: rjb_auth
+    password: ziM7SZhiAcmNkSDT
+    hikari:
+      maximum-pool-size: 12
+      minimum-idle: 5
+      idle-timeout: 300000
+      connection-timeout: 20000
+      connection-test-query: select 1
+  redis:
+    timeout: 1000ms
+    host: k423.xyz
+    port: 6379
+    database: 3
+    password: CPa7Mn2ER8hDbrx6
+  cache:
+    type: redis
+    redis:
+      # 指定redis中的过期时间为1h
+      time-to-live: 3600000
+      #缓存空值
+      cache-null-values: true
+      use-key-prefix: true
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
