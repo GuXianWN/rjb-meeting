@@ -3,11 +3,8 @@ package com.guxian.meeting.controller;
 import com.guxian.common.entity.ResponseData;
 import com.guxian.common.valid.AddGroup;
 import com.guxian.common.valid.UpdateGroup;
-import com.guxian.meeting.entity.MeetingCheck;
 import com.guxian.meeting.entity.vo.MeetingCheckVo;
-import com.guxian.meeting.mapper.MeetingCheckMapper;
 import com.guxian.meeting.service.MeetingCheckService;
-import com.guxian.meeting.service.impl.MeetingCheckServiceImpl;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +14,7 @@ import java.util.Map;
  * 对会议签到进行操作
  */
 @RestController
-@RequestMapping("/meeting-check")
+@RequestMapping("/meeting/check")
 public class MeetingCheckController {
 
     private final MeetingCheckService meetingCheckService;
@@ -26,11 +23,22 @@ public class MeetingCheckController {
         this.meetingCheckService = meetingCheckService;
     }
 
+    /**
+     * smjb
+     * @param id
+     * @return
+     */
     @GetMapping("/{id}")
     public ResponseData getMeetingCheckById(@PathVariable String id) {
         return ResponseData.success(meetingCheckService.getById(id));
     }
 
+    /**
+     * 添加会议签到
+     * @param meetingCheck
+     * @param code
+     * @return
+     */
     @PostMapping("/{code}")
     public ResponseData createMeetingCheck(@RequestBody @Validated(AddGroup.class) MeetingCheckVo meetingCheck, @PathVariable String code) {
         return ResponseData.success(meetingCheckService.addCheckType(meetingCheck.toMeetingCheck(), code));

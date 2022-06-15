@@ -3,6 +3,7 @@ package com.guxian.meeting.controller;
 import com.guxian.common.entity.ResponseData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
+import com.guxian.common.utils.JwtUtils;
 import com.guxian.common.valid.AddGroup;
 import com.guxian.common.valid.UpdateGroup;
 import com.guxian.meeting.entity.vo.MeetingVo;
@@ -11,13 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 对会议的操作
  */
 @RestController
 @RequestMapping("/meeting")
 public class MeetingController {
-
+    @Autowired
+    private JwtUtils jwtUtils;
     private MeetingService meetingService;
 
     public  MeetingController (@Autowired MeetingService meetingService) {
@@ -31,9 +35,9 @@ public class MeetingController {
      */
 
     @PostMapping("/")
-    public ResponseData createMeeting(@RequestBody @Validated(AddGroup.class) MeetingVo meeting) {
+    public ResponseData createMeeting(@RequestBody @Validated(AddGroup.class) MeetingVo meeting, HttpServletRequest request) {
         return ResponseData.success()
-                .data(meetingService.addMeeting(meeting.toMeeting())
+                .data(meetingService.addMeeting(meeting.toMeeting(),jwtUtils.getUid(request))
                         .orElseThrow(() -> new ServiceException(BizCodeEnum.CREATE_MEETING_FAILED)));
     }
 
@@ -77,8 +81,6 @@ public class MeetingController {
         return ResponseData.success()
                 .data(meetingService.getAll(page, size));
     }
-
-
 }
 
 

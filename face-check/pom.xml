@@ -28,7 +28,6 @@
             <version>4.5.1-2</version>
             <systemPath>src/main/resources/lib/opencv/opencv_java455.dll</systemPath>
         </dependency>
-
     </dependencies>
 
 
