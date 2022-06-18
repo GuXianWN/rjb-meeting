@@ -27,7 +27,9 @@ public enum BizCodeEnum {
     GET_OAUTH_TOKEN_EXCEPTION(15004, "认证失败"),
     USER_NOT_EXIST(15005, "用户不存在"),
     NO_ACCESS(15006, "无权限访问"),
-    CHECK_IN_FAIL(15007, "签到失败"), CHECK_IN_ALREADY(15008, "已签到"),;
+    CHECK_IN_FAIL(15007, "签到失败"),
+    CHECK_IN_ALREADY(15008, "已签到"),
+    NOT_LOGGED_IN(15009,"未登录");
 
 
     private int code;

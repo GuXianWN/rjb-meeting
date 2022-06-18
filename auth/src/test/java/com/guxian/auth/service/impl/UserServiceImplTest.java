@@ -42,7 +42,7 @@ class UserServiceImplTest {
     void testFindByUsernameLimitOne() {
         // Setup
         final User user = new User();
-        user.setRoleId(RoleType.ROLE_USER);
+        user.setRole(RoleType.ROLE_USER);
         user.setId(0L);
         user.setUsername("userName");
         user.setPassword("password");
@@ -99,7 +99,7 @@ class UserServiceImplTest {
         user.setAccount("account");
 
         final User user1 = new User();
-        user1.setRoleId(RoleType.ROLE_USER);
+        user1.setRole(RoleType.ROLE_USER);
         user1.setUsername("userName");
         user1.setPassword("password");
         user1.setAccount("account");

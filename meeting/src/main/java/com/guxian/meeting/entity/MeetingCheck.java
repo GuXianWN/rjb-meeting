@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.errorprone.annotations.NoAllocation;
 import com.guxian.common.entity.RedisPrefix;
 import lombok.AllArgsConstructor;
@@ -43,14 +44,15 @@ public class MeetingCheck implements Serializable {
     private Integer checkWay;
 
     /**
-     * 该签到方式的 开始时间
+     * 该签到方式的 持续时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date beginTime;
 
     /**
      * 该签到方式的截至时间
      */
-    private Date endTime;
+    private Integer duration;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

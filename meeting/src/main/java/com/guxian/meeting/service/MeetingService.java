@@ -16,11 +16,13 @@ import java.util.Optional;
 public interface MeetingService extends IService<Meeting> {
     Optional<Meeting> addMeeting(Meeting meeting,Long id);
 
-    Optional<Meeting> updateMeeting(Meeting toMeeting);
+    Optional<Meeting> updateMeeting(Meeting toMeeting,Long uid);
 
     Optional<Meeting> getMeetingByName(String name);
 
-    Optional<Meeting> getMeetingById(Long id);
+    Meeting getMeetingById(Long id);
 
     List<Meeting> getAll(int page, int size);
+
+    List<Meeting> getAll(int page, int size,Long uid);
 }

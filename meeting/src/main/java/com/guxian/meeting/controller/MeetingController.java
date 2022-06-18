@@ -24,12 +24,13 @@ public class MeetingController {
     private JwtUtils jwtUtils;
     private MeetingService meetingService;
 
-    public  MeetingController (@Autowired MeetingService meetingService) {
+    public MeetingController(@Autowired MeetingService meetingService) {
         this.meetingService = meetingService;
     }
 
     /**
      * 添加会议
+     *
      * @param meeting
      * @return
      */
@@ -37,37 +38,34 @@ public class MeetingController {
     @PostMapping("/")
     public ResponseData createMeeting(@RequestBody @Validated(AddGroup.class) MeetingVo meeting, HttpServletRequest request) {
         return ResponseData.success()
-                .data(meetingService.addMeeting(meeting.toMeeting(),jwtUtils.getUid(request))
+                .data(meetingService.addMeeting(meeting.toMeeting(), jwtUtils.getUid(request))
                         .orElseThrow(() -> new ServiceException(BizCodeEnum.CREATE_MEETING_FAILED)));
     }
 
     @PostMapping("/test2")
-    public ResponseData test2(){
+    public ResponseData test2() {
         return ResponseData.success("1", "2");
     }
 
 
-
     @PatchMapping("/")
-    public ResponseData updateMeeting(@RequestBody @Validated(UpdateGroup.class)  MeetingVo meeting) {
+    public ResponseData updateMeeting(@RequestBody @Validated(UpdateGroup.class) MeetingVo meeting, HttpServletRequest request) {
+        Long uid = jwtUtils.getUid(request);
         return ResponseData.success()
                 .data(
-                        meetingService.updateMeeting(meeting.toMeeting())
+                        meetingService.updateMeeting(meeting.toMeeting(),uid)
                                 .orElseThrow(() -> new ServiceException(BizCodeEnum.UPDATE_MEETING_FAILED)));
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseData deleteMeeting(@PathVariable("id") Long id) {
         return ResponseData.is(meetingService.removeById(id));
     }
 
-
     @GetMapping("/{id}")
     public ResponseData getMeeting(@PathVariable("id") Long id) {
         return ResponseData.success()
-                .data(meetingService.getMeetingById(id)
-                        .orElseThrow(() -> new ServiceException(BizCodeEnum.MEETING_NOT_EXIST)));
+                .data(meetingService.getMeetingById(id));
     }
 
     @GetMapping("/")
@@ -80,6 +78,13 @@ public class MeetingController {
     public ResponseData getMeetingList(int page, int size) {
         return ResponseData.success()
                 .data(meetingService.getAll(page, size));
+    }
+
+    @GetMapping("/list/me")
+    public ResponseData getMeetingListForMe(int page, int size,HttpServletRequest request) {
+        Long uid = jwtUtils.getUid(request);
+        return ResponseData.success()
+                .data(meetingService.getAll(page, size,uid));
     }
 }
 

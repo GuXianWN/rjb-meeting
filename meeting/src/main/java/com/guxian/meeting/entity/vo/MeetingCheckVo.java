@@ -29,9 +29,6 @@ public class MeetingCheckVo implements Serializable {
     @NotNull(message = "会议签到id不能为空", groups = {UpdateGroup.class})
     private Long id;
 
-    @NotNull(message = "会议id不能为空", groups = {UpdateGroup.class, AddGroup.class})
-    private Long meetingId;
-
     /**
      * 签到方式
      */
@@ -39,26 +36,15 @@ public class MeetingCheckVo implements Serializable {
     private CheckWay checkWay;
 
     /**
-     * 该签到方式的 开始时间
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @FutureOrPresent(message = "签到开始时间必须是未来时间", groups = {AddGroup.class})
-    private Date beginTime;
-
-    /**
      * 该签到方式的截至时间
      */
-
-    @FutureOrPresent(message = "签到截至时间必须是未来时间", groups = {AddGroup.class})
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date endTime;
+    @NotNull(message = "持续时间不能为空", groups = {UpdateGroup.class, AddGroup.class})
+    private Integer duration;
 
     public MeetingCheck toMeetingCheck() {
         return  new MeetingCheck()
-                .setId(this.id)
-                .setMeetingId(this.meetingId)
+                .setMeetingId(this.id)
                 .setCheckWay(this.checkWay.getValue())
-                .setBeginTime(this.beginTime)
-                .setEndTime(this.endTime);
+                .setDuration(duration);
     }
 }

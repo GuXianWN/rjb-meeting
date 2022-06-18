@@ -62,7 +62,7 @@ public class PermissionsCheck implements HandlerInterceptor {
             return true;
         }
         var ops = redisTemplate.opsForValue();
-        var currentRole = RoleType.ROLE_GUEST;
+        var currentRole = RoleType.ROLE_GUEST.getExplain();
         var requestURI = request.getRequestURI();
         var uid = 0L;
         var user = new UserSession();
@@ -74,13 +74,11 @@ public class PermissionsCheck implements HandlerInterceptor {
                 log.error("user is not UserSession");
                 throw new ServiceException(BizCodeEnum.USER_NOT_EXIST);
             }
-
             currentRole = user.getRole();
         }
         List<String> accessUrls = JSON.parseArray(ops.get(ROLE_PREFIX + currentRole.toString()), String.class);
 
         assert accessUrls != null;
-
 
         CurrentUserSession.setUserSession(user,closed);
 
@@ -88,7 +86,6 @@ public class PermissionsCheck implements HandlerInterceptor {
         if (accessUrls.stream().anyMatch(url -> antPathMatcher.match(url, requestURI))) {
             return true;
         }
-
 
         throw new ServiceException(BizCodeEnum.NO_ACCESS);
     }

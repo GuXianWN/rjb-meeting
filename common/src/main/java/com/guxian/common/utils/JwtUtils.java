@@ -1,13 +1,18 @@
 package com.guxian.common.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.guxian.common.entity.UserSession;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -18,6 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 
 
+
 @Component
 @Data
 @Slf4j
@@ -26,6 +32,8 @@ public class JwtUtils {
     private String secret;
     @Value("${guxian.jwt.expire}")
     private long expire;
+    @Autowired
+    private RedisTemplate<String,String> redisTemplate;
 
 
     /**
@@ -69,10 +77,18 @@ public class JwtUtils {
                 .get("userId", Long.class);
     }
 
-
     public boolean hasToken(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         return StringUtils.hasText(token) && token.startsWith("Bearer ");
+    }
+
+    public UserSession getUserForRedis(Long uid){
+        var ops = redisTemplate.opsForValue();
+        UserSession user = JSON.parseObject(ops.get("user:" + uid), UserSession.class);
+        if (user==null){
+            throw new ServiceException(BizCodeEnum.NOT_LOGGED_IN);
+        }
+        return user;
     }
 
     /**

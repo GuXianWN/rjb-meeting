@@ -74,7 +74,7 @@ public class User {
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
-    public User setRoleId(RoleType roleId) {
+    public User setRole(RoleType roleId) {
         this.roleId = roleId.name();
         return this;
     }

@@ -19,7 +19,6 @@ public class MeetingVo {
     private Long id;
 
     @Null(message = "createId必须为空",groups = {AddGroup.class})
-    @NotNull(message = "createId不能为空",groups = {UpdateGroup.class})
     private Long createId;
 
 

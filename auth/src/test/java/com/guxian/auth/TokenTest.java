@@ -21,7 +21,7 @@ class TokenTest {
 
     @Test
     public void encode() {
-        String rawPassword = "123456";
+        String rawPassword = "admin";
         System.out.println(passwordEncoder.encode(rawPassword));
     }
 

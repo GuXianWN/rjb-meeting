@@ -24,4 +24,13 @@ public class SomeUtils {
         }
         return sb.toString();
     }
+
+    public static String randomCode() {
+        //四位随机数
+        Random ne=new Random();//实例化一个random的对象ne
+
+        int x = ne.nextInt(9999 - 1000 + 1) + 1000;
+
+        return String.valueOf(x);
+    }
 }
