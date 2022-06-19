@@ -1,11 +1,13 @@
 package com.guxian.meeting.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.guxian.common.entity.ResponseData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.utils.JwtUtils;
 import com.guxian.common.valid.AddGroup;
 import com.guxian.common.valid.UpdateGroup;
+import com.guxian.meeting.entity.UserMeeting;
 import com.guxian.meeting.entity.vo.MeetingVo;
 import com.guxian.meeting.service.MeetingService;
 import com.guxian.meeting.service.UserMeetingService;
@@ -70,8 +72,11 @@ public class MeetingController {
 
     @GetMapping("/{id}")
     public ResponseData getMeeting(@PathVariable("id") Long id) {
+        //todo 修改获取会议的加入人数的方式 ，并且把这个加入人数的方式放到service层
+        // 而且添加获取签到人数和未签到人数 ， 方式也应该放到service层
         return ResponseData.success()
-                .data(MeetingVo.fromMeeting(meetingService.getMeetingById(id)));
+                .data(MeetingVo.fromMeeting(meetingService.getMeetingById(id))
+                        .setJoinNum((int) userMeetingService.count(new QueryWrapper<UserMeeting>().eq("mid", id))));
     }
 
     @GetMapping("/")
