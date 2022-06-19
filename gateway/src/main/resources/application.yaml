@@ -7,8 +7,12 @@ spring:
         - id: meeting
           uri: lb://meeting
           predicates:
-            - Path=/meeting/*
+            - Path=/api/meeting/**
+          filters:
+            - RewritePath= /api/(?<segment>.*),/$\{segment}
         - id: auth
           uri: lb://auth
           predicates:
-            - Path=/auth/*
+            - Path=/api/auth/**
+          filters:
+            - RewritePath= /api/(?<segment>.*),/$\{segment}

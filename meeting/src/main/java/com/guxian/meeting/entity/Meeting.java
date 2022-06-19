@@ -66,6 +66,7 @@ public class Meeting implements Serializable {
     /**
      * 状态
      */
+    //0待开始 1进行中 2已结束
     private Integer state;
 
     @TableField(exist = false)

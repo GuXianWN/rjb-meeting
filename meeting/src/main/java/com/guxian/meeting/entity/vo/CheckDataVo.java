@@ -20,7 +20,6 @@ public class CheckDataVo {
     Long meetingId;
     String code;
     String faceUrl;
-
     @NotNull(message = "签到方式不能为空")
     CheckWay checkWay;
 }

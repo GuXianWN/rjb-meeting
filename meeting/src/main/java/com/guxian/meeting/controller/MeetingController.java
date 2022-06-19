@@ -86,6 +86,12 @@ public class MeetingController {
         return ResponseData.success()
                 .data(meetingService.getAll(page, size,uid));
     }
+
+    @GetMapping("/info/{id}")
+    public ResponseData getMeetingInfo(@PathVariable("id") Long id) {
+        return ResponseData.success()
+                .data(meetingService.getMeetingInfo(id));
+    }
 }
 
 

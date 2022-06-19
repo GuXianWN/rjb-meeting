@@ -64,10 +64,10 @@ class MyMeetingServiceTest {
     }
 
 
-    @Test
-    @Transactional
-    void getMeetingTest() {
-        var res = meetingService.getMeetingById(1L);
-        res.ifPresent(a -> assertEquals("test1", a.getName(), "获取会议失败"));
-    }
+//    @Test
+//    @Transactional
+//    void getMeetingTest() {
+//        var res = meetingService.getMeetingById(1L);
+//        res.ifPresent(a -> assertEquals("test1", a.getName(), "获取会议失败"));
+//    }
 }

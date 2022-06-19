@@ -2,7 +2,7 @@ package com.guxian.meeting.service;
 
 import com.guxian.meeting.entity.Meeting;
 import com.baomidou.mybatisplus.extension.service.IService;
-import lombok.Setter;
+import com.guxian.meeting.entity.MeetingInfor;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,4 +25,6 @@ public interface MeetingService extends IService<Meeting> {
     List<Meeting> getAll(int page, int size);
 
     List<Meeting> getAll(int page, int size,Long uid);
+
+    MeetingInfor getMeetingInfo(Long id);
 }
