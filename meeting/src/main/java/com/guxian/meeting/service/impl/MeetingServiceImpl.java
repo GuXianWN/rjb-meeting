@@ -1,14 +1,18 @@
 package com.guxian.meeting.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.guxian.common.RoleType;
+import com.guxian.meeting.clients.UserClient;
 import com.guxian.common.entity.UserSession;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.common.utils.JwtUtils;
-import lombok.Setter;
+import com.guxian.meeting.entity.MeetingInfor;
+import com.guxian.meeting.entity.vo.UserVo;
+import com.guxian.meeting.service.MeetingCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,23 +42,26 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
 
     @Autowired
     private JwtUtils jwtUtils;
+    @Autowired
+    private UserClient userClient;
+    @Autowired
+    private MeetingCheckService meetingCheckService;
 
     UserSession user = CurrentUserSession.getUserSession();
 
     @Override
-    public Optional<Meeting> addMeeting(Meeting meeting) {
+    public Optional<Meeting> addMeeting(Meeting meeting, Long id) {
         meeting.setCreateTime(new Date());
-        this.save(meeting.setCreateUid(CurrentUserSession.getUserSession().getUserId()));
+        this.save(meeting.setCreateUid(id));
         return Optional.ofNullable(meeting.getId() != null ? meeting : null);
     }
 
     @Override
-    public Optional<Meeting> updateMeeting(Meeting toMeeting) {
+    public Optional<Meeting> updateMeeting(Meeting toMeeting, Long uid) {
         Meeting meeting = baseMapper.selectById(toMeeting.getId());
-        var createUid = meeting.getCreateUid();
-        var currentUserId = CurrentUserSession.getUserSession().getUserId();
-        if (!currentUserId.equals(createUid)) {
-            UserSession user1 = jwtUtils.getUserForRedis(currentUserId);
+        Long createUid = meeting.getCreateUid();
+        if (!uid.equals(createUid)) {
+            UserSession user1 = jwtUtils.getUserForRedis(uid);
             if (user1.getRole() < RoleType.ROLE_ADMIN.getExplain()) {
                 throw new ServiceException(BizCodeEnum.NO_ACCESS);
             }
@@ -82,12 +89,22 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     }
 
     @Override
-    public List<Meeting> getMe(int page, int size) {
+    public List<Meeting> getAll(int page, int size, Long uid) {
         Page<Meeting> meetingPage = new Page<>(page, size);
         IPage<Meeting> iPage = baseMapper.selectPage(meetingPage,
                 new QueryWrapper<Meeting>()
-                        .eq("create_uid", CurrentUserSession.getUserSession().getUserId()));
+                        .eq("create_uid", uid));
         return iPage.getRecords();
+    }
+
+    @Override
+    public MeetingInfor getMeetingInfo(Long id) {
+        Meeting meeting = baseMapper.selectById(id);
+        MeetingInfor meetingInfor = MeetingInfor.from(meeting);
+        meetingInfor.setOwner(JSON.parseObject(JSON.toJSONString(userClient.infor(meeting.getCreateUid()).getData()), UserVo.class))
+                //获取当前会议所有的签到
+                .setAttendDetail(meetingCheckService.getCheckInList(id));
+        return meetingInfor;
     }
 }
 

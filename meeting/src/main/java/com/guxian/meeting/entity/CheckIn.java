@@ -32,9 +32,9 @@ public class CheckIn implements Serializable {
     private Long uid;
 
     /**
-     * 会议id
+     * 签到id
      */
-    private Long mid;
+    private Long cid;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

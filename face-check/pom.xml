@@ -21,6 +21,7 @@
         <dependency>
             <groupId>com.guxian</groupId>
             <artifactId>common</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -31,4 +32,6 @@
             <systemPath>${basedir}/src/main/resources/haarcascade_frontalface_alt.xml</systemPath>
         </dependency>
     </dependencies>
+
+
 </project>

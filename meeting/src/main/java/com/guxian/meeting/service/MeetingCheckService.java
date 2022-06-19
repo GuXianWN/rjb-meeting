@@ -13,4 +13,8 @@ public interface MeetingCheckService extends IService<MeetingCheck> {
 
     Optional<MeetingCheck> createMeetingCheck(MeetingCheck toMeetingCheck, String data);
 
+    MeetingCheck createMeetingCheck(MeetingCheck toMeetingCheck,Long uid);
+
+    List<CheckInfor> getCheckInList(Long id);
+//    Optional<MeetingCheck> addCheckType(MeetingCheck meetingCheck,String code);
 }

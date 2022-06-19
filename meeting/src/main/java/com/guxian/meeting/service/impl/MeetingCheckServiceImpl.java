@@ -1,12 +1,11 @@
 package com.guxian.meeting.service.impl;
 
-import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.guxian.common.CheckWay;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.redis.RedisUtils;
-import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.common.utils.SomeUtils;
 import com.guxian.meeting.entity.Meeting;
 import com.guxian.meeting.entity.MeetingCheck;
@@ -16,7 +15,6 @@ import com.guxian.meeting.service.MeetingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -28,52 +26,56 @@ import java.util.concurrent.TimeUnit;
 public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, MeetingCheck>
         implements MeetingCheckService {
 
-    private final MeetingService meetingService;
+    @Autowired
+    private MeetingService meetingService;
 
-    public MeetingCheckServiceImpl(@Autowired MeetingService meetingService) {
-        this.meetingService = meetingService;
-    }
+//    @Override
+//    public Optional<MeetingCheck> addCheckType(MeetingCheck meetingCheck, String code) {
+//        var ms = meetingCheck.getEndTime().toInstant().toEpochMilli() - Instant.now().toEpochMilli();
+//        this.save(meetingCheck);
+//        RedisUtils.ops.set(MeetingCheck.buildKey(meetingCheck.getMeetingId()),
+//                code == null ? SomeUtils.randomString(6) : code, //默认随机6位字符串 作为签到码 如果传入了签到码则使用传入的签到码
+//                ms, TimeUnit.MILLISECONDS);
+//        return Optional.of(meetingCheck);
+//    }
 
-
-    public Optional<MeetingCheck> createMeetingCheckUseCode(MeetingCheck meetingCheck, String data) {
-
-
-        RedisUtils.ops.set("meeting_check:check_code:" + meetingCheck.getId(), data != null ? SomeUtils.randomString(4) : data,
-                meetingCheck.getDuration(), TimeUnit.SECONDS);
-        return Optional.of(meetingCheck);
-    }
-
-    public Optional<MeetingCheck> createMeetingCheckUseFace(MeetingCheck toMeetingCheck, String data) {
-        RedisUtils.ops.set("meeting_check:" + toMeetingCheck.getCheckWay() + ":" + toMeetingCheck.getId(),
-                JSON.toJSONString(toMeetingCheck),
-                toMeetingCheck.getDuration(), TimeUnit.SECONDS);
-        return Optional.of(toMeetingCheck);
+    @Override
+    public Optional<MeetingCheck> createMeetingCheck(MeetingCheck toMeetingCheck, String data) {
+        return Optional.empty();
     }
 
     @Override
-    public Optional<MeetingCheck> createMeetingCheck(MeetingCheck meetingCheck, String data) {
-        Meeting meeting = meetingService.getMeetingById(meetingCheck.getMeetingId());
-        if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())) {
+    public MeetingCheck createMeetingCheck(MeetingCheck toMeetingCheck,Long uid) {
+        Meeting meeting = meetingService.getMeetingById(toMeetingCheck.getMeetingId());
+        if (!meeting.getCreateUid().equals(uid)){
             throw new ServiceException(BizCodeEnum.NO_ACCESS);
         }
+        toMeetingCheck.setBeginTime(new Date());
+        baseMapper.insert(toMeetingCheck);
+        RedisUtils.ops.set("meeting_check:"+toMeetingCheck.getCheckWay()+":"+toMeetingCheck.getId(),
+                JSONObject.toJSONString(toMeetingCheck),
+                toMeetingCheck.getDuration(), TimeUnit.SECONDS);
 
-        meetingCheck.setBeginTime(Date.from(Instant.now()));
-
-        //已经存在的会议签到，则删除原有的签到，重新创建新的签到
-        if (baseMapper.selectById(meetingCheck.getMeetingId()) != null) {
-            baseMapper.deleteById(meetingCheck.getMeetingId());
+        if (toMeetingCheck.getCheckWay()==CheckWay.CODE.getValue()){
+            RedisUtils.ops.set("meeting_check:check_code:"+toMeetingCheck.getId(), SomeUtils.randomCode(),
+                    toMeetingCheck.getDuration(), TimeUnit.SECONDS);
         }
-        baseMapper.insert(meetingCheck);
+        return toMeetingCheck;
+    }
 
+    @Override
+    public List<CheckInfor> getCheckInList(Long id) {
+        List<MeetingCheck> meetingCheckList = baseMapper.selectList(new QueryWrapper<MeetingCheck>()
+                .eq("meeting_id", id));
+        List<CheckInfor> list = new ArrayList<>();
+        meetingCheckList.forEach(v->{
+            list.add(new CheckInfor(v,null));
+        });
 
-        /**
-         * 创建签到 ,不同的签到方式，创建的签到不同
-         */
-        if (meetingCheck.getCheckWay() == CheckWay.CODE.getValue()) {
-            return createMeetingCheckUseCode(meetingCheck, data);
-        } else {
-            return createMeetingCheckUseFace(meetingCheck, data);
-        }
+        list.forEach(v->{
+            v.setCheckInList(checkInService.getCheckInList(v.getMeetingCheck().getId()));
+        });
+        return list;
     }
 }
 

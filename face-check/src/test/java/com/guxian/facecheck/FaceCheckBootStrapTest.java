@@ -1,4 +1,4 @@
-package com.guxian;
+package com.guxian.facecheck;
 
 import nu.pattern.OpenCV;
 import org.junit.jupiter.api.BeforeEach;
