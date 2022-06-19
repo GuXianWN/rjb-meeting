@@ -50,18 +50,18 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     UserSession user = CurrentUserSession.getUserSession();
 
     @Override
-    public Optional<Meeting> addMeeting(Meeting meeting, Long id) {
+    public Optional<Meeting> addMeeting(Meeting meeting) {
         meeting.setCreateTime(new Date());
-        this.save(meeting.setCreateUid(id));
+        this.save(meeting.setCreateUid(CurrentUserSession.getUserSession().getUserId()));
         return Optional.ofNullable(meeting.getId() != null ? meeting : null);
     }
 
     @Override
-    public Optional<Meeting> updateMeeting(Meeting toMeeting, Long uid) {
+    public Optional<Meeting> updateMeeting(Meeting toMeeting) {
         Meeting meeting = baseMapper.selectById(toMeeting.getId());
         Long createUid = meeting.getCreateUid();
-        if (!uid.equals(createUid)) {
-            UserSession user1 = jwtUtils.getUserForRedis(uid);
+        if (!CurrentUserSession.getUserSession().getUserId().equals(createUid)) {
+            UserSession user1 = jwtUtils.getUserForRedis(CurrentUserSession.getUserSession().getUserId());
             if (user1.getRole() < RoleType.ROLE_ADMIN.getExplain()) {
                 throw new ServiceException(BizCodeEnum.NO_ACCESS);
             }
@@ -89,11 +89,12 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     }
 
     @Override
-    public List<Meeting> getAll(int page, int size, Long uid) {
+    public List<Meeting> getMe(int page, int size) {
         Page<Meeting> meetingPage = new Page<>(page, size);
         IPage<Meeting> iPage = baseMapper.selectPage(meetingPage,
                 new QueryWrapper<Meeting>()
-                        .eq("create_uid", uid));
+                        .eq("create_uid"
+                                , CurrentUserSession.getUserSession().getUserId()));
         return iPage.getRecords();
     }
 

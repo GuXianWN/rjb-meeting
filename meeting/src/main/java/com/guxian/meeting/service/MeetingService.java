@@ -2,6 +2,7 @@ package com.guxian.meeting.service;
 
 import com.guxian.meeting.entity.Meeting;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.guxian.meeting.entity.MeetingInfor;
 import lombok.Setter;
 
 import java.util.List;
@@ -14,9 +15,9 @@ import java.util.Optional;
  */
 
 public interface MeetingService extends IService<Meeting> {
-    Optional<Meeting> addMeeting(Meeting meeting, Long id);
+    Optional<Meeting> addMeeting(Meeting meeting);
 
-    Optional<Meeting> updateMeeting(Meeting toMeeting, Long uid);
+    Optional<Meeting> updateMeeting(Meeting toMeeting);
 
     Optional<Meeting> getMeetingByName(String name);
 
