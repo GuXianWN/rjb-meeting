@@ -3,6 +3,7 @@ package com.guxian.meeting.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson2.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.guxian.common.CheckWay;
 import com.guxian.common.entity.RedisPrefix;
@@ -21,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author GuXian
@@ -79,6 +82,11 @@ public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn>
         String face = checkDataVo.getFaceUrl();
 
         return true;
+    }
+
+    @Override
+    public List<CheckIn> getCheckInList(Long checkId) {
+        return baseMapper.selectList(new QueryWrapper<CheckIn>().eq("cid", checkId));
     }
 }
 

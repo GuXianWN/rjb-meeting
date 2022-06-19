@@ -35,7 +35,4 @@ public class SomeUtils {
         }
         return null;
     }
-
-
-
 }

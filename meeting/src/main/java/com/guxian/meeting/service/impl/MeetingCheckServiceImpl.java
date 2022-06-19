@@ -1,6 +1,8 @@
 package com.guxian.meeting.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson2.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.guxian.common.CheckWay;
 import com.guxian.common.exception.BizCodeEnum;
@@ -8,8 +10,10 @@ import com.guxian.common.exception.ServiceException;
 import com.guxian.common.redis.RedisUtils;
 import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.common.utils.SomeUtils;
+import com.guxian.meeting.entity.CheckInfor;
 import com.guxian.meeting.entity.Meeting;
 import com.guxian.meeting.entity.MeetingCheck;
+import com.guxian.meeting.service.CheckInService;
 import com.guxian.meeting.service.MeetingCheckService;
 import com.guxian.meeting.mapper.MeetingCheckMapper;
 import com.guxian.meeting.service.MeetingService;
@@ -17,7 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -27,11 +33,13 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, MeetingCheck>
         implements MeetingCheckService {
-
     private final MeetingService meetingService;
+    private final CheckInService checkInService;
 
-    public MeetingCheckServiceImpl(@Autowired MeetingService meetingService) {
+    public MeetingCheckServiceImpl(@Autowired MeetingService meetingService,
+                                   @Autowired CheckInService checkInService) {
         this.meetingService = meetingService;
+        this.checkInService = checkInService;
     }
 
 
@@ -74,6 +82,21 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
         } else {
             return createMeetingCheckUseFace(meetingCheck, data);
         }
+    }
+
+    @Override
+    public List<CheckInfor> getCheckInList(Long id) {
+        List<MeetingCheck> meetingCheckList = baseMapper.selectList(new QueryWrapper<MeetingCheck>()
+                .eq("meeting_id", id));
+        List<CheckInfor> list = new ArrayList<>();
+        meetingCheckList.forEach(v -> {
+            list.add(new CheckInfor(v, null));
+        });
+
+        list.forEach(v -> {
+            v.setCheckInList(checkInService.getCheckInList(v.getMeetingCheck().getId()));
+        });
+        return list;
     }
 }
 

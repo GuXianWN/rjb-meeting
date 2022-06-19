@@ -24,7 +24,7 @@ public class ExceptionHandle {
         Map<String, String> errorMap = bindingResult.getFieldErrors().stream()
                 .collect(Collectors.toMap(FieldError::getField, DefaultMessageSourceResolvable::getDefaultMessage));
 
-        return ResponseEntity.badRequest().body(ResponseData.error(BizCodeEnum.VALID_EXCEPTION.getMsg())
+        return ResponseEntity.ok().body(ResponseData.error(BizCodeEnum.VALID_EXCEPTION.getMsg())
                 .setCode(BizCodeEnum.VALID_EXCEPTION.getCode())
                 .data(errorMap));
 
@@ -33,7 +33,7 @@ public class ExceptionHandle {
     @ExceptionHandler(ServiceException.class)
     public ResponseEntity<ResponseData> handleValidException(ServiceException e) {
         log.error("业务异常: {},类型: {}", e.getMessage(), e.getClass());
-        return ResponseEntity.badRequest().body(ResponseData.error(e.getMessage())
+        return ResponseEntity.ok().body(ResponseData.error(e.getMessage())
                 .setCode(e.getStatus()));
     }
 }

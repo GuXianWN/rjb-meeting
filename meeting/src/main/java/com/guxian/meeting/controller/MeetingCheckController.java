@@ -53,7 +53,6 @@ public class MeetingCheckController {
             //todo 无签到方式的处理
         }
 
-        String code = meetingCheck.getCode();
         String data = SomeUtils.<String>getNotNullValue(meetingCheck.getCode()
                 , meetingCheck.getFaceUrl());
         return ResponseData.success().data(meetingCheckService.createMeetingCheck(meetingCheck.toMeetingCheck(), data));

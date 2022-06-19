@@ -59,7 +59,7 @@ class MyMeetingServiceTest {
                         .setName("test1")
                         .setBeginTime(Date.from(Instant.now()))
                         .setInstruction("test213")
-                        .setEndTime(Date.from(Instant.now().minusSeconds(100L))));
+                        .setEndTime(Date.from(Instant.now().minusSeconds(100L))),1L);
 
         assertNotNull(res.orElse(null), "添加会议失败");
     }
