@@ -1,6 +1,7 @@
 package com.guxian.meeting.service.impl;
 
 import com.alibaba.fastjson2.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.guxian.common.CheckWay;
 import com.guxian.common.exception.BizCodeEnum;
@@ -8,6 +9,7 @@ import com.guxian.common.exception.ServiceException;
 import com.guxian.common.redis.RedisUtils;
 import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.common.utils.SomeUtils;
+import com.guxian.meeting.entity.CheckInfor;
 import com.guxian.meeting.entity.Meeting;
 import com.guxian.meeting.entity.MeetingCheck;
 import com.guxian.meeting.service.MeetingCheckService;
@@ -17,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
