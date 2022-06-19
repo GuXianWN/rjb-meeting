@@ -20,7 +20,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication(scanBasePackages = "com.guxian.*")
 public class FaceCheckBootStrap {
     public static void main(String[] args) {
-
-         SpringApplication.run(FaceCheckBootStrap.class, args).getBeanFactory();
+         SpringApplication.run(FaceCheckBootStrap.class, args);
     }
 }
