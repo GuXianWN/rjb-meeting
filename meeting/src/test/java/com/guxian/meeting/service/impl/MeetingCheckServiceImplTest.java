@@ -45,7 +45,7 @@ class MeetingCheckServiceImplTest {
                 endTime.getNano());
 
         // Run the test
-        final Optional<MeetingCheck> result = meetingCheckService.createMeetingCheckUseCode(meetingCheck);
+        final Optional<MeetingCheck> result = meetingCheckService.createMeetingCheck(meetingCheck,"code");
 
         // Verify the results
         assertThat(result.get().getMeetingId()).isNotNull();
