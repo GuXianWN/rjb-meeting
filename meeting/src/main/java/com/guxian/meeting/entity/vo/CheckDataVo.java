@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 /**
  * 签到时需要传递的数据
  */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
