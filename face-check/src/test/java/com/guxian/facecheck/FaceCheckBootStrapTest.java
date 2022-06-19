@@ -1,4 +1,4 @@
-package com.guxian;
+package com.guxian.facecheck;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,0 +1,29 @@
+
+### @no-log
+POST https://api.cloud.tencent.com/requesttc3
+Content-Type: application/json; charset=utf-8
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44
+cookie: qcloud_uid=1e08219cc9bc07e82f09fbfce630477c%40devS; intl_sid=17c1f906a1a4ee189; AMCV_F2C33DDA5A3918ED0A495C08%40AdobeOrg=-1891778711%7CMCIDTS%7C18912%7CMCMID%7C80112075338854320193899994734551352067%7CMCAID%7CNONE%7CMCOPTOUT-1633942327s%7CNONE%7CvVersion%7C2.4.0; pgv_pvid=2105010060; UM_distinctid=17e4a2ae3224ad-02fa4c83c3b459-59191353-14ac90-17e4a2ae323403; pgv_pvi=3594273792; _ga=GA1.2.738579607.1636866415; _ga_NM5TEZ9LY8=GS1.1.1643681844.3.0.1643681844.0; intl_language=zh; language=zh; lastLoginType=wx; web_uid=b4bfafb7-a395-443e-91d7-5781552842b9; qcmainCSRFToken=ryZ-_DArt9; qcloud_visitId=4b40d43d7314445a42355f2993db3e3d; qcloud_from=qcloud.google.seo-1655456281161; uin=o100020974377; tinyid=144115262795785717; skey=cTCLlTIH-9NkArb9bZC-l2TMkac-bzHAVIBIUkH3aNU_; loginType=wx; regionId=4; nick=%E9%9B%A8%E8%BE%B0%20%E5%96%B5; appid=1307207519; intl=1; moduleId=1307207519; opc_xsrf=089d9fbd4fc1ab95343d950b3acbff84%7C1655647496; saas_synced_session=100020974377%7CcTCLlTIH-9NkArb9bZC-l2TMkac-bzHAVIBIUkH3aNU_; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%22100020974377%22%2C%22first_id%22%3A%221e08219cc9bc07e82f09fbfce630477c%40devS%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%2C%22%24latest_referrer%22%3A%22%22%7D%2C%22%24device_id%22%3A%2217bbe4c9bbf1b0-074d89286fc836-5734174f-1098042-17bbe4c9bc0b1d%22%7D; systemTimeGap=54098; ownerUin=O100020974377G
+Product: iai
+Action: CompareFace
+Version: 2020-03-03
+Region: ap-beijing
+
+{
+  "UrlA": "https://test.image.myqcloud.com/testA.jpg",
+  "UrlB": "https://test.image.myqcloud.com/testB.jpg",
+  "FaceModelVersion": "3.0"
+}
+
+###
+# curl -X POST https://iai.tencentcloudapi.com -H "Authorization: TC3-HMAC-SHA256 Credential=AKIDf8cXycubtdHRFZTSKNjjCfNwHTZt0qYsOTSr-oyVFcIvs_Y3ghZwwvRBZQ3Iiv4N/2022-06-19/iai/tc3_request, SignedHeaders=content-type;host, Signature=d13fdab58343f4e86de3cca1eedcb839c393b59d2278c7bbbe7045de0ab16d01" -H "Content-Type: application/json" -H "Host: iai.tencentcloudapi.com" -H "X-TC-Action: CompareFace" -H "X-TC-Timestamp: 1655648999" -H "X-TC-Version: 2020-03-03" -H "X-TC-Region: ap-beijing" -H "X-TC-Language: zh-CN" -H "X-TC-Token: tXXn91FW4KIN0UkcqrgbYn5XA8KsgAUa42ad8099c1824a02e9fe4c5308acdee7A8VjOFd-C_Yaq3iiqzg0CPEvh9Jt1Euy8wPQ1Gm_6RU2XYNhoIvp2j5v2bw8h8exekulwTbO95RJy8VVrcYnRdYplDlr4rGXAfGpN6m6EGBliJOiW7blpKSgNvNYs5k2toJiU7QX97gV6CrjOV_B4DN6nRQ_ZgGD1kpD5cIqhmMqZxx0vrRiRlO65cVSV8ZoYz2sd0f5-kR4grbQd_5Qsw" -d '{"UrlA":"http://test.image.myqcloud.com/testA.jpg","UrlB":"http://test.image.myqcloud.com/testB.jpg","FaceModelVersion":"3.0"}'
+POST https://iai.tencentcloudapi.com?action=CompareFace&Action=CompareFace&UrlA=http://test.image.myqcloud.com/testA.jpg&UrlB=http://test.image.myqcloud.com/testB.jpg&FaceModelVersion=3.0
+Host: iai.tencentcloudapi.com
+X-TC-Action: CompareFace
+X-TC-Region: ap-beijing
+X-TC-Language: zh-CN
+X-TC-Token: tXXn91FW4KIN0UkcqrgbYn5XA8KsgAUa42ad8099c1824a02e9fe4c5308acdee7A8VjOFd-C_Yaq3iiqzg0CPEvh9Jt1Euy8wPQ1Gm_6RU2XYNhoIvp2j5v2bw8h8exekulwTbO95RJy8VVrcYnRdYplDlr4rGXAfGpN6m6EGBliJOiW7blpKSgNvNYs5k2toJiU7QX97gV6CrjOV_B4DN6nRQ_ZgGD1kpD5cIqhmMqZxx0vrRiRlO65cVSV8ZoYz2sd0f5-kR4grbQd_5Qsw
+Content-Type: application/json;
+Action: CompareFace
+action: CompareFace
+Version: 2020-03-03

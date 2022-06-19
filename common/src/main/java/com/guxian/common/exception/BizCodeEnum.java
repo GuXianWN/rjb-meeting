@@ -39,9 +39,5 @@ public enum BizCodeEnum {
         this.code = code;
         this.msg = msg;
     }
-
-    BizCodeEnum(String msg) {
-        this.msg = msg;
-    }
 }
 
