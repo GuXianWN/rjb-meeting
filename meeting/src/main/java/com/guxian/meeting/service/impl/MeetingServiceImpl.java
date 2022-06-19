@@ -14,15 +14,20 @@ import com.guxian.meeting.entity.MeetingInfor;
 import com.guxian.meeting.entity.vo.UserVo;
 import com.guxian.meeting.service.MeetingCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.guxian.meeting.entity.Meeting;
 import com.guxian.meeting.service.MeetingService;
 import com.guxian.meeting.mapper.MeetingMapper;
+import org.apache.ibatis.reflection.wrapper.BaseWrapper;
+import org.apache.ibatis.reflection.wrapper.BeanWrapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**

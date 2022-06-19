@@ -1,26 +1,22 @@
 package com.guxian.meeting.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.guxian.common.CheckWay;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.redis.RedisUtils;
 import com.guxian.common.utils.SomeUtils;
-import com.guxian.meeting.entity.CheckInfor;
 import com.guxian.meeting.entity.Meeting;
 import com.guxian.meeting.entity.MeetingCheck;
-import com.guxian.meeting.service.CheckInService;
 import com.guxian.meeting.service.MeetingCheckService;
 import com.guxian.meeting.mapper.MeetingCheckMapper;
 import com.guxian.meeting.service.MeetingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -32,8 +28,6 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
 
     @Autowired
     private MeetingService meetingService;
-    @Autowired
-    private CheckInService checkInService;
 
 //    @Override
 //    public Optional<MeetingCheck> addCheckType(MeetingCheck meetingCheck, String code) {
@@ -44,6 +38,11 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
 //                ms, TimeUnit.MILLISECONDS);
 //        return Optional.of(meetingCheck);
 //    }
+
+    @Override
+    public Optional<MeetingCheck> createMeetingCheck(MeetingCheck toMeetingCheck, String data) {
+        return Optional.empty();
+    }
 
     @Override
     public MeetingCheck createMeetingCheck(MeetingCheck toMeetingCheck,Long uid) {

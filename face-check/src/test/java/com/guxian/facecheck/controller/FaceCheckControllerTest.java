@@ -1,5 +1,6 @@
 package com.guxian.facecheck.controller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @ExtendWith(SpringExtension.class)
@@ -19,6 +21,12 @@ class FaceCheckControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+
+    @BeforeEach
+    void setUp() {
+
+    }
 
     @Test
     void testCheck() throws Exception {
@@ -39,6 +47,20 @@ class FaceCheckControllerTest {
         // Setup
         // Run the test
         final MockHttpServletResponse response = mockMvc.perform(post("/face-check/upload")
+                        .param("url", "url")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+
+        // Verify the results
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getContentAsString()).isEqualTo("expectedResponse");
+    }
+
+    @Test
+    void testTest() throws Exception {
+        // Setup
+        // Run the test
+        final MockHttpServletResponse response = mockMvc.perform(get("/face-check/test")
                         .param("url", "url")
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();

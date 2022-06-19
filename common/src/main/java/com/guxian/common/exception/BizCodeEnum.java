@@ -21,6 +21,7 @@ public enum BizCodeEnum {
     CHECK_IN_CODE_ERROR(12002, "签到码错误"),
 
 
+
     USER_EXIST_EXCEPTION(15001, "用户已存在"),
     PHONE_EXIST_EXCEPTION(15002, "手机号已存在"),
     LOGIN_ACCOUNT_PASSWORD_EXCEPTION(15003, "账号或密码错误"),

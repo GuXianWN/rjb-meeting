@@ -52,18 +52,18 @@ class MeetingCheckServiceImplTest {
     @Test
     @Transactional
     void testAddCheckType() {
-//        Instant beginTime = Instant.now();
-//        Instant endTime = Instant.now().plusSeconds(1000);
-//        // Setup
-//        final MeetingCheck meetingCheck = new MeetingCheck(null, 0L, 0,
-//                Date.from(beginTime),
-//                Date.from(endTime));
-//
-//        // Run the test
-//        final Optional<MeetingCheck> result = meetingCheckService.addCheckType(meetingCheck);
-//
-//        // Verify the results
-//        assertThat(result.get().getMeetingId()).isNotNull();
+        Instant beginTime = Instant.now();
+        Instant endTime = Instant.now().plusSeconds(1000);
+        // Setup
+        final MeetingCheck meetingCheck = new MeetingCheck(null, 0L, 0,
+                Date.from(beginTime),
+                endTime.getNano());
+
+        // Run the test
+        final Optional<MeetingCheck> result = meetingCheckService.createMeetingCheck(meetingCheck,"code");
+
+        // Verify the results
+        assertThat(result.get().getMeetingId()).isNotNull();
 
     }
 }

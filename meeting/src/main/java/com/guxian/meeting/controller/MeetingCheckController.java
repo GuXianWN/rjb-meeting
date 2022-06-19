@@ -1,7 +1,9 @@
 package com.guxian.meeting.controller;
 
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.guxian.common.entity.ResponseData;
 import com.guxian.common.utils.JwtUtils;
+import com.guxian.common.utils.SomeUtils;
 import com.guxian.common.valid.AddGroup;
 import com.guxian.common.valid.UpdateGroup;
 import com.guxian.meeting.entity.vo.MeetingCheckVo;
@@ -10,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -44,15 +45,23 @@ public class MeetingCheckController {
      * @param meetingCheck
      * @return
      */
+
     @PostMapping("/")
-    public ResponseData createMeetingCheck(@RequestBody @Validated(AddGroup.class) MeetingCheckVo meetingCheck, HttpServletRequest httpServletRequest) {
-//        return ResponseData.success(meetingCheckService.addCheckType(meetingCheck.toMeetingCheck(), code));
-        Long uid = jwtUtils.getUid(httpServletRequest);
-        return ResponseData.success().data(meetingCheckService.createMeetingCheck(meetingCheck.toMeetingCheck(), uid));
+    public ResponseData createMeetingCheck(@RequestBody @Validated(AddGroup.class) MeetingCheckVo meetingCheck) {
+        if (SomeUtils.getNotNullValue(meetingCheck.getCode()
+                , meetingCheck.getFaceUrl()) == null) {
+            //todo 无签到方式的处理
+        }
+
+        String code = meetingCheck.getCode();
+        String data = SomeUtils.<String>getNotNullValue(meetingCheck.getCode()
+                , meetingCheck.getFaceUrl());
+        return ResponseData.success().data(meetingCheckService.createMeetingCheck(meetingCheck.toMeetingCheck(), data));
     }
 
     /**
      * 签到码签到
+     *
      * @param id
      * @param meetingCheck
      * @return
