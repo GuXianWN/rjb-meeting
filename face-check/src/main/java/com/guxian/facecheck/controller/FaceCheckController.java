@@ -4,6 +4,7 @@ import com.guxian.common.entity.ResponseData;
 import com.guxian.facecheck.service.FaceCheckService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,5 +27,9 @@ public class FaceCheckController {
         var check = faceCheckService.upload(url);
         return ResponseData.is(check);
     }
-
+//    test
+    @GetMapping("/test")
+    public ResponseData test(String url) {
+        return ResponseData.success(url);
+    }
 }
