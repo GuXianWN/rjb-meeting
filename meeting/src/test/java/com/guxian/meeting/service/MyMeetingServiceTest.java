@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -58,7 +59,7 @@ class MyMeetingServiceTest {
                         .setName("test1")
                         .setBeginTime(Date.from(Instant.now()))
                         .setInstruction("test213")
-                        .setEndTime(Date.from(Instant.now().minusSeconds(100L))),1L);
+                        .setEndTime(Date.from(Instant.now().minusSeconds(100L))), 1L);
 
         assertNotNull(res.orElse(null), "添加会议失败");
     }
@@ -67,7 +68,7 @@ class MyMeetingServiceTest {
     @Test
     @Transactional
     void getMeetingTest() {
-        var res = meetingService.getMeetingById(1L);
+        var res = Optional.ofNullable(meetingService.getMeetingById(1L));
         res.ifPresent(a -> assertEquals("test1", a.getName(), "获取会议失败"));
     }
 }

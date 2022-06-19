@@ -8,6 +8,8 @@ import com.guxian.common.valid.AddGroup;
 import com.guxian.common.valid.UpdateGroup;
 import com.guxian.meeting.entity.vo.MeetingVo;
 import com.guxian.meeting.service.MeetingService;
+import com.guxian.meeting.service.UserMeetingService;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +22,25 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/meeting")
 public class MeetingController {
-    @Autowired
-    private JwtUtils jwtUtils;
-    private MeetingService meetingService;
+    /**
+     * JWT工具类
+     */
+    private final JwtUtils jwtUtils;
+    /**
+     * 会议服务类
+     */
+    private final MeetingService meetingService;
+    /**
+     * 用户与会议<strong style="color:red">关系</strong>服务类
+     **/
+    private final UserMeetingService userMeetingService;
 
-    public MeetingController(@Autowired MeetingService meetingService) {
+    public MeetingController(@Autowired MeetingService meetingService
+            , @Autowired JwtUtils jwtUtils
+            , @Autowired UserMeetingService userMeetingService) {
         this.meetingService = meetingService;
+        this.jwtUtils = jwtUtils;
+        this.userMeetingService = userMeetingService;
     }
 
     /**
@@ -42,18 +57,12 @@ public class MeetingController {
                         .orElseThrow(() -> new ServiceException(BizCodeEnum.CREATE_MEETING_FAILED)));
     }
 
-    @PostMapping("/test2")
-    public ResponseData test2() {
-        return ResponseData.success("1", "2");
-    }
-
-
     @PatchMapping("/")
     public ResponseData updateMeeting(@RequestBody @Validated(UpdateGroup.class) MeetingVo meeting, HttpServletRequest request) {
         Long uid = jwtUtils.getUid(request);
         return ResponseData.success()
                 .data(
-                        meetingService.updateMeeting(meeting.toMeeting(),uid)
+                        meetingService.updateMeeting(meeting.toMeeting(), uid)
                                 .orElseThrow(() -> new ServiceException(BizCodeEnum.UPDATE_MEETING_FAILED)));
     }
 
@@ -65,7 +74,7 @@ public class MeetingController {
     @GetMapping("/{id}")
     public ResponseData getMeeting(@PathVariable("id") Long id) {
         return ResponseData.success()
-                .data(meetingService.getMeetingById(id));
+                .data(MeetingVo.fromMeeting(meetingService.getMeetingById(id)));
     }
 
     @GetMapping("/")
@@ -81,10 +90,10 @@ public class MeetingController {
     }
 
     @GetMapping("/list/me")
-    public ResponseData getMeetingListForMe(int page, int size,HttpServletRequest request) {
+    public ResponseData getMeetingListForMe(int page, int size, HttpServletRequest request) {
         Long uid = jwtUtils.getUid(request);
         return ResponseData.success()
-                .data(meetingService.getAll(page, size,uid));
+                .data(meetingService.getAll(page, size, uid));
     }
 }
 

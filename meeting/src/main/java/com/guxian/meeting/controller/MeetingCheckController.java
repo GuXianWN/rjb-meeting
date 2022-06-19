@@ -46,8 +46,8 @@ public class MeetingCheckController {
      */
     @PostMapping("/")
     public ResponseData createMeetingCheck(@RequestBody @Validated(AddGroup.class) MeetingCheckVo meetingCheck, HttpServletRequest httpServletRequest) {
-//        return ResponseData.success(meetingCheckService.addCheckType(meetingCheck.toMeetingCheck(), code));
         Long uid = jwtUtils.getUid(httpServletRequest);
+//        return ResponseData.success(meetingCheckService.addCheckType(meetingCheck.toMeetingCheck(), code));
         return ResponseData.success().data(meetingCheckService.createMeetingCheck(meetingCheck.toMeetingCheck(), uid));
     }
 

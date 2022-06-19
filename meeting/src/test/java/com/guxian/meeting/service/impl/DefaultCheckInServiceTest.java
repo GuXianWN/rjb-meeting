@@ -56,7 +56,7 @@ class DefaultCheckInServiceTest {
     @Transactional
     void testCheckInUseCodeWillReturnTrue() {
 
-        var code=SomeUtils.randomString(6);
+        var code = SomeUtils.randomString(6);
 
         // Setup
         final CheckDataVo checkDataVo = new CheckDataVo(0L, code, null, CheckWay.CODE);
@@ -68,21 +68,20 @@ class DefaultCheckInServiceTest {
 
         final MeetingCheck meetingCheck = new MeetingCheck(0L, 0L, 0,
                 Date.from(beginTime),
-                Date.from(endTime));
+                endTime.getNano());
 
         // Run the test
-        final Optional<MeetingCheck> result = meetingCheckService.addCheckType(meetingCheck,code);
+        final Optional<MeetingCheck> result = meetingCheckService.addCheckType(meetingCheck, code);
 
         // Verify the results
         assertThat(result.get().getMeetingId()).isNotNull();
-
 
 
         // Run the test
         final boolean result2 = defaultCheckInServiceUnderTest.checkInUseCode(checkDataVo.setCode(code).setMeetingId(result.get().getMeetingId()));
 
 
-        log.info("result2:{} and checkDataVo code is {}",result2,checkDataVo.getCode());
+        log.info("result2:{} and checkDataVo code is {}", result2, checkDataVo.getCode());
         // Verify the results
         assertThat(result2).isTrue();
     }

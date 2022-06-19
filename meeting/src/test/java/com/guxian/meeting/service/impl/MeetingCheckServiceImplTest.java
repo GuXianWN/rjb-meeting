@@ -41,7 +41,6 @@ class MeetingCheckServiceImplTest {
     private MeetingCheckServiceImpl meetingCheckService;
 
 
-
     @BeforeEach
     void setUp() {
         RedisUtils.ops = new RedisTemplateConfigurer().redisTemplateForStringObject(this.redisConnectionFactory).opsForValue();
@@ -57,7 +56,7 @@ class MeetingCheckServiceImplTest {
         // Setup
         final MeetingCheck meetingCheck = new MeetingCheck(null, 0L, 0,
                 Date.from(beginTime),
-                Date.from(endTime));
+                endTime.getNano());
 
         // Run the test
         final Optional<MeetingCheck> result = meetingCheckService.addCheckType(meetingCheck);

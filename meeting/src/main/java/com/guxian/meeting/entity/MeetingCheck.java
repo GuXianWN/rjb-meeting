@@ -58,6 +58,6 @@ public class MeetingCheck implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public static String buildKey(Long meetingId) {
-        return RedisPrefix.CHECK_IN_CODE_PREFIX + "-" + meetingId;
+        return RedisPrefix.CHECK_IN_CODE_PREFIX  + meetingId;
     }
 }
