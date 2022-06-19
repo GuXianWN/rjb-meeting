@@ -1,7 +1,6 @@
 package com.guxian.meeting.service.impl;
 
 import com.guxian.common.entity.UserSession;
-import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.meeting.entity.Meeting;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import javax.xml.crypto.Data;
 import java.time.Instant;
 import java.util.*;
 
@@ -51,7 +49,7 @@ class MeetingServiceImplTest {
         when(meetingServiceImplUnderTest.user.getUserId()).thenReturn(0L);
 
         // Run the test
-        final Optional<Meeting> result = meetingServiceImplUnderTest.addMeeting(meeting,1L);
+        final Optional<Meeting> result = meetingServiceImplUnderTest.addMeeting(meeting);
 
         // Verify the results
         assertThat(result).isEqualTo(expectedResult);
@@ -70,7 +68,7 @@ class MeetingServiceImplTest {
                         new GregorianCalendar(2020, Calendar.JANUARY, 1).getTime(), 0));
 
         // Run the test
-        final Optional<Meeting> result = meetingServiceImplUnderTest.updateMeeting(toMeeting,1L);
+        final Optional<Meeting> result = meetingServiceImplUnderTest.updateMeeting(toMeeting);
 
         // Verify the results
         assertThat(result).isEqualTo(expectedResult);

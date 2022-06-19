@@ -27,6 +27,9 @@ public class MeetingVo {
     @NotBlank(message = "会议名称不能为空白", groups = {AddGroup.class, UpdateGroup.class})
     private String name;
 
+    /**
+     *  会议说明
+     */
     private String explain;
 
 
@@ -46,8 +49,10 @@ public class MeetingVo {
     private Integer state;
 
 
+    /**
+     * 参加会议的人数
+     */
     private Integer joinNum;
-
 
     public Meeting toMeeting() {
         return new Meeting()
