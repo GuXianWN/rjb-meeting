@@ -41,8 +41,19 @@ public class MeetingCheckVo implements Serializable {
     @NotNull(message = "持续时间不能为空", groups = {UpdateGroup.class, AddGroup.class})
     private Integer duration;
 
+
+    /**
+     * 如果使用CheckWay.CODE，则需要传入code
+     */
+    private String code;
+
+    /**
+     * 如果使用CheckWay.FACE，则需要传入face的url
+     */
+    private String faceUrl;
+
     public MeetingCheck toMeetingCheck() {
-        return  new MeetingCheck()
+        return new MeetingCheck()
                 .setMeetingId(this.id)
                 .setCheckWay(this.checkWay.getValue())
                 .setDuration(duration);

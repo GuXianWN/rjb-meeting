@@ -10,8 +10,6 @@ import com.guxian.meeting.entity.vo.CheckDataVo;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -23,7 +21,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Log4j2
@@ -71,7 +68,7 @@ class DefaultCheckInServiceTest {
                 endTime.getNano());
 
         // Run the test
-        final Optional<MeetingCheck> result = meetingCheckService.addCheckType(meetingCheck, code);
+        final Optional<MeetingCheck> result = meetingCheckService.createMeetingCheckUseCode(meetingCheck, code);
 
         // Verify the results
         assertThat(result.get().getMeetingId()).isNotNull();

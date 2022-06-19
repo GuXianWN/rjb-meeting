@@ -1,12 +1,12 @@
 package com.guxian.meeting.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.guxian.common.CheckWay;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.redis.RedisUtils;
+import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.common.utils.SomeUtils;
 import com.guxian.meeting.entity.Meeting;
 import com.guxian.meeting.entity.MeetingCheck;
@@ -34,37 +34,46 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
         this.meetingService = meetingService;
     }
 
-    @Override
-    public Optional<MeetingCheck> addCheckType(MeetingCheck meetingCheck, String code) {
-        var seconds = meetingCheck.getDuration();
-        this.save(meetingCheck);
-        RedisUtils.ops.set(MeetingCheck.buildKey(meetingCheck.getMeetingId()),
-                code == null ? SomeUtils.randomString(6) : code, //默认随机6位字符串 作为签到码 如果传入了签到码则使用传入的签到码
-                seconds, TimeUnit.MILLISECONDS);
+
+    public Optional<MeetingCheck> createMeetingCheckUseCode(MeetingCheck meetingCheck, String data) {
+
+
+        RedisUtils.ops.set("meeting_check:check_code:" + meetingCheck.getId(), data != null ? SomeUtils.randomString(4) : data,
+                meetingCheck.getDuration(), TimeUnit.SECONDS);
         return Optional.of(meetingCheck);
     }
 
-    public Optional<MeetingCheck> addCheckType(MeetingCheck meetingCheck) {
-        return addCheckType(meetingCheck, null);
-    }
-
-    @Override
-    public MeetingCheck createMeetingCheck(MeetingCheck toMeetingCheck, Long uid) {
-        Meeting meeting = meetingService.getMeetingById(toMeetingCheck.getMeetingId());
-        if (!meeting.getCreateUid().equals(uid)) {
-            throw new ServiceException(BizCodeEnum.NO_ACCESS);
-        }
-        toMeetingCheck.setBeginTime(new Date());
-        baseMapper.insert(toMeetingCheck);
+    public Optional<MeetingCheck> createMeetingCheckUseFace(MeetingCheck toMeetingCheck, String data) {
         RedisUtils.ops.set("meeting_check:" + toMeetingCheck.getCheckWay() + ":" + toMeetingCheck.getId(),
                 JSON.toJSONString(toMeetingCheck),
                 toMeetingCheck.getDuration(), TimeUnit.SECONDS);
+        return Optional.of(toMeetingCheck);
+    }
 
-        if (toMeetingCheck.getCheckWay() == CheckWay.CODE.getValue()) {
-            RedisUtils.ops.set("meeting_check:check_code:" + toMeetingCheck.getId(), SomeUtils.randomCode(),
-                    toMeetingCheck.getDuration(), TimeUnit.SECONDS);
+    @Override
+    public Optional<MeetingCheck> createMeetingCheck(MeetingCheck meetingCheck, String data) {
+        Meeting meeting = meetingService.getMeetingById(meetingCheck.getMeetingId());
+        if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())) {
+            throw new ServiceException(BizCodeEnum.NO_ACCESS);
         }
-        return toMeetingCheck;
+
+        meetingCheck.setBeginTime(Date.from(Instant.now()));
+
+        //已经存在的会议签到，则删除原有的签到，重新创建新的签到
+        if (baseMapper.selectById(meetingCheck.getMeetingId()) != null) {
+            baseMapper.deleteById(meetingCheck.getMeetingId());
+        }
+        baseMapper.insert(meetingCheck);
+
+
+        /**
+         * 创建签到 ,不同的签到方式，创建的签到不同
+         */
+        if (meetingCheck.getCheckWay() == CheckWay.CODE.getValue()) {
+            return createMeetingCheckUseCode(meetingCheck, data);
+        } else {
+            return createMeetingCheckUseFace(meetingCheck, data);
+        }
     }
 }
 
