@@ -48,9 +48,9 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     UserSession user = CurrentUserSession.getUserSession();
 
     @Override
-    public Optional<Meeting> addMeeting(Meeting meeting) {
+    public Optional<Meeting> addMeeting(Meeting meeting,Long uid) {
         meeting.setCreateTime(new Date());
-        this.save(meeting.setCreateUid(CurrentUserSession.getUserSession().getUserId()));
+        this.save(meeting.setCreateUid(uid));
         return Optional.ofNullable(meeting.getId() != null ? meeting : null);
     }
 

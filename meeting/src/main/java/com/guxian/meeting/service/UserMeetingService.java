@@ -17,5 +17,7 @@ public interface UserMeetingService extends IService<UserMeeting> {
 
     void checkIn(Long meetingId, CheckWay way);
 
-    List<UserMeeting> getUserMeetingList(Long uid);
+    int removeUserByMeeting(Long mid, Long uid);
+
+    List<UserMeeting> getUserByMeeting(Long mid);
 }

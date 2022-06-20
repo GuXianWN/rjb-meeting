@@ -49,7 +49,7 @@ class MeetingServiceImplTest {
         when(meetingServiceImplUnderTest.user.getUserId()).thenReturn(0L);
 
         // Run the test
-        final Optional<Meeting> result = meetingServiceImplUnderTest.addMeeting(meeting);
+        final Optional<Meeting> result = meetingServiceImplUnderTest.addMeeting(meeting,1L);
 
         // Verify the results
         assertThat(result).isEqualTo(expectedResult);

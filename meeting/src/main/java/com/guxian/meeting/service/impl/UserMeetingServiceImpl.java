@@ -1,5 +1,6 @@
 package com.guxian.meeting.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.guxian.common.CheckWay;
@@ -50,9 +51,16 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
     }
 
     @Override
-    public List<UserMeeting> getUserMeetingList(Long uid) {
-        return baseMapper.selectList(new QueryWrapper<UserMeeting>()
-                .eq("uid", uid));
+    public int removeUserByMeeting(Long mid, Long uid) {
+        return baseMapper.delete(new LambdaQueryWrapper<>(new UserMeeting()
+                .setMid(mid)
+                .setUid(uid)));
+    }
+
+    @Override
+    public List<UserMeeting> getUserByMeeting(Long mid) {
+        return baseMapper.selectList(new LambdaQueryWrapper<>(new UserMeeting()
+                .setMid(mid)));
     }
 }
 

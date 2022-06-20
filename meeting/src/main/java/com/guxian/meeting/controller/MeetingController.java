@@ -53,9 +53,10 @@ public class MeetingController {
      */
 
     @PostMapping
-    public ResponseData createMeeting(@RequestBody @Validated(AddGroup.class) MeetingVo meeting) {
+    public ResponseData createMeeting(@RequestBody @Validated(AddGroup.class) MeetingVo meeting,HttpServletRequest request) {
+        Long uid = jwtUtils.getUid(request);
         return ResponseData.success()
-                .data(meetingService.addMeeting(meeting.toMeeting())
+                .data(meetingService.addMeeting(meeting.toMeeting(),uid)
                         .orElseThrow(() -> new ServiceException(BizCodeEnum.CREATE_MEETING_FAILED)));
     }
 
@@ -109,15 +110,6 @@ public class MeetingController {
         Long uid = jwtUtils.getUid(request);
         return ResponseData.success()
                 .data(meetingService.getMe(page, size,uid));
-    }
-
-    /**
-     * 加入会议的用户
-     */
-    @GetMapping("/user/list")
-    public ResponseData getUserList(Long id) {
-        return ResponseData.success()
-                .data(userMeetingService.getUserMeetingList(id));
     }
 }
 

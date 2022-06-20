@@ -16,7 +16,7 @@ import java.util.Optional;
  */
 
 public interface MeetingService extends IService<Meeting> {
-    Optional<Meeting> addMeeting(Meeting meeting);
+    Optional<Meeting> addMeeting(Meeting meeting,Long uid);
 
     Optional<Meeting> updateMeeting(Meeting toMeeting);
 
