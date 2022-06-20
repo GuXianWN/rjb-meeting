@@ -1,6 +1,7 @@
 package com.guxian.common.utils;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class SomeUtils {
@@ -34,5 +35,10 @@ public class SomeUtils {
             }
         }
         return null;
+    }
+
+
+    public static String getResource(String path) {
+        return Objects.requireNonNull(SomeUtils.class.getClassLoader().getResource(path)).getPath();
     }
 }
