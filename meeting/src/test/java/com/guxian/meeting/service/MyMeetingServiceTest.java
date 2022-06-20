@@ -52,7 +52,7 @@ class MyMeetingServiceTest {
     void addMeetingTest() {
         var currentUserSession = Mockito.mock(CurrentUserSession.class);
 
-        Mockito.when(currentUserSession.getUserSession())
+        Mockito.when(CurrentUserSession.getUserSession())
                 .thenReturn(new UserSession().setUserId(1L));
         var res = meetingService.addMeeting(
                 new Meeting()
