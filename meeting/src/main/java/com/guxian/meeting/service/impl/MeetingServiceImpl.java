@@ -1,9 +1,11 @@
 package com.guxian.meeting.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.guxian.common.RoleType;
+import com.guxian.common.entity.PageData;
 import com.guxian.common.entity.UserSession;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
@@ -79,19 +81,18 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     }
 
     @Override
-    public List<Meeting> getAll(int page, int size) {
+    public PageData getAll(Long page, Long size) {
         Page<Meeting> meetingPage = new Page<>(page, size);
         IPage<Meeting> iPage = baseMapper.selectPage(meetingPage, new QueryWrapper<Meeting>());
-        return iPage.getRecords();
+        return new PageData(page, size, iPage.getTotal(), iPage.getRecords());
     }
 
     @Override
-    public List<Meeting> getMe(int page, int size) {
+    public PageData getMe(Long page, Long size, Long uid) {
         Page<Meeting> meetingPage = new Page<>(page, size);
         IPage<Meeting> iPage = baseMapper.selectPage(meetingPage,
-                new QueryWrapper<Meeting>()
-                        .eq("create_uid", CurrentUserSession.getUserSession().getUserId()));
-        return iPage.getRecords();
+                new LambdaQueryWrapper<Meeting>().eq(Meeting::getCreateUid, uid));
+        return new PageData(page, size, iPage.getTotal(), iPage.getRecords());
     }
 
     @Override
@@ -105,11 +106,6 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
                 //获取当前会议所有的签到
                 .setAttendDetail(meetingCheckService.getCheckInList(id));
         return meetingInfor;
-    }
-
-    @Override
-    public List<Meeting> getAll(int page, int size, Long uid) {
-        return null;
     }
 }
 

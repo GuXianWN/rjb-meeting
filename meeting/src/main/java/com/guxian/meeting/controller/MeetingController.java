@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 对会议的操作
  */
@@ -97,15 +99,16 @@ public class MeetingController {
     }
 
     @GetMapping("/list")
-    public ResponseData getMeetingList(int page, int size) {
+    public ResponseData getMeetingList(Long page, Long size) {
         return ResponseData.success()
                 .data(meetingService.getAll(page, size));
     }
 
     @GetMapping("/list/me")
-    public ResponseData getMeetingListForMe(int page, int size) {
+    public ResponseData getMeetingListForMe(Long page, Long size, HttpServletRequest request) {
+        Long uid = jwtUtils.getUid(request);
         return ResponseData.success()
-                .data(meetingService.getMe(page, size));
+                .data(meetingService.getMe(page, size,uid));
     }
 
     /**
