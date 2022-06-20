@@ -1,5 +1,6 @@
 package com.guxian.meeting.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.guxian.common.CheckWay;
 import com.guxian.common.UserCheckInStatus;
@@ -11,6 +12,7 @@ import com.guxian.meeting.entity.UserMeeting;
 import com.guxian.meeting.service.UserMeetingService;
 import com.guxian.meeting.mapper.UserMeetingMapper;
 import lombok.Setter;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +47,12 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
                 .setMid(meetingId)
                 .setJoinTime(Date.from(Instant.now()))
                 .setUid(CurrentUserSession.getUserSession().getUserId()));
+    }
+
+    @Override
+    public List<UserMeeting> getUserMeetingList(Long uid) {
+        return baseMapper.selectList(new QueryWrapper<UserMeeting>()
+                .eq("uid", uid));
     }
 }
 

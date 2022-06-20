@@ -1,28 +1,26 @@
 package com.guxian.meeting.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.guxian.common.RoleType;
-import com.guxian.meeting.clients.UserClient;
+import com.guxian.common.entity.PageData;
 import com.guxian.common.entity.UserSession;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.common.utils.JwtUtils;
+import com.guxian.meeting.clients.UserClient;
 import com.guxian.meeting.entity.MeetingInfor;
 import com.guxian.meeting.entity.vo.UserVo;
 import com.guxian.meeting.service.MeetingCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.guxian.meeting.entity.Meeting;
 import com.guxian.meeting.service.MeetingService;
 import com.guxian.meeting.mapper.MeetingMapper;
-import org.apache.ibatis.reflection.wrapper.BaseWrapper;
-import org.apache.ibatis.reflection.wrapper.BeanWrapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -36,15 +34,16 @@ import java.util.Optional;
  * @createDate 2022-05-31 21:08:48
  */
 @Service
+
 public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
         implements MeetingService {
 
     @Autowired
     private JwtUtils jwtUtils;
     @Autowired
-    private UserClient userClient;
+    private MeetingCheckService meetingCheckService;
     @Autowired
-    private MeetingCheckServiceImpl meetingCheckService;
+    private UserClient userClient;
 
     UserSession user = CurrentUserSession.getUserSession();
 
@@ -58,9 +57,10 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     @Override
     public Optional<Meeting> updateMeeting(Meeting toMeeting) {
         Meeting meeting = baseMapper.selectById(toMeeting.getId());
-        Long createUid = meeting.getCreateUid();
-        if (!CurrentUserSession.getUserSession().getUserId().equals(createUid)) {
-            UserSession user1 = jwtUtils.getUserForRedis(CurrentUserSession.getUserSession().getUserId());
+        var createUid = meeting.getCreateUid();
+        var currentUserId = CurrentUserSession.getUserSession().getUserId();
+        if (!currentUserId.equals(createUid)) {
+            UserSession user1 = jwtUtils.getUserForRedis(currentUserId);
             if (user1.getRole() < RoleType.ROLE_ADMIN.getExplain()) {
                 throw new ServiceException(BizCodeEnum.NO_ACCESS);
             }
@@ -81,25 +81,26 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     }
 
     @Override
-    public List<Meeting> getAll(int page, int size) {
+    public PageData getAll(Long page, Long size) {
         Page<Meeting> meetingPage = new Page<>(page, size);
         IPage<Meeting> iPage = baseMapper.selectPage(meetingPage, new QueryWrapper<Meeting>());
-        return iPage.getRecords();
+        return new PageData(page, size, iPage.getTotal(), iPage.getRecords());
     }
 
     @Override
-    public List<Meeting> getMe(int page, int size) {
+    public PageData getMe(Long page, Long size, Long uid) {
         Page<Meeting> meetingPage = new Page<>(page, size);
         IPage<Meeting> iPage = baseMapper.selectPage(meetingPage,
-                new QueryWrapper<Meeting>()
-                        .eq("create_uid"
-                                , CurrentUserSession.getUserSession().getUserId()));
-        return iPage.getRecords();
+                new LambdaQueryWrapper<Meeting>().eq(Meeting::getCreateUid, uid));
+        return new PageData(page, size, iPage.getTotal(), iPage.getRecords());
     }
 
     @Override
     public MeetingInfor getMeetingInfo(Long id) {
         Meeting meeting = baseMapper.selectById(id);
+        if (meeting == null) {
+            throw new ServiceException(BizCodeEnum.MEETING_NOT_EXIST);
+        }
         MeetingInfor meetingInfor = MeetingInfor.from(meeting);
         meetingInfor.setOwner(JSON.parseObject(JSON.toJSONString(userClient.infor(meeting.getCreateUid()).getData()), UserVo.class))
                 //获取当前会议所有的签到

@@ -1,9 +1,10 @@
 package com.guxian.meeting.service;
 
+import com.guxian.common.entity.PageData;
 import com.guxian.meeting.entity.Meeting;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.guxian.meeting.entity.MeetingInfor;
-import lombok.Setter;
+import com.guxian.meeting.entity.vo.UserVo;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,9 +24,9 @@ public interface MeetingService extends IService<Meeting> {
 
     Meeting getMeetingById(Long id);
 
-    List<Meeting> getAll(int page, int size);
+    PageData getAll(Long page, Long size); // 获取所有会议
+
+    PageData getMe(Long page, Long size, Long uid); // 获取我参加的会议
 
     MeetingInfor getMeetingInfo(Long id);
-
-    List<Meeting> getMe(int page, int size);
 }
