@@ -36,7 +36,6 @@ import java.util.Optional;
  * @createDate 2022-05-31 21:08:48
  */
 @Service
-
 public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
         implements MeetingService {
 
@@ -45,7 +44,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     @Autowired
     private UserClient userClient;
     @Autowired
-    private MeetingCheckService meetingCheckService;
+    private MeetingCheckServiceImpl meetingCheckService;
 
     UserSession user = CurrentUserSession.getUserSession();
 

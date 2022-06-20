@@ -33,14 +33,10 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, MeetingCheck>
         implements MeetingCheckService {
-    private final MeetingService meetingService;
-    private final CheckInService checkInService;
-
-    public MeetingCheckServiceImpl(@Autowired MeetingService meetingService,
-                                   @Autowired CheckInService checkInService) {
-        this.meetingService = meetingService;
-        this.checkInService = checkInService;
-    }
+    @Autowired
+    private MeetingService meetingService;
+    @Autowired
+    private CheckInService checkInService;
 
 
     public Optional<MeetingCheck> createMeetingCheckUseCode(MeetingCheck meetingCheck, String data) {
