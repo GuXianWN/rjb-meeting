@@ -5,6 +5,7 @@ import com.guxian.auth.entity.dto.UserDTO;
 import com.guxian.auth.service.UserService;
 import com.guxian.common.entity.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -15,6 +16,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/infor/{id}")
+    @Cacheable(value = {"userInfor"}, key = "#id",sync = true)
     public ResponseData infor(@PathVariable("id") Long id) {
         User user = userService.getById(id);
         return ResponseData.success("查询成功")

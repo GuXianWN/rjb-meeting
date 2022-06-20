@@ -50,14 +50,14 @@ public class MeetingController {
      * @return
      */
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseData createMeeting(@RequestBody @Validated(AddGroup.class) MeetingVo meeting) {
         return ResponseData.success()
                 .data(meetingService.addMeeting(meeting.toMeeting())
                         .orElseThrow(() -> new ServiceException(BizCodeEnum.CREATE_MEETING_FAILED)));
     }
 
-    @PatchMapping("/")
+    @PatchMapping
     public ResponseData updateMeeting(@RequestBody @Validated(UpdateGroup.class) MeetingVo meeting) {
         return ResponseData.success()
                 .data(
@@ -79,7 +79,18 @@ public class MeetingController {
                         .setJoinNum((int) userMeetingService.count(new QueryWrapper<UserMeeting>().eq("mid", id))));
     }
 
-    @GetMapping("/")
+    /**
+     * 会议详情，包括签到信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/info/{id}")
+    public ResponseData getMeetingInfo(@PathVariable("id") Long id) {
+        return ResponseData.success()
+                .data(meetingService.getMeetingInfo(id));
+    }
+
+    @GetMapping
     public ResponseData getMeetingByName(String name) {
         return ResponseData.success()
                 .data(meetingService.getMeetingByName(name).orElseThrow(() -> new ServiceException(BizCodeEnum.MEETING_NOT_EXIST)));
@@ -97,10 +108,13 @@ public class MeetingController {
                 .data(meetingService.getMe(page, size));
     }
 
-    @GetMapping("/info/{id}")
-    public ResponseData getMeetingInfo(@PathVariable("id") Long id) {
+    /**
+     * 加入会议的用户
+     */
+    @GetMapping("/user/list")
+    public ResponseData getUserList(Long id) {
         return ResponseData.success()
-                .data(meetingService.getMeetingInfo(id));
+                .data(userMeetingService.getUserMeetingList(id));
     }
 }
 
