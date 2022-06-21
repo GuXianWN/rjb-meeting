@@ -30,7 +30,8 @@ public enum BizCodeEnum {
     NO_ACCESS(15006, "无权限访问"),
     CHECK_IN_FAIL(15007, "签到失败"),
     CHECK_IN_ALREADY(15008, "已签到"),
-    NOT_LOGGED_IN(15009,"未登录");
+    NOT_LOGGED_IN(15009,"未登录"),
+    USER_FACE_NOT_EXIST(15010, "该用户未上传脸部照片"),;
 
 
     private int code;

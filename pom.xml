@@ -15,6 +15,7 @@
         <module>face-check</module>
     </modules>
 
+
     <packaging>pom</packaging>
 
     <parent>
@@ -25,6 +26,8 @@
     </parent>
 
     <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
@@ -37,8 +40,8 @@
         <commons-lang3>3.12.0</commons-lang3>
         <mybatis-plus>3.5.1</mybatis-plus>
         <jjwt>0.9.1</jjwt>
+        <spring-jpa.version>2.7.0</spring-jpa.version>
     </properties>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -95,19 +98,13 @@
                 <artifactId>mybatis-spring-boot-starter</artifactId>
                 <version>${mybatis.version}</version>
             </dependency>
+            
+<!--            jpa-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-jpa</artifactId>
+                <version>${spring-jpa.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>11</source>
-                    <target>11</target>
-                </configuration>
-            </plugin>
-        </plugins>
-
-    </build>
 </project>
