@@ -29,7 +29,8 @@
             <artifactId>opencv</artifactId>
             <version>4.5.1-2</version>
             <!--            todo 改为运行时自动给系统变量加入该路径-->
-            <systemPath>${basedir}/src/main/resources/haarcascade_frontalface_alt.xml</systemPath>
+<!--            <systemPath>${basedir}/src/main/resources/haarcascade_frontalface_alt.xml</systemPath>-->
+            <systemPath>${project.basedir}/src/main/resources/haarcascade_frontalface_alt.xml</systemPath>
         </dependency>
 
 
@@ -49,7 +50,22 @@
             <version>3.1.530</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+            <version>3.10.2</version>
+        </dependency>
     </dependencies>
 
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <includeSystemScope>true</includeSystemScope>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
