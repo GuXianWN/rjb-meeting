@@ -2,6 +2,7 @@ package com.guxian.facecheck;
 
 import com.alibaba.cloud.commons.io.Charsets;
 import com.google.common.io.Resources;
+import com.tencentcloudapi.common.profile.Language;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -10,6 +11,14 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+
+
+import com.tencentcloudapi.common.Credential;
+import com.tencentcloudapi.common.profile.ClientProfile;
+import com.tencentcloudapi.common.profile.HttpProfile;
+import com.tencentcloudapi.common.exception.TencentCloudSDKException;
+import com.tencentcloudapi.iai.v20200303.IaiClient;
+import com.tencentcloudapi.iai.v20200303.models.*;
 
 public class RemoteFaceCheckTest {
     /**
@@ -40,4 +49,32 @@ public class RemoteFaceCheckTest {
         System.out.println(response.body());
     }
 
+
+    @Test
+    public void t() {
+        try {
+            // 实例化一个认证对象，入参需要传入腾讯云账户secretId，secretKey,此处还需注意密钥对的保密
+            // 密钥可前往https://console.cloud.tencent.com/cam/capi网站进行获取
+            Credential cred = new Credential("AKIDkaLuFNIyPeilhR5cw6CAxa0NaaNwFJ8i", "Us52kCPO8dvznMgkZ8TYQ2PWP5XkiRyJ");
+            // 实例化一个http选项，可选的，没有特殊需求可以跳过
+            HttpProfile httpProfile = new HttpProfile();
+            httpProfile.setEndpoint("iai.tencentcloudapi.com");
+            // 实例化一个client选项，可选的，没有特殊需求可以跳过
+            ClientProfile clientProfile = new ClientProfile();
+            clientProfile.setHttpProfile(httpProfile);
+            // 实例化要请求产品的client对象,clientProfile是可选的
+            IaiClient client = new IaiClient(cred, "ap-beijing", clientProfile);
+            // 实例化一个请求对象,每个接口都会对应一个request对象
+            CompareFaceRequest req = new CompareFaceRequest();
+            req.setUrlA("https://static.generated.photos/vue-static/face-generator/landing/wall/3.jpg");
+            req.setUrlB("https://static.generated.photos/vue-static/face-generator/landing/wall/11.jpg");
+            // 返回的resp是一个CompareFaceResponse的实例，与请求对象对应
+            CompareFaceResponse resp = client.CompareFace(req);
+            // 输出json格式的字符串回包
+            System.out.println(CompareFaceResponse.toJsonString(resp));
+        } catch (TencentCloudSDKException e) {
+            System.out.println(e.toString());
+        }
+    }
 }
+
