@@ -12,6 +12,14 @@ spring:
       idle-timeout: 300000
       connection-timeout: 20000
       connection-test-query: select 1
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database: mysql
+
   redis:
     timeout: 1000ms
     host: k423.xyz

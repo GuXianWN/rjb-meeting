@@ -3,6 +3,9 @@ package com.guxian.facecheck;
 import com.alibaba.cloud.commons.io.Charsets;
 import com.google.common.io.Resources;
 import com.tencentcloudapi.common.profile.Language;
+import com.tencentcloudapi.iai.v20200303.IaiClient;
+import com.tencentcloudapi.iai.v20200303.models.CompareFaceRequest;
+import com.tencentcloudapi.iai.v20200303.models.CompareFaceResponse;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -17,8 +20,7 @@ import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.profile.ClientProfile;
 import com.tencentcloudapi.common.profile.HttpProfile;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
-import com.tencentcloudapi.iai.v20200303.IaiClient;
-import com.tencentcloudapi.iai.v20200303.models.*;
+
 
 public class RemoteFaceCheckTest {
     /**
