@@ -1,19 +1,27 @@
 package com.guxian;
 
-import org.mybatis.spring.annotation.MapperScan;
+import com.guxian.facecheck.entity.UserFace;
+import com.guxian.facecheck.repo.UserFaceRepo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
+import java.time.Instant;
+import java.util.Date;
+
+
+@SpringBootApplication
 @EnableFeignClients
 @EnableDiscoveryClient
-//@MapperScan("com.guxian.faceheck.mapper")
-@SpringBootApplication(scanBasePackages = "com.guxian.*")
-@EntityScan("com.guxian.facecheck")
+@EntityScan({"com.guxian.facecheck.entity"})
 public class FaceCheckBootStrap {
     public static void main(String[] args) {
-         SpringApplication.run(FaceCheckBootStrap.class, args);
+        var repo=SpringApplication.run(FaceCheckBootStrap.class, args).getBean(UserFaceRepo.class);
+        System.out.println(repo.save(new UserFace()
+                .setUserId(1L)
+                .setFaceUrl("test")
+                .setCreateTime(Date.from(Instant.now()))));
     }
 }

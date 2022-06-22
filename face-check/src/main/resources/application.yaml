@@ -34,10 +34,13 @@ spring:
       #缓存空值
       cache-null-values: true
       use-key-prefix: true
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-
 file:
   upload:
     path: /home/rjb/upload
+
+oss:
+    endpoint: https://oss-cn-beijing.aliyuncs.com
+    access-key-id: LTAI5tRbacmb22t5b6XKxZcG
+    access-key-secret: cvHsWCx5o3Uze7Q4pCo1xMkc1tinUI
+    bucket: cocos-kepu
+    object-name-prefix: ruanjianbei_2022/
