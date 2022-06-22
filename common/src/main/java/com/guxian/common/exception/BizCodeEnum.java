@@ -14,6 +14,7 @@ public enum BizCodeEnum {
 
     CREATE_MEETING_FAILED(11001, "创建会议失败"),
     UPDATE_MEETING_FAILED(11002, "更新会议失败"),
+    JOINED(11002, "已加入"),
 
     MEETING_NOT_EXIST(11003, "会议不存在"),
 
