@@ -2,10 +2,12 @@ package com.guxian.facecheck.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 /**
  * 人脸识别所需要的表，包含用户上传的脸图片URL
@@ -13,11 +15,16 @@ import lombok.Data;
  */
 @Table(name="user_face")
 @Data
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Accessors(chain = true)
 public class UserFace implements Serializable {
     /**
      * 
      */
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     /**
@@ -38,5 +45,4 @@ public class UserFace implements Serializable {
     @Column(name = "create_time")
     private Date createTime;
 
-    private static final long serialVersionUID = 1L;
 }
