@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.guxian.common.UserCheckInStatus;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -43,6 +44,7 @@ public class UserMeeting implements Serializable {
     /**
      * 加入时间
      */
+    @JsonFormat
     private Date joinTime;
 
     /**

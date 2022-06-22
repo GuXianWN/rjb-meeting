@@ -1,12 +1,14 @@
 package com.guxian.meeting.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.guxian.common.RoleType;
 import com.guxian.common.entity.ResponseData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.utils.JwtUtils;
 import com.guxian.common.valid.AddGroup;
 import com.guxian.common.valid.UpdateGroup;
+import com.guxian.meeting.entity.Meeting;
 import com.guxian.meeting.entity.UserMeeting;
 import com.guxian.meeting.entity.vo.MeetingVo;
 import com.guxian.meeting.service.MeetingService;
@@ -53,10 +55,10 @@ public class MeetingController {
      */
 
     @PostMapping
-    public ResponseData createMeeting(@RequestBody @Validated(AddGroup.class) MeetingVo meeting,HttpServletRequest request) {
+    public ResponseData createMeeting(@RequestBody @Validated(AddGroup.class) MeetingVo meeting, HttpServletRequest request) {
         Long uid = jwtUtils.getUid(request);
         return ResponseData.success()
-                .data(meetingService.addMeeting(meeting.toMeeting(),uid)
+                .data(meetingService.addMeeting(meeting.toMeeting(), uid)
                         .orElseThrow(() -> new ServiceException(BizCodeEnum.CREATE_MEETING_FAILED)));
     }
 
@@ -69,8 +71,10 @@ public class MeetingController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseData deleteMeeting(@PathVariable("id") Long id) {
-        return ResponseData.is(meetingService.removeById(id));
+    public ResponseData deleteMeeting(@PathVariable("id") Long mid, HttpServletRequest request) {
+        Meeting meeting = meetingService.getMeetingById(mid);
+        jwtUtils.RoleVerifyAndException(meeting.getCreateUid(), request, RoleType.ROLE_ADMIN);
+        return ResponseData.is(meetingService.removeById(mid));
     }
 
     @GetMapping("/{id}")
@@ -84,6 +88,7 @@ public class MeetingController {
 
     /**
      * 会议详情，包括签到信息
+     *
      * @param id
      * @return
      */
@@ -109,7 +114,7 @@ public class MeetingController {
     public ResponseData getMeetingListForMe(Long page, Long size, HttpServletRequest request) {
         Long uid = jwtUtils.getUid(request);
         return ResponseData.success()
-                .data(meetingService.getMe(page, size,uid));
+                .data(meetingService.getMe(page, size, uid));
     }
 }
 

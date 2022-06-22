@@ -26,7 +26,7 @@ public class UserMeetingController {
     public ResponseData removeUserByMeeting(@PathVariable("mid") Long mid, @PathVariable("uid") Long uid, HttpServletRequest request) {
         Long cuid = jwtUtils.getUid(request);
         Meeting meeting = meetingService.getMeetingById(mid);
-        if(meeting.getCreateUid()!=cuid){
+        if (meeting.getCreateUid() != cuid) {
             throw new ServiceException(BizCodeEnum.NO_ACCESS);
         }
         int i = userMeetingService.removeUserByMeeting(mid, uid);
@@ -38,11 +38,17 @@ public class UserMeetingController {
 
     /**
      * 会议的参与者
+     *
      * @param mid
      * @return
      */
     @GetMapping("/{mid}")
     public ResponseData getUserByMeeting(@PathVariable("mid") Long mid) {
         return ResponseData.success().data(userMeetingService.getUserByMeeting(mid));
+    }
+
+    @PostMapping("/join/{mid}")
+    public ResponseData joinMeeting(@PathVariable Long mid, HttpServletRequest request) {
+        return ResponseData.success().data(userMeetingService.joinMeeting(mid, jwtUtils.getUid(request)));
     }
 }
