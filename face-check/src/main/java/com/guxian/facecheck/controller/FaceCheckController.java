@@ -2,8 +2,6 @@ package com.guxian.facecheck.controller;
 
 import com.guxian.common.entity.ResponseData;
 import com.guxian.facecheck.service.AliOssUploadService;
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,11 +9,12 @@ import java.io.File;
 
 @RestController
 @RequestMapping("/face-check")
-@Setter(onMethod_ = @Autowired)
 public class FaceCheckController {
+    private final AliOssUploadService aliOssUploadService;
 
-
-    private AliOssUploadService aliOssUploadService;
+    public FaceCheckController(AliOssUploadService aliOssUploadService) {
+        this.aliOssUploadService = aliOssUploadService;
+    }
 
     @PostMapping("/")
     public ResponseData check(String url) {
@@ -29,7 +28,6 @@ public class FaceCheckController {
         var check = aliOssUploadService.upload(file);
         return ResponseData.is(StringUtils.hasText(check));
     }
-
 
     @GetMapping("/test/{url}")
     public ResponseData test(@PathVariable("url") String url) {
