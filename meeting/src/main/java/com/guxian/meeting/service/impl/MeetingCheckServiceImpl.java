@@ -17,6 +17,7 @@ import com.guxian.meeting.service.CheckInService;
 import com.guxian.meeting.service.MeetingCheckService;
 import com.guxian.meeting.mapper.MeetingCheckMapper;
 import com.guxian.meeting.service.MeetingService;
+import com.guxian.meeting.service.UserMeetingService;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,8 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
     private MeetingService meetingService;
     @Autowired
     private CheckInService checkInService;
+    @Autowired
+    private UserMeetingService userMeetingService;
 
 
     public Optional<MeetingCheck> createMeetingCheckUseCode(MeetingCheck meetingCheck, String data) {
@@ -57,9 +60,9 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
     }
 
     @Override
-    public Optional<MeetingCheck> createMeetingCheck(MeetingCheck meetingCheck, String data) {
+    public Optional<MeetingCheck> createMeetingCheck(MeetingCheck meetingCheck, String data, Long uid) {
         Meeting meeting = meetingService.getMeetingById(meetingCheck.getMeetingId());
-        if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())) {
+        if (!meeting.getCreateUid().equals(uid)) {
             throw new ServiceException(BizCodeEnum.NO_ACCESS);
         }
 
@@ -84,6 +87,9 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
 
     @Override
     public List<CheckInfor> getCheckInList(Long id) {
+        //会议加入者数量
+        int meetingJoin = userMeetingService.getUserByMeeting(id).size();
+
         List<MeetingCheck> meetingCheckList = baseMapper.selectList(new QueryWrapper<MeetingCheck>()
                 .eq("meeting_id", id));
         List<CheckInfor> list = new ArrayList<>();
@@ -95,7 +101,8 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
             //获取签到列表
             List<CheckIn> checkInList = checkInService.getCheckInList(v.getMeetingCheck().getId());
             v.setCheckInList(checkInList)
-                    .setCheckNum(checkInList.size());
+                    .setCheckNum(checkInList.size())
+                    .setJoinNum(meetingJoin);
         });
         return list;
     }

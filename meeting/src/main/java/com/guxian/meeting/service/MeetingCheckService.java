@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface MeetingCheckService extends IService<MeetingCheck> {
 
 
-    Optional<MeetingCheck> createMeetingCheck(MeetingCheck toMeetingCheck, String data);
+    Optional<MeetingCheck> createMeetingCheck(MeetingCheck toMeetingCheck, String data,Long uid);
 
 
     List<CheckInfor> getCheckInList(Long id);

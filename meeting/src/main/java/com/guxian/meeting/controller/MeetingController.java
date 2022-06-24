@@ -63,10 +63,11 @@ public class MeetingController {
     }
 
     @PatchMapping
-    public ResponseData updateMeeting(@RequestBody @Validated(UpdateGroup.class) MeetingVo meeting) {
+    public ResponseData updateMeeting(@RequestBody @Validated(UpdateGroup.class) MeetingVo meeting,HttpServletRequest request) {
+        Long uid = jwtUtils.getUid(request);
         return ResponseData.success()
                 .data(
-                        meetingService.updateMeeting(meeting.toMeeting())
+                        meetingService.updateMeeting(meeting.toMeeting(),uid)
                                 .orElseThrow(() -> new ServiceException(BizCodeEnum.UPDATE_MEETING_FAILED)));
     }
 
@@ -96,6 +97,12 @@ public class MeetingController {
     public ResponseData getMeetingInfo(@PathVariable("id") Long id) {
         return ResponseData.success()
                 .data(meetingService.getMeetingInfo(id));
+    }
+
+    @GetMapping("/list/me/info")
+    public ResponseData getMeetingListInfo(HttpServletRequest request) {
+        return ResponseData.success()
+                .data(meetingService.getMeetingListInfo(jwtUtils.getUid(request)));
     }
 
     @GetMapping
