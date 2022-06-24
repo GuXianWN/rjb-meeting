@@ -18,7 +18,7 @@ import java.util.Optional;
 public interface MeetingService extends IService<Meeting> {
     Optional<Meeting> addMeeting(Meeting meeting,Long uid);
 
-    Optional<Meeting> updateMeeting(Meeting toMeeting);
+    Optional<Meeting> updateMeeting(Meeting toMeeting,Long uid);
 
     Optional<Meeting> getMeetingByName(String name);
 
@@ -29,4 +29,6 @@ public interface MeetingService extends IService<Meeting> {
     PageData getMe(Long page, Long size, Long uid); // 获取我参加的会议
 
     MeetingInfor getMeetingInfo(Long id);
+
+    List<MeetingInfor> getMeetingListInfo(Long uid);
 }

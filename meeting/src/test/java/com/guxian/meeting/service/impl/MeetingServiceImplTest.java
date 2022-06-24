@@ -68,7 +68,7 @@ class MeetingServiceImplTest {
                         new GregorianCalendar(2020, Calendar.JANUARY, 1).getTime(), 0));
 
         // Run the test
-        final Optional<Meeting> result = meetingServiceImplUnderTest.updateMeeting(toMeeting);
+        final Optional<Meeting> result = meetingServiceImplUnderTest.updateMeeting(toMeeting,1L);
 
         // Verify the results
         assertThat(result).isEqualTo(expectedResult);

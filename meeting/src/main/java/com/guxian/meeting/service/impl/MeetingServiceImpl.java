@@ -12,6 +12,7 @@ import com.guxian.common.exception.ServiceException;
 import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.common.utils.JwtUtils;
 import com.guxian.meeting.clients.UserClient;
+import com.guxian.meeting.entity.CheckInfor;
 import com.guxian.meeting.entity.MeetingInfor;
 import com.guxian.meeting.entity.vo.UserVo;
 import com.guxian.meeting.service.MeetingCheckService;
@@ -23,10 +24,7 @@ import com.guxian.meeting.service.MeetingService;
 import com.guxian.meeting.mapper.MeetingMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author GuXian
@@ -48,19 +46,18 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     UserSession user = CurrentUserSession.getUserSession();
 
     @Override
-    public Optional<Meeting> addMeeting(Meeting meeting,Long uid) {
+    public Optional<Meeting> addMeeting(Meeting meeting, Long uid) {
         meeting.setCreateTime(new Date());
         this.save(meeting.setCreateUid(uid));
         return Optional.ofNullable(meeting.getId() != null ? meeting : null);
     }
 
     @Override
-    public Optional<Meeting> updateMeeting(Meeting toMeeting) {
+    public Optional<Meeting> updateMeeting(Meeting toMeeting, Long uid) {
         Meeting meeting = baseMapper.selectById(toMeeting.getId());
         var createUid = meeting.getCreateUid();
-        var currentUserId = CurrentUserSession.getUserSession().getUserId();
-        if (!currentUserId.equals(createUid)) {
-            UserSession user1 = jwtUtils.getUserForRedis(currentUserId);
+        if (!createUid.equals(uid)) {
+            UserSession user1 = jwtUtils.getUserForRedis(uid);
             if (user1.getRole() < RoleType.ROLE_ADMIN.getExplain()) {
                 throw new ServiceException(BizCodeEnum.NO_ACCESS);
             }
@@ -102,10 +99,22 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
             throw new ServiceException(BizCodeEnum.MEETING_NOT_EXIST);
         }
         MeetingInfor meetingInfor = MeetingInfor.from(meeting);
+        List<CheckInfor> checkInList = meetingCheckService.getCheckInList(id);
         meetingInfor.setOwner(JSON.parseObject(JSON.toJSONString(userClient.infor(meeting.getCreateUid()).getData()), UserVo.class))
                 //获取当前会议所有的签到
-                .setAttendDetail(meetingCheckService.getCheckInList(id));
+                .setAttendDetail(checkInList);
         return meetingInfor;
+    }
+
+    @Override
+    public List<MeetingInfor> getMeetingListInfo(Long uid) {
+        List<Meeting> meetings = baseMapper.selectList(new LambdaQueryWrapper<Meeting>()
+                .eq(Meeting::getCreateUid, uid));
+        List<MeetingInfor> list=new ArrayList<>();
+        meetings.forEach(v->{
+            list.add(getMeetingInfo(v.getId()));
+        });
+        return list;
     }
 }
 

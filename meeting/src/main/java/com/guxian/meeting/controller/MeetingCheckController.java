@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -47,7 +48,8 @@ public class MeetingCheckController {
      */
 
     @PostMapping("/")
-    public ResponseData createMeetingCheck(@RequestBody @Validated(AddGroup.class) MeetingCheckVo meetingCheck) {
+    public ResponseData createMeetingCheck(@RequestBody @Validated(AddGroup.class) MeetingCheckVo meetingCheck, HttpServletRequest request) {
+        Long uid = jwtUtils.getUid(request);
         if (SomeUtils.getNotNullValue(meetingCheck.getCode()
                 , meetingCheck.getFaceUrl()) == null) {
             //todo 无签到方式的处理
@@ -55,7 +57,7 @@ public class MeetingCheckController {
 
         String data = SomeUtils.<String>getNotNullValue(meetingCheck.getCode()
                 , meetingCheck.getFaceUrl());
-        return ResponseData.success().data(meetingCheckService.createMeetingCheck(meetingCheck.toMeetingCheck(), data));
+        return ResponseData.success().data(meetingCheckService.createMeetingCheck(meetingCheck.toMeetingCheck(), data,uid));
     }
 
     /**
