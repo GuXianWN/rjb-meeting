@@ -5,6 +5,7 @@ import com.guxian.common.RoleType;
 import com.guxian.common.entity.ResponseData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
+import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.common.utils.JwtUtils;
 import com.guxian.common.valid.AddGroup;
 import com.guxian.common.valid.UpdateGroup;
@@ -100,9 +101,9 @@ public class MeetingController {
     }
 
     @GetMapping("/list/me/info")
-    public ResponseData getMeetingListInfo(Long page,Long size,HttpServletRequest request) {
+    public ResponseData getMeetingListInfo(Long page,Long size) {
         return ResponseData.success()
-                .data(meetingService.getMeetingListInfo(jwtUtils.getUid(request),page,size));
+                .data(meetingService.getMeetingListInfo(CurrentUserSession.getUserSession().getUserId(), page,size));
     }
 
     @GetMapping
@@ -118,8 +119,8 @@ public class MeetingController {
     }
 
     @GetMapping("/list/me")
-    public ResponseData getMeetingListForMe(Long page, Long size, HttpServletRequest request) {
-        Long uid = jwtUtils.getUid(request);
+    public ResponseData getMeetingListForMe(Long page, Long size) {
+        Long uid = CurrentUserSession.getUserSession().getUserId();
         return ResponseData.success()
                 .data(meetingService.getMe(page, size, uid));
     }
