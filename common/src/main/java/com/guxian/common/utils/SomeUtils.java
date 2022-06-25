@@ -28,7 +28,7 @@ public class SomeUtils {
 
 
     @SafeVarargs
-    public static<T> T getNotNullValue(T ... objects) {
+    public static <T> T getNotNullValue(T... objects) {
         for (T object : objects) {
             if (object != null) {
                 return object;
@@ -41,4 +41,5 @@ public class SomeUtils {
     public static String getResource(String path) {
         return Objects.requireNonNull(SomeUtils.class.getClassLoader().getResource(path)).getPath();
     }
+
 }

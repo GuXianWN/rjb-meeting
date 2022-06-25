@@ -9,10 +9,6 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
-import java.time.Instant;
-import java.util.Date;
-
-
 @SpringBootApplication
 @EnableFeignClients
 @EnableDiscoveryClient
@@ -22,5 +18,4 @@ public class FaceCheckBootStrap {
     public static void main(String[] args) {
         SpringApplication.run(FaceCheckBootStrap.class, args);
     }
-
 }
