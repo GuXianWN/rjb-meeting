@@ -9,8 +9,11 @@ import lombok.Getter;
  */
 @Getter
 public enum BizCodeEnum {
+
+
     UNKNOWN_EXCEPTION(10000, "未知异常"),
     VALID_EXCEPTION(10001, "参数校验异常"),
+    OSS_INIT_EXCEPTION(10002, "服务器初始OSS异常"),
 
     CREATE_MEETING_FAILED(11001, "创建会议失败"),
     UPDATE_MEETING_FAILED(11002, "更新会议失败"),

@@ -25,7 +25,7 @@ public class FaceCheckController {
     //文件上传 ,参数为文件
     @PostMapping("/upload")
     public ResponseData upload(@RequestParam("file") File file) {
-        var check = aliOssUploadService.upload(file);
+        var check = aliOssUploadService.uploadFace(file);
         return ResponseData.is(StringUtils.hasText(check));
     }
 
@@ -33,4 +33,5 @@ public class FaceCheckController {
     public ResponseData test(@PathVariable("url") String url) {
         return ResponseData.success(url);
     }
+
 }
