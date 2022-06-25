@@ -100,9 +100,9 @@ public class MeetingController {
     }
 
     @GetMapping("/list/me/info")
-    public ResponseData getMeetingListInfo(HttpServletRequest request) {
+    public ResponseData getMeetingListInfo(Long page,Long size,HttpServletRequest request) {
         return ResponseData.success()
-                .data(meetingService.getMeetingListInfo(jwtUtils.getUid(request)));
+                .data(meetingService.getMeetingListInfo(jwtUtils.getUid(request),page,size));
     }
 
     @GetMapping

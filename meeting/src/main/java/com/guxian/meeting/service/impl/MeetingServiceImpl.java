@@ -107,14 +107,16 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     }
 
     @Override
-    public List<MeetingInfor> getMeetingListInfo(Long uid) {
-        List<Meeting> meetings = baseMapper.selectList(new LambdaQueryWrapper<Meeting>()
+    public PageData getMeetingListInfo(Long uid,Long page,Long size) {
+        Page<Meeting> page1=new Page<>(page,size);
+        IPage<Meeting> iPage = baseMapper.selectPage(page1,new LambdaQueryWrapper<Meeting>()
                 .eq(Meeting::getCreateUid, uid));
         List<MeetingInfor> list=new ArrayList<>();
-        meetings.forEach(v->{
+        List<Meeting> meetingList = iPage.getRecords();
+        meetingList.forEach(v->{
             list.add(getMeetingInfo(v.getId()));
         });
-        return list;
+        return new PageData(page,size,iPage.getTotal(), list);
     }
 }
 
