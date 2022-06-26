@@ -117,11 +117,11 @@ public class MeetingController {
                 .data(meetingService.getAll(page, size));
     }
 
-    @GetMapping("/list/me")
-    public ResponseData getMeetingListForMe(Long page, Long size, HttpServletRequest request) {
+    @GetMapping("/list/join")
+    public ResponseData getMeetingJoinList(Long page, Long size, HttpServletRequest request) {
         Long uid = jwtUtils.getUid(request);
         return ResponseData.success()
-                .data(meetingService.getMe(page, size, uid));
+                .data(meetingService.getMeetingJoinList(page, size, uid));
     }
 }
 

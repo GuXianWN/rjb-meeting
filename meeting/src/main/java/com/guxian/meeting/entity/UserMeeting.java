@@ -9,7 +9,9 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.guxian.common.UserCheckInStatus;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
@@ -19,6 +21,8 @@ import lombok.experimental.Accessors;
 @TableName(value ="user_meeting")
 @Data
 @Accessors(chain = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserMeeting implements Serializable {
     /**
      * 

@@ -1,6 +1,7 @@
 package com.guxian.meeting.service;
 
 import com.guxian.common.CheckWay;
+import com.guxian.common.entity.PageData;
 import com.guxian.meeting.entity.MeetingCheck;
 import com.guxian.meeting.entity.UserMeeting;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -21,4 +22,6 @@ public interface UserMeetingService extends IService<UserMeeting> {
     List<UserMeeting> getUserByMeeting(Long mid);
 
     UserMeeting joinMeeting(Long mid, Long uid);
+
+    PageData getMeetingJoinList(Long uid, Long page, Long size);
 }
