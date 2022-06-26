@@ -31,7 +31,6 @@
             <version>4.5.1-2</version>
             <!--            todo 改为运行时自动给系统变量加入该路径-->
             <!--            <systemPath>${basedir}/src/main/resources/haarcascade_frontalface_alt.xml</systemPath>-->
-            <systemPath>${project.basedir}/src/main/resources/haarcascade_frontalface_alt.xml</systemPath>
         </dependency>
 
 
