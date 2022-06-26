@@ -14,8 +14,10 @@ import com.guxian.common.utils.JwtUtils;
 import com.guxian.meeting.clients.UserClient;
 import com.guxian.meeting.entity.CheckInfor;
 import com.guxian.meeting.entity.MeetingInfor;
+import com.guxian.meeting.entity.UserMeeting;
 import com.guxian.meeting.entity.vo.UserVo;
 import com.guxian.meeting.service.MeetingCheckService;
+import com.guxian.meeting.service.UserMeetingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -40,6 +42,8 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     private JwtUtils jwtUtils;
     @Autowired
     private MeetingCheckService meetingCheckService;
+    @Autowired
+    private UserMeetingService userMeetingService;
     @Autowired
     private UserClient userClient;
 
@@ -85,11 +89,14 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     }
 
     @Override
-    public PageData getMe(Long page, Long size, Long uid) {
-        Page<Meeting> meetingPage = new Page<>(page, size);
-        IPage<Meeting> iPage = baseMapper.selectPage(meetingPage,
-                new LambdaQueryWrapper<Meeting>().eq(Meeting::getCreateUid, uid));
-        return new PageData(page, size, iPage.getTotal(), iPage.getRecords());
+    public PageData getMeetingJoinList(Long page, Long size, Long uid) {
+        PageData joinList = userMeetingService.getMeetingJoinList(uid, page, size);
+        List<UserMeeting> list = (List<UserMeeting>) joinList.getData();
+        List<Meeting> meetings=new ArrayList<>();
+        list.forEach(v->{
+            meetings.add(getMeetingById(v.getMid()));
+        });
+        return joinList.setData(meetings);
     }
 
     @Override

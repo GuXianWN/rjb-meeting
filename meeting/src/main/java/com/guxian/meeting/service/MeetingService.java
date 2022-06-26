@@ -26,7 +26,7 @@ public interface MeetingService extends IService<Meeting> {
 
     PageData getAll(Long page, Long size); // 获取所有会议
 
-    PageData getMe(Long page, Long size, Long uid); // 获取我参加的会议
+    PageData getMeetingJoinList(Long page, Long size, Long uid); // 获取我参加的会议
 
     MeetingInfor getMeetingInfo(Long id);
 

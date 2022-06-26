@@ -1,9 +1,13 @@
 package com.guxian.meeting.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.guxian.common.CheckWay;
 import com.guxian.common.UserCheckInStatus;
+import com.guxian.common.entity.PageData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.utils.CurrentUserSession;
@@ -79,6 +83,14 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
                 .setJoinTime(new Date());
         baseMapper.insert(userMeeting);
         return userMeeting;
+    }
+
+    @Override
+    public PageData getMeetingJoinList(Long uid, Long page, Long size) {
+        Page<UserMeeting> page1=new Page<>();
+        Page<UserMeeting> iPage = baseMapper.selectPage(page1, new QueryWrapper<UserMeeting>()
+                .eq("uid", uid));
+        return new PageData(page,size,iPage.getTotal(),iPage.getRecords());
     }
 }
 
