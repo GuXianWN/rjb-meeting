@@ -3,13 +3,13 @@ package com.guxian.facecheck.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class AliOssUploadServiceTestTest {
+class AliOssServiceTestTest {
 
-    private AliOssUploadServiceTest aliOssUploadServiceTestUnderTest;
+    private AliOssServiceTest aliOssUploadServiceTestUnderTest;
 
     @BeforeEach
     void setUp() {
-        aliOssUploadServiceTestUnderTest = new AliOssUploadServiceTest();
+        aliOssUploadServiceTestUnderTest = new AliOssServiceTest();
     }
 
     @Test

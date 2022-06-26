@@ -1,13 +1,18 @@
 package com.guxian.facecheck.config;
 
+import com.aliyun.facebody20191230.Client;
 import com.aliyun.oss.OSS;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class AliService {
-    private OSS ossClient;
+public class AliServiceObject {
+
+    private OSS oss;
+
+    private Client client;
+
     private String downloadPathPrefix;
 
     private String endpoint;
@@ -19,4 +24,6 @@ public class AliService {
     private String bucketName;
 
     private String objectNamePrefix;
+
+
 }
