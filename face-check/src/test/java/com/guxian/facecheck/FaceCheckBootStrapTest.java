@@ -31,25 +31,27 @@ class FaceCheckBootStrapTest {
     @Test
     void opencvTest() {
         Mat image = Imgcodecs.imread("D:/File/picture/(95).png", 1);// 读取图片，第二个参数是图片读取方式0：灰度 1,彩色
+//        Imgproc.Canny(image, image, 10, 100);// 对图片进行边缘检测
 
         HighGui.imshow("图片", image);// 显示读取的图片
 
         // 转换为灰度
         Mat image2 = new Mat();
+
         Imgproc.cvtColor(image, image2, Imgproc.COLOR_BGR2GRAY);// 将读取的图片转为灰色
 
         HighGui.imshow("灰度", image2);// 展示灰色的图片
+
+        //        Imgproc.cvtColor(image, image, Imgproc.COLOR_BGR2GRAY);// 将读取的图片转为灰色
+//        Imgproc.equalizeHist(image, image);// 对图片进行直方图均衡化
+//        Imgproc.resize(image, image, new org.opencv.core.Size(image.cols() / 2, image.rows() / 2));// 将图片缩放到1/2大小
+//        Imgproc.GaussianBlur(image, image, new org.opencv.core.Size(5, 5), 0);// 对图片进行高斯模糊
 
         HighGui.waitKey();// 阻塞进程
 
         HighGui.destroyAllWindows(); // 销毁窗口
     }
 
-    //        Imgproc.cvtColor(image, image, Imgproc.COLOR_BGR2GRAY);// 将读取的图片转为灰色
-//        Imgproc.equalizeHist(image, image);// 对图片进行直方图均衡化
-//        Imgproc.resize(image, image, new org.opencv.core.Size(image.cols() / 2, image.rows() / 2));// 将图片缩放到1/2大小
-//        Imgproc.GaussianBlur(image, image, new org.opencv.core.Size(5, 5), 0);// 对图片进行高斯模糊
-//        Imgproc.Canny(image, image, 10, 100);// 对图片进行边缘检测
 
 
     Mat getFace(String url) {
@@ -60,16 +62,18 @@ class FaceCheckBootStrapTest {
         CascadeClassifier faceDetector = new CascadeClassifier(resourcePath + "/haarcascade_frontalface_alt.xml");
         faceDetector.detectMultiScale(image, faceDetections);
         Rect[] rects = faceDetections.toArray();
+        if(rects.length==0) return null;
         return image.submat(rects[0]);
     }
 
 
     @Test
     void findFaceTest() {
-
-        var image1=getFace(resourcePath + "/photos/01.png");
+        var image1=getFace(resourcePath + "/photos/no-face01.png");
         var image2=getFace(resourcePath + "/photos/02.png");
-        System.out.println(getPSNR(image1, image2));
+        printImage(image1);
+
+//        System.out.println(getPSNR(image1, image2));
     }
 
     double getPSNR(Mat I1, Mat I2) {
