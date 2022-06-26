@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 
 @RestController
-@RequestMapping("/face-check")
+@RequestMapping("/face")
 public class FaceCheckController {
     private final AliOssUploadService aliOssUploadService;
 
@@ -24,10 +24,12 @@ public class FaceCheckController {
 
     //文件上传 ,参数为文件
     @PostMapping("/upload")
-    public ResponseData upload(@RequestParam("file") File file) {
+    public ResponseData uploadFace(@RequestParam("file") File file) {
         var check = aliOssUploadService.uploadFace(file);
         return ResponseData.is(StringUtils.hasText(check));
     }
+
+
 
     @GetMapping("/test/{url}")
     public ResponseData test(@PathVariable("url") String url) {
