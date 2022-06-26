@@ -1,7 +1,6 @@
 package com.guxian;
 
-import com.guxian.facecheck.entity.UserFace;
-import com.guxian.facecheck.repo.UserFaceRepo;
+import com.guxian.facecheck.config.AliServiceBuilder;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,6 +15,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @Log4j2
 public class FaceCheckBootStrap {
     public static void main(String[] args) {
-        SpringApplication.run(FaceCheckBootStrap.class, args);
+        var run = SpringApplication.run(FaceCheckBootStrap.class, args);
+        run.getBean(AliServiceBuilder.class);
+
     }
 }
