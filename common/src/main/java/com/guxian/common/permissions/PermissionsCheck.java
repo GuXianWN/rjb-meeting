@@ -46,7 +46,7 @@ public class PermissionsCheck implements HandlerInterceptor {
     AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     @Value("${close-token-check}")
-    private boolean closed = false;
+    private boolean closed = true;
 
     @Autowired
     public PermissionsCheck(JwtUtils jwtUtils, RedisTemplate<String, String> redisTemplate) {

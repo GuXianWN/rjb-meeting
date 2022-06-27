@@ -13,3 +13,9 @@ spring:
         ext-config[0].data-id: db.yaml
   profiles:
     active: dev
+
+feign:
+  client:
+    config:
+      airport-service:
+

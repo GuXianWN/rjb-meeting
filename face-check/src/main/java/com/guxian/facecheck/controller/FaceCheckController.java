@@ -16,15 +16,15 @@ import java.io.File;
 public class FaceCheckController {
     private final OssService ossService;
     private final OSSForFaceService faceOss;
-    private final FaceCompareService faceCompareService;
+    private  FaceCompareService faceCompareService;
 
     @Value("${face-compare.minimum-confidence}")
     private double minimumConfidence = 0.9;
 
-    public FaceCheckController(OssService ossService, OSSForFaceService faceOss, FaceCompareService faceCompareService) {
+    public FaceCheckController(OssService ossService, OSSForFaceService faceOss) {
         this.ossService = ossService;
         this.faceOss = faceOss;
-        this.faceCompareService = faceCompareService;
+//        this.faceCompareService = faceCompareService;
     }
 
     @PostMapping("/compare")
