@@ -7,7 +7,7 @@ import com.guxian.common.exception.ServiceException;
 import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.facecheck.config.AliServiceObject;
 import com.guxian.facecheck.repo.UserFaceRepo;
-import com.guxian.facecheck.service.FaceCheckService;
+import com.guxian.facecheck.service.FaceCompareService;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -16,13 +16,13 @@ import java.io.File;
 import java.io.FileInputStream;
 
 @Service
-public class AliFaceCheckService implements FaceCheckService {
+public class AliFaceCompareService implements FaceCompareService {
 
     private final AliServiceObject aliServiceObject;
 
     private final UserFaceRepo userFaceRepo;
 
-    public AliFaceCheckService(AliServiceObject aliServiceObject, UserFaceRepo userFaceRepo) {
+    public AliFaceCompareService(AliServiceObject aliServiceObject, UserFaceRepo userFaceRepo) {
         this.aliServiceObject = aliServiceObject;
         this.userFaceRepo = userFaceRepo;
     }

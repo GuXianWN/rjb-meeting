@@ -21,23 +21,7 @@ class AliOssServiceTestTest {
         // Verify the results
     }
 
-    @Test
-    void testTestCheckFace() {
-        // Setup
-        // Run the test
-        aliOssUploadServiceTestUnderTest.testCheckFace();
 
-        // Verify the results
-    }
-
-    @Test
-    void testTestCheckFace_UserFaceRepoReturnsAbsent() {
-        // Setup
-        // Run the test
-        aliOssUploadServiceTestUnderTest.testCheckFace_UserFaceRepoReturnsAbsent();
-
-        // Verify the results
-    }
 
     @Test
     void testTestUpload() {
