@@ -43,9 +43,11 @@ file:
     path: /home/rjb/upload/
 
 oss:
-    endpoint: https://oss-cn-beijing.aliyuncs.com
-    access-key-id: LTAI5tRbacmb22t5b6XKxZcG
-    access-key-secret: cvHsWCx5o3Uze7Q4pCo1xMkc1tinUI
-    bucket-name: cocos-kepu
-    object-name-prefix: ruanjianbei_2022/
-    download-prefix: https://cocos-kepu.oss-cn-beijing.aliyuncs.com/ruanjianbei_2022/
+  endpoint: https://oss-cn-beijing.aliyuncs.com
+  access-key-id: LTAI5tRbacmb22t5b6XKxZcG
+  access-key-secret: cvHsWCx5o3Uze7Q4pCo1xMkc1tinUI
+  bucket-name: cocos-kepu
+  object-name-prefix: ruanjianbei_2022/
+  download-prefix: https://cocos-kepu.oss-cn-beijing.aliyuncs.com/ruanjianbei_2022/
+  face-filename-prefix: FACE_
+  face-filename-suffix: .png
