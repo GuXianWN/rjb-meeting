@@ -9,8 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.google.errorprone.annotations.NoAllocation;
-import com.guxian.common.entity.RedisPrefix;
+import com.guxian.common.config.RedisPrefix;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

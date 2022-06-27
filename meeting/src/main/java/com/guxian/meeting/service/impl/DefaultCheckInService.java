@@ -1,14 +1,12 @@
 package com.guxian.meeting.service.impl;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.guxian.common.CheckWay;
-import com.guxian.common.entity.RedisPrefix;
+import com.guxian.common.entity.ResponseData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
+import com.guxian.common.openfegin.facecheck.FaceCheckController;
 import com.guxian.common.redis.RedisUtils;
 import com.guxian.meeting.entity.CheckIn;
 import com.guxian.meeting.entity.MeetingCheck;
@@ -16,11 +14,7 @@ import com.guxian.meeting.entity.vo.CheckDataVo;
 import com.guxian.meeting.service.CheckInService;
 import com.guxian.meeting.mapper.CheckInMapper;
 import com.guxian.meeting.service.UserMeetingService;
-import lombok.*;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,11 +27,17 @@ import java.util.List;
 
 @Service
 @Log4j2
-@Setter(onMethod_ = @Autowired)
 public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn>
         implements CheckInService {
 
-    private UserMeetingService userMeetingService;
+    private final UserMeetingService userMeetingService;
+
+    private final FaceCheckController faceCheckController;
+
+    public DefaultCheckInService(UserMeetingService userMeetingService, FaceCheckController faceCheckController) {
+        this.userMeetingService = userMeetingService;
+        this.faceCheckController = faceCheckController;
+    }
 
 
     /**
@@ -51,7 +51,7 @@ public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn>
     public boolean checkIn(CheckDataVo checkDataVo) {
 
         if (checkDataVo.getCheckWay() == CheckWay.FACE) {
-
+            return checkInUseFace(checkDataVo);
         }
 
         if (checkDataVo.getCheckWay() == CheckWay.CODE) {
@@ -79,8 +79,8 @@ public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn>
     }
 
     public boolean checkInUseFace(CheckDataVo checkDataVo) {
-        String face = checkDataVo.getFaceUrl();
-
+        var face = checkDataVo.getFace();
+        var responseData = faceCheckController.compareFace(face);
         return true;
     }
 

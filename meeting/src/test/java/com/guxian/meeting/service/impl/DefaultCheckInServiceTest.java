@@ -35,19 +35,11 @@ class DefaultCheckInServiceTest {
 
     @BeforeEach
     void setUp() {
-        defaultCheckInServiceUnderTest = new DefaultCheckInService();
+//        defaultCheckInServiceUnderTest = new DefaultCheckInService(userMeetingService);
         RedisUtils.ops = new RedisTemplateConfigurer().redisTemplateForStringObject(this.redisConnectionFactory).opsForValue();
     }
 
-    @Test
-    void testCheckInWillThrowException() {
-        // Setup
-        final CheckDataVo checkDataVo = new CheckDataVo(0L, "code", "faceUrl", CheckWay.CODE);
 
-        assertThatThrownBy(() -> defaultCheckInServiceUnderTest.checkIn(checkDataVo))
-                .isInstanceOf(ServiceException.class)
-                .hasMessageContaining("签到码不存在");
-    }
 
     @Test
     @Transactional
