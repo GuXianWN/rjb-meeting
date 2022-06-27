@@ -13,7 +13,7 @@ public class CurrentUserSession {
 
     private static final ThreadLocal<UserSession> userSession = new ThreadLocal<>();
 
-    private static boolean closed=true;
+    private static boolean closed=false;
 
     public static void setUserSession(UserSession userSession) {
         CurrentUserSession.userSession.set(userSession);

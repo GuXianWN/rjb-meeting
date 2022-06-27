@@ -4,6 +4,7 @@ import com.guxian.auth.entity.User;
 import com.guxian.auth.entity.dto.UserDTO;
 import com.guxian.auth.service.UserService;
 import com.guxian.common.entity.ResponseData;
+import com.guxian.common.utils.CurrentUserSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
@@ -21,5 +22,11 @@ public class UserController {
         User user = userService.getById(id);
         return ResponseData.success("查询成功")
                 .data(UserDTO.form(user));
+    }
+
+    @GetMapping("/test")
+    public ResponseData test(){
+        Long uid = CurrentUserSession.getUserSession().getUserId();
+        return ResponseData.success().data(userService.getById(uid));
     }
 }
