@@ -35,7 +35,11 @@ public enum BizCodeEnum {
     CHECK_IN_FAIL(15007, "签到失败"),
     CHECK_IN_ALREADY(15008, "已签到"),
     NOT_LOGGED_IN(15009,"未登录"),
-    USER_FACE_NOT_EXIST(15010, "该用户未上传脸部照片"),;
+    USER_FACE_NOT_EXIST(15010, "该用户未上传脸部照片"),
+    NO_FACE_WAS_DETECTED(15011, "未检测到面部图像"),
+    FACE_CONTRAST_INCONSISTENT(15012, "脸部和数据库中不一致！尝试变化角度再试一次！"),
+
+    ;
 
 
     private int code;

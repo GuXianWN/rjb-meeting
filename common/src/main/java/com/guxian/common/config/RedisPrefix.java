@@ -1,4 +1,4 @@
-package com.guxian.common.entity;
+package com.guxian.common.config;
 
 public class RedisPrefix {
     private RedisPrefix() {

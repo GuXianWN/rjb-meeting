@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotNull;
+import java.io.File;
 
 /**
  * 签到时需要传递的数据
@@ -20,7 +21,7 @@ public class CheckDataVo {
     @NotNull(message = "会议ID不能为空")
     Long meetingId;
     String code;
-    String faceUrl;
+    File face;
     @NotNull(message = "签到方式不能为空")
     CheckWay checkWay;
 }

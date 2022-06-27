@@ -13,23 +13,19 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/check-in")
-@Setter(onMethod_ = @Autowired)
 public class CheckInController {
-    private CheckInService checkInService;
+    private final CheckInService checkInService;
+
+    public CheckInController(CheckInService checkInService) {
+        this.checkInService = checkInService;
+    }
 
     @PostMapping
     public ResponseData check(
-            @RequestBody @Validated CheckDataVo checkDataVo
-    ) {
-        if (checkDataVo.getMeetingId() == null) {
+            @RequestBody @Validated CheckDataVo checkDataVo) {
+        if (checkDataVo.getMeetingId() != null) {
             return ResponseData.error("会议ID不能为空");
         }
-
-        var check = checkInService.checkIn(checkDataVo);
-
-        if (check) {
-            return ResponseData.success("签到成功");
-        }
-        return ResponseData.success("签到失败");
+        return ResponseData.is(checkInService.checkIn(checkDataVo));
     }
 }

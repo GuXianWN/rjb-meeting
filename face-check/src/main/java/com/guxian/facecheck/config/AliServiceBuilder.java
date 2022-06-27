@@ -1,8 +1,11 @@
 package com.guxian.facecheck.config;
 
 
+import com.aliyun.facebody20191230.Client;
 import com.aliyun.oss.OSSClientBuilder;
+import com.aliyun.teaopenapi.models.Config;
 import lombok.Data;
+import lombok.SneakyThrows;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,13 +22,18 @@ public class AliServiceBuilder {
         this.props = ossProperties;
     }
 
+    //todo @sneakyThrows
+    @SneakyThrows
     @Bean
-    public AliService aliServiceBean() {
-        return new AliService()
-                .setOssClient(
+    public AliServiceObject aliServiceBean() {
+        return new AliServiceObject()
+                .setOss(
                         new OSSClientBuilder().build(props.getEndpoint(), props.getAccessKeyId()
                                 , props.getAccessKeySecret()))
-
+                .setClient(new Client(new Config()
+                        .setAccessKeyId(props.getAccessKeyId())
+                        .setEndpoint(props.getEndpoint())
+                        .setAccessKeySecret(props.getAccessKeySecret())))
                 .setAccessKeyId(props.getAccessKeyId())
                 .setEndpoint(props.getEndpoint())
                 .setBucketName(props.getBucketName())
@@ -33,4 +41,5 @@ public class AliServiceBuilder {
                 .setAccessKeySecret(props.getAccessKeySecret())
                 .setObjectNamePrefix(props.getObjectNamePrefix());
     }
+
 }

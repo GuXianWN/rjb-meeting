@@ -6,11 +6,9 @@ import java.io.File;
 import java.net.URL;
 
 @Service
-public interface FaceCheckService {
-    double checkFaceSimilarRate(File faceFile);
-
+public interface CheckFaceExistService {
     boolean hasFace(File file);
 
-    boolean hasFace(URL url);
+    boolean hasFace(String url);
 
 }
