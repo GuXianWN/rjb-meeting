@@ -16,14 +16,14 @@ import java.util.List;
 @NoArgsConstructor
 public class MeetingInfor {
     Long id;
-    String title;
+    String name;
     //String avatar;
-    String description;
+    String explain;
     UserVo owner;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    Date startAt;
+    Date beginTime;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    Date endAt;
+    Date endTime;
     //参加人数
     Integer attendTotalNumber;
     //已到人数
@@ -38,11 +38,11 @@ public class MeetingInfor {
     public static MeetingInfor from(Meeting meeting) {
         MeetingInfor meetingInfor = new MeetingInfor();
         meetingInfor.setId(meeting.getId())
-                .setTitle(meeting.getName())
-                .setDescription(meeting.getInstruction())
+                .setName(meeting.getName())
+                .setExplain(meeting.getInstruction())
                 .setOwner(UserVo.from(meeting.getCreateUid()))
-                .setStartAt(meeting.getBeginTime())
-                .setEndAt(meeting.getEndTime())
+                .setBeginTime(meeting.getBeginTime())
+                .setEndTime(meeting.getEndTime())
                 .setStatus(meeting.getState());
         return meetingInfor;
     }

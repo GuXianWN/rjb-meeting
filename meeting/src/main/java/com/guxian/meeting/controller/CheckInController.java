@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class CheckInController {
     private CheckInService checkInService;
 
-    @GetMapping
+    @PostMapping
     public ResponseData check(
             @RequestBody @Validated CheckDataVo checkDataVo
     ) {

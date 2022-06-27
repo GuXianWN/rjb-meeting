@@ -34,7 +34,6 @@ import java.util.*;
  * @createDate 2022-05-31 21:08:48
  */
 @Service
-
 public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
         implements MeetingService {
 

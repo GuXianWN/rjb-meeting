@@ -1,0 +1,6 @@
+FROM openjdk:11
+MAINTAINER om
+ADD ./target/face-check-1.0-SNAPSHOT.jar face.jar
+RUN bash -c 'touch /face.jar'
+ENTRYPOINT ["java","-jar","-Duser.timezone=GMT+8","face.jar"]
+EXPOSE 10013

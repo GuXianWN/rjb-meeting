@@ -30,7 +30,7 @@ public class MeetingVo {
     /**
      *  会议说明
      */
-    private String instruction;
+    private String explain;
 
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
@@ -60,7 +60,7 @@ public class MeetingVo {
                 .setCreateTime(this.createTime)
                 .setCreateUid(this.createUid)
                 .setEndTime(this.endTime)
-                .setInstruction(this.instruction)
+                .setInstruction(this.explain)
                 .setId(this.id)
                 .setName(this.name)
                 .setState(this.state);
@@ -74,7 +74,7 @@ public class MeetingVo {
                 .setCreateTime(meeting.getCreateTime())
                 .setCreateUid(meeting.getCreateUid())
                 .setEndTime(meeting.getEndTime())
-                .setInstruction(meeting.getInstruction())
+                .setExplain(meeting.getInstruction())
                 .setId(meeting.getId())
                 .setName(meeting.getName())
                 .setState(meeting.getState());
