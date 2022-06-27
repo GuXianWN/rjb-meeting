@@ -44,7 +44,7 @@ public class ResponseData {
         return respData;
     }
 
-    public static  ResponseData success(Object data) {
+    public static ResponseData success(Object data) {
         ResponseData respBean = new ResponseData();
         respBean.setCode(0);
         respBean.setMessage("success");
@@ -91,7 +91,6 @@ public class ResponseData {
     }
 
 
-
     public static ResponseData error() {
         ResponseData respBean = new ResponseData();
         respBean.setCode(-1);
@@ -100,8 +99,7 @@ public class ResponseData {
     }
 
 
-
-    public  ResponseData data(String key, Object value) {
+    public ResponseData data(String key, Object value) {
         if (data == null) {
             var tmp = new HashMap<>();
             tmp.put(key, value);
@@ -115,7 +113,16 @@ public class ResponseData {
         return this;
     }
 
-    public static  ResponseData is(boolean bool) {
+    public static ResponseData is(boolean bool) {
         return bool ? success() : error();
+    }
+
+    public static ResponseData is(boolean bool, BizCodeEnum bizCodeEnum) {
+        return bool ? success() : atBizCodeEnum(bizCodeEnum);
+    }
+
+    //检测响应是否正常
+    public static boolean returnIs(ResponseData responseData) {
+        return responseData.getCode() != 0;
     }
 }

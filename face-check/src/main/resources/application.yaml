@@ -51,3 +51,6 @@ oss:
   download-prefix: https://cocos-kepu.oss-cn-beijing.aliyuncs.com/ruanjianbei_2022/
   face-filename-prefix: FACE_
   face-filename-suffix: .png
+
+face-compare:
+  minimum-confidence: 0.8
