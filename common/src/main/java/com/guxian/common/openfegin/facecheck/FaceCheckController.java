@@ -7,8 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.File;
 
-@FeignClient(value = "face_check")
+
+//@FeignClient(value = "face_check")
 public interface FaceCheckController {
-    @PostMapping("/face/compare")
+//    @PostMapping("/face/compare")
     ResponseData compareFace(File file);
 }

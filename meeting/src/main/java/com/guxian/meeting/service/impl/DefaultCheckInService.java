@@ -3,7 +3,6 @@ package com.guxian.meeting.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.guxian.common.CheckWay;
-import com.guxian.common.entity.ResponseData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.openfegin.facecheck.FaceCheckController;
@@ -32,11 +31,12 @@ public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn>
 
     private final UserMeetingService userMeetingService;
 
-    private final FaceCheckController faceCheckController;
+    private FaceCheckController faceCheckController;
 
-    public DefaultCheckInService(UserMeetingService userMeetingService, FaceCheckController faceCheckController) {
+    public DefaultCheckInService(UserMeetingService userMeetingService
+            ) {
         this.userMeetingService = userMeetingService;
-        this.faceCheckController = faceCheckController;
+        this.faceCheckController = null;
     }
 
 
