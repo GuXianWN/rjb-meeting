@@ -17,7 +17,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 如果有多个拦截器，继续registry.add往下添加就可以啦
-        if (closeTokenCheck) {
+        if (!closeTokenCheck) {
             registry.addInterceptor(permissionsCheck).addPathPatterns("/**");
         }
     }

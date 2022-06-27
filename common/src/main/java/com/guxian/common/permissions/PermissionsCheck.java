@@ -82,12 +82,13 @@ public class PermissionsCheck implements HandlerInterceptor {
 
         CurrentUserSession.setUserSession(user,closed);
 
-        // 放行白名单
-        if (accessUrls.stream().anyMatch(url -> antPathMatcher.match(url, requestURI))) {
-            return true;
-        }
-
-        throw new ServiceException(BizCodeEnum.NO_ACCESS);
+        return true;
+//        // 放行白名单
+//        if (accessUrls.stream().anyMatch(url -> antPathMatcher.match(url, requestURI))) {
+//            return true;
+//        }
+//
+//        throw new ServiceException(BizCodeEnum.NO_ACCESS);
     }
 
 }
