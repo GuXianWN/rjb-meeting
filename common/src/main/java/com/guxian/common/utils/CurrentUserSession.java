@@ -1,10 +1,7 @@
 package com.guxian.common.utils;
 
 import com.guxian.common.entity.UserSession;
-import com.mysql.cj.log.Log;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 @Log4j2
 public class CurrentUserSession {
