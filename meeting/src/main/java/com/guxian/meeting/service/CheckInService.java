@@ -3,6 +3,7 @@ package com.guxian.meeting.service;
 import com.guxian.meeting.entity.CheckIn;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.guxian.meeting.entity.vo.CheckDataVo;
+import com.guxian.meeting.entity.vo.ReCheckVo;
 import org.springframework.cloud.client.loadbalancer.RequestData;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public interface CheckInService extends IService<CheckIn> {
     boolean checkIn(CheckDataVo checkDataVo);
 
     List<CheckIn> getCheckInList(Long checkId);
+
+    void reCheck(ReCheckVo reCheckVo, Long uid);
 }

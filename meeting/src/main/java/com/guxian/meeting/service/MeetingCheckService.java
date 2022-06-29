@@ -17,4 +17,6 @@ public interface MeetingCheckService extends IService<MeetingCheck> {
 
 
     List<CheckInfor> getCheckInList(Long id);
+
+    MeetingCheck getCheckById(Long checkId);
 }

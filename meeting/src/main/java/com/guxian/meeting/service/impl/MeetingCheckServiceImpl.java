@@ -106,6 +106,12 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
         });
         return list;
     }
+
+    @Override
+    public MeetingCheck getCheckById(Long checkId) {
+        return Optional.ofNullable(baseMapper.selectById(checkId))
+                .orElseThrow(()->new ServiceException(BizCodeEnum.CHECK_DOES_NOT_EXIST));
+    }
 }
 
 
