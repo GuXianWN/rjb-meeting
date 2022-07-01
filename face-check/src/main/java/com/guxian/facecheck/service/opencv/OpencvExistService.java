@@ -36,7 +36,7 @@ public class OpencvExistService implements CheckFaceExistService {
         // 对图片检测
         MatOfRect faceDetections = new MatOfRect();
         //获取当前项目路径
-        log.info("当前训练集路径: {}  ",RESOURCE_PATH + "\\haarcascade_frontalface_alt.xml");
+        log.info("当前训练集路径: {}  ",RESOURCE_PATH + "/haarcascade_frontalface_alt.xml");
         CascadeClassifier faceDetector = new CascadeClassifier(RESOURCE_PATH + "/haarcascade_frontalface_alt.xml");
         faceDetector.detectMultiScale(image, faceDetections);
         Rect[] rects = faceDetections.toArray();

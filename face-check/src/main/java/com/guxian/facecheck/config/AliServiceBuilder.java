@@ -41,5 +41,4 @@ public class AliServiceBuilder {
                 .setAccessKeySecret(props.getAccessKeySecret())
                 .setObjectNamePrefix(props.getObjectNamePrefix());
     }
-
 }

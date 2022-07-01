@@ -1,6 +1,7 @@
 package com.guxian.facecheck.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 
@@ -22,4 +23,6 @@ public interface OssService {
 
 
     File downloadObject(String filename);
+
+    String uploadMultipart(MultipartFile file);
 }

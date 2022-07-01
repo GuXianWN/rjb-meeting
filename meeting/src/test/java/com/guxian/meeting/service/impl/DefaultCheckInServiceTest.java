@@ -48,7 +48,7 @@ class DefaultCheckInServiceTest {
         var code = SomeUtils.randomString(6);
 
         // Setup
-        final CheckDataVo checkDataVo = new CheckDataVo(0L, code, null, CheckWay.CODE,1);
+        final CheckDataVo checkDataVo = new CheckDataVo();
 
 
         //add code to redis
