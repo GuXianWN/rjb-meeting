@@ -4,9 +4,7 @@ import com.guxian.common.entity.PageData;
 import com.guxian.meeting.entity.Meeting;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.guxian.meeting.entity.MeetingInfor;
-import com.guxian.meeting.entity.vo.UserVo;
 
-import java.util.List;
 import java.util.Optional;
 
 /**

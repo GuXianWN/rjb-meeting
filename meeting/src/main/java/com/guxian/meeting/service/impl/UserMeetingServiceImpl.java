@@ -29,10 +29,9 @@ import java.util.Optional;
  *
  */
 @Service
-@Setter(onMethod_ = @Autowired)
 public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserMeeting>
         implements UserMeetingService {
-    UserMeetingMapper userMeetingMapper;
+
     @Autowired
     private JwtUtils jwtUtils;
 
@@ -43,7 +42,7 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
 
     @Override
     public void checkIn(Long meetingId, CheckWay way) {
-        List<UserMeeting> userMeetings = userMeetingMapper.queryByMidAndUid(meetingId, CurrentUserSession.getUserSession().getUserId());
+        List<UserMeeting> userMeetings = baseMapper.queryByMidAndUid(meetingId, CurrentUserSession.getUserSession().getUserId());
         if (!userMeetings.isEmpty()) {
             throw new ServiceException(BizCodeEnum.CHECK_IN_ALREADY);
         }

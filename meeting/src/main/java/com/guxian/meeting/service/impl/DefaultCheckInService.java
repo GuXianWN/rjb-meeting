@@ -3,19 +3,27 @@ package com.guxian.meeting.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.guxian.common.CheckWay;
+import com.guxian.common.entity.ResponseData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.openfegin.facecheck.FaceCheckController;
 import com.guxian.common.redis.RedisUtils;
+import com.guxian.meeting.clients.FaceCheckClient;
 import com.guxian.meeting.entity.CheckIn;
+import com.guxian.meeting.entity.Meeting;
 import com.guxian.meeting.entity.MeetingCheck;
 import com.guxian.meeting.entity.vo.CheckDataVo;
+import com.guxian.meeting.entity.vo.ReCheckVo;
 import com.guxian.meeting.service.CheckInService;
 import com.guxian.meeting.mapper.CheckInMapper;
+import com.guxian.meeting.service.MeetingCheckService;
+import com.guxian.meeting.service.MeetingService;
 import com.guxian.meeting.service.UserMeetingService;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,16 +36,15 @@ import java.util.List;
 @Log4j2
 public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn>
         implements CheckInService {
+    @Autowired
+    private UserMeetingService userMeetingService;
+    @Autowired
+    private FaceCheckClient faceCheckClient;
 
-    private final UserMeetingService userMeetingService;
-
-    private FaceCheckController faceCheckController;
-
-    public DefaultCheckInService(UserMeetingService userMeetingService
-            ) {
-        this.userMeetingService = userMeetingService;
-        this.faceCheckController = null;
-    }
+    @Autowired
+    private MeetingServiceImpl meetingService;
+    @Autowired
+    private MeetingCheckService meetingCheckService;
 
 
     /**
@@ -80,13 +87,23 @@ public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn>
 
     public boolean checkInUseFace(CheckDataVo checkDataVo) {
         var face = checkDataVo.getFace();
-        var responseData = faceCheckController.compareFace(face);
+        var responseData = faceCheckClient.compareFace(face);
         return true;
     }
 
     @Override
     public List<CheckIn> getCheckInList(Long checkId) {
         return baseMapper.selectList(new QueryWrapper<CheckIn>().eq("cid", checkId));
+    }
+
+    @Override
+    public void reCheck(ReCheckVo reCheckVo, Long uid) {
+        Meeting meeting = meetingService.getMeetingById(reCheckVo.getMid());
+        if (!meeting.getCreateUid().equals(uid)) {
+            throw new ServiceException(BizCodeEnum.NO_ACCESS);
+        }
+        meetingCheckService.getCheckById(reCheckVo.getCheckId());
+        baseMapper.insert(new CheckIn(null, new Date(), reCheckVo.getUid(), reCheckVo.getCheckId()));
     }
 }
 

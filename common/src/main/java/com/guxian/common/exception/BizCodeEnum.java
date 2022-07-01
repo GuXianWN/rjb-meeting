@@ -25,6 +25,7 @@ public enum BizCodeEnum {
 
     CHECK_IN_CODE_NOT_EXIST(12001, "不存在签到码方式"),
     CHECK_IN_CODE_ERROR(12002, "签到码错误"),
+    CHECK_DOES_NOT_EXIST(12003,"签到不存在"),
 
 
     USER_EXIST_EXCEPTION(15001, "用户已存在"),

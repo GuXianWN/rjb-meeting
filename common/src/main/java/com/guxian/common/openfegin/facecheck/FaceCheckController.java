@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.io.File;
 
 
-@FeignClient(value = "face-check")
+//@FeignClient(value = "face_check")
 public interface FaceCheckController {
-    @PostMapping("/face/compare")
+//    @PostMapping("/face/compare")
     ResponseData compareFace(File file);
 
     @PostMapping("/face/upload")
