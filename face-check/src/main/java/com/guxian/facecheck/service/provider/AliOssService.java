@@ -8,6 +8,7 @@ import com.guxian.facecheck.service.OSSForFaceService;
 import com.guxian.facecheck.service.OssService;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
+import org.junit.jupiter.api.Order;
 import org.springframework.stereotype.Service;
 import com.aliyun.oss.model.PutObjectRequest;
 
@@ -17,6 +18,7 @@ import java.io.File;
 @Service
 @Log4j2
 @Data
+@Order(1)
 public class AliOssService implements OssService {
 
     private final AliServiceObject aliServiceObject;

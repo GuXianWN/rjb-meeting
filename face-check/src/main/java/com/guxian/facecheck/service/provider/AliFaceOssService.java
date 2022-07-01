@@ -9,11 +9,13 @@ import com.guxian.facecheck.service.CheckFaceExistService;
 import com.guxian.facecheck.service.OSSForFaceService;
 import com.guxian.facecheck.service.OssService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.time.Instant;
 import java.util.Date;
 
+@Service
 public class AliFaceOssService implements OSSForFaceService {
 
     private final OssService ossService;

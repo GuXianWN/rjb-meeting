@@ -38,6 +38,8 @@ spring:
   servlet:
     multipart:
       enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
 file:
   upload:
     path: /home/rjb/upload/
@@ -51,6 +53,5 @@ oss:
   download-prefix: https://cocos-kepu.oss-cn-beijing.aliyuncs.com/ruanjianbei_2022/
   face-filename-prefix: FACE_
   face-filename-suffix: .png
-
 face-compare:
   minimum-confidence: 0.8

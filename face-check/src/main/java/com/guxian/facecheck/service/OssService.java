@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 
-@Service
 public interface OssService {
     /**
      * 上传图片

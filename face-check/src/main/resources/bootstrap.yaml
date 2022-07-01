@@ -1,6 +1,6 @@
 spring:
   application:
-    name: face_check # 服务名称
+    name: face-check # 服务名称
   cloud:
     nacos:
       discovery:
@@ -13,9 +13,4 @@ spring:
         ext-config[0].data-id: db.yaml
   profiles:
     active: dev
-
-feign:
-  client:
-    config:
-      airport-service:
 

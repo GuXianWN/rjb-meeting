@@ -14,6 +14,8 @@ public enum BizCodeEnum {
     UNKNOWN_EXCEPTION(10000, "未知异常"),
     VALID_EXCEPTION(10001, "参数校验异常"),
     OSS_INIT_EXCEPTION(10002, "服务器初始OSS异常"),
+    UPLOAD_ERROR(10003, "上传异常"),
+
 
     CREATE_MEETING_FAILED(11001, "创建会议失败"),
     UPDATE_MEETING_FAILED(11002, "更新会议失败"),
@@ -21,9 +23,8 @@ public enum BizCodeEnum {
 
     MEETING_NOT_EXIST(11003, "会议不存在"),
 
-    CHECK_IN_CODE_NOT_EXIST(12001,"不存在签到码方式" ),
+    CHECK_IN_CODE_NOT_EXIST(12001, "不存在签到码方式"),
     CHECK_IN_CODE_ERROR(12002, "签到码错误"),
-
 
 
     USER_EXIST_EXCEPTION(15001, "用户已存在"),
@@ -34,10 +35,11 @@ public enum BizCodeEnum {
     NO_ACCESS(15006, "无权限访问"),
     CHECK_IN_FAIL(15007, "签到失败"),
     CHECK_IN_ALREADY(15008, "已签到"),
-    NOT_LOGGED_IN(15009,"未登录"),
+    NOT_LOGGED_IN(15009, "未登录"),
     USER_FACE_NOT_EXIST(15010, "该用户未上传脸部照片"),
     NO_FACE_WAS_DETECTED(15011, "未检测到面部图像"),
     FACE_CONTRAST_INCONSISTENT(15012, "脸部和数据库中不一致！尝试变化角度再试一次！"),
+    NUMBER_OF_UPLOADED_FILE_NOT_ONE(15013, "文件上传为空或大于1"),
 
     ;
 
