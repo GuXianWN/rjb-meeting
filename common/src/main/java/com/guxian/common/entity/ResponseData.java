@@ -19,6 +19,7 @@ import java.util.Map;
 @Accessors(chain = true)
 public class ResponseData {
 
+
     private ResponseData() {
     }
 
@@ -119,6 +120,10 @@ public class ResponseData {
 
     public static ResponseData is(boolean bool, BizCodeEnum bizCodeEnum) {
         return bool ? success() : atBizCodeEnum(bizCodeEnum);
+    }
+
+    public static <T> ResponseData is(boolean bool, BizCodeEnum bizCodeEnum, T object) {
+        return bool ? success().data(object) : atBizCodeEnum(bizCodeEnum);
     }
 
     //检测响应是否正常

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 
-@Service
 public interface OSSForFaceService {
     /**
      * @param file   脸图片
