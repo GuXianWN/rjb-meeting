@@ -6,30 +6,39 @@ import com.guxian.common.exception.ServiceException;
 import com.guxian.facecheck.service.FaceCompareService;
 import com.guxian.facecheck.service.OSSForFaceService;
 import com.guxian.facecheck.service.OssService;
+import com.guxian.facecheck.service.provider.AliOssService;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import javax.annotation.Resource;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/face")
+@Slf4j
 public class FaceCheckController {
     private final OssService ossService;
     private final OSSForFaceService faceOss;
     private final FaceCompareService faceCompareService;
 
+    @Resource
+    private AliOssService aliOssService;
+
     @Value("${face-compare.minimum-confidence}")
     private double minimumConfidence = 0.9;
 
-    private String tmpDir = System.getProperty("user.dir").replace('\\', '/') + "/src/main/resources/tmp";
+    private String tmpDir = System.getProperty("user.dir").replace('\\', '/') + "/userFace";
 
     public FaceCheckController(OssService ossService,
                                 OSSForFaceService faceOss,
@@ -53,7 +62,6 @@ public class FaceCheckController {
             throw new ServiceException(BizCodeEnum.NUMBER_OF_UPLOADED_FILE_NOT_ONE);
         }
 
-
         // mkdir
         String fileName = files.getName();  // 文件名
         File dest = new File(tmpDir + '/' + fileName);
@@ -66,5 +74,16 @@ public class FaceCheckController {
         Files.write(path, bytes);
         var check = faceOss.uploadFace(dest);
         return ResponseData.is(StringUtils.hasText(check), BizCodeEnum.UPLOAD_ERROR);
+    }
+
+    @PostMapping("/demo")
+    public ResponseData demo(@RequestParam MultipartFile file) {
+        //校验格式
+        if (!StringUtils.endsWithIgnoreCase(file.getOriginalFilename(), ".jpg")){
+            return ResponseData.error("文件格式错误");
+        }
+        //康康是不是头
+        String url = faceOss.demo(file);
+        return ResponseData.success().data("url",url);
     }
 }
