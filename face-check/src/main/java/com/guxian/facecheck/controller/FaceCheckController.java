@@ -55,14 +55,14 @@ public class FaceCheckController {
 
 
         // mkdir
-        String fileName = files.getName();  // 文件名
+        String fileName = files.getOriginalFilename();  // 文件名
         File dest = new File(tmpDir + '/' + fileName);
         if (!dest.getParentFile().exists()) {
             dest.getParentFile().mkdirs();
         }
 
         byte[] bytes = files.getBytes();
-        Path path = Paths.get(tmpDir + '/' + files.getOriginalFilename());
+        Path path = Paths.get(dest.getPath());
         Files.write(path, bytes);
         var check = faceOss.uploadFace(dest);
         return ResponseData.is(StringUtils.hasText(check), BizCodeEnum.UPLOAD_ERROR);
