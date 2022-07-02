@@ -75,9 +75,9 @@ public class UserMeetingController {
     /**
      * 用户接受邀请
      */
-    @PutMapping("/invite/{mid}")
-    public ResponseData acceptInvite(@PathVariable Long mid) {
-        boolean invite = userMeetingService.acceptInvite(mid);
+    @PutMapping("/invite/{umid}")
+    public ResponseData acceptInvite(@PathVariable Long umid) {
+        boolean invite = userMeetingService.acceptInvite(umid);
         return invite ? ResponseData.success("加入成功") : ResponseData.error("加入失败");
     }
 
