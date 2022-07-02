@@ -13,6 +13,7 @@ import com.guxian.meeting.entity.UserMeeting;
 import com.guxian.meeting.entity.vo.MeetingVo;
 import com.guxian.meeting.service.MeetingService;
 import com.guxian.meeting.service.UserMeetingService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -63,7 +64,7 @@ public class MeetingController {
     }
 
     @PatchMapping
-    public ResponseData updateMeeting(@RequestBody @Validated(UpdateGroup.class) MeetingVo meeting,HttpServletRequest request) {
+    public ResponseData updateMeeting(@RequestBody @Validated(UpdateGroup.class) @NotNull MeetingVo meeting, HttpServletRequest request) {
         Long uid = jwtUtils.getUid(request);
         return ResponseData.success()
                 .data(

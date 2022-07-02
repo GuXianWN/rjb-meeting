@@ -24,4 +24,14 @@ public interface UserMeetingService extends IService<UserMeeting> {
     UserMeeting joinMeeting(Long mid, Long uid);
 
     PageData getMeetingJoinList(Long uid, Long page, Long size);
+
+    void invite(List<Long> uids,Long mid);
+
+    boolean acceptInvite(Long mid);
+
+    boolean acceptJoin(Long umid);
+
+    UserMeeting selectById(Long umid);
+
+    PageData list(Long page, Long size);
 }
