@@ -3,6 +3,8 @@ package com.guxian.facecheck.service.provider;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.utils.CurrentUserSession;
+import com.guxian.common.utils.FileCacheUtils;
+import com.guxian.common.utils.SomeUtils;
 import com.guxian.facecheck.entity.UserFace;
 import com.guxian.facecheck.repo.UserFaceRepo;
 import com.guxian.facecheck.service.CheckFaceExistService;
@@ -20,18 +22,15 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 
+import static org.aspectj.weaver.tools.cache.SimpleCacheFactory.path;
+
 @Service
 @Slf4j
 public class AliFaceOssService implements OSSForFaceService {
 
-    private final String tmpDir = System.getProperty("user.dir").replace('\\', '/') + "/userFace";
     private final OssService ossService;
 
-    @Value("${oss.face-filename-prefix}")
-    private String faceFilenamePrefix = "FACE_";
 
-    @Value("${oss.face-filename-suffix}")
-    private String faceFilenameSuffix = ".png";
 
     private final UserFaceRepo userFaceRepo;
 
@@ -55,18 +54,15 @@ public class AliFaceOssService implements OSSForFaceService {
     @SneakyThrows
     @Override
     public String uploadFace(InputStream inputStream, Long userId) {
-        String fileName = buildFileName(userId);
-        String path = tmpDir + "/" + fileName;
+        String fileName = SomeUtils.buildFileName(userId);
 
-        // 复制文件
-        File targetFile = new File(tmpDir, fileName);
-        FileUtils.writeByteArrayToFile(targetFile, inputStream.readAllBytes());
-        log.info("{}", path);
-        if (!checkFaceExistService.hasFace(path)) {
+        var fileCacheUtils = new FileCacheUtils("/face");
+        var file = fileCacheUtils.saveFile(inputStream, fileName);
+        if (!checkFaceExistService.hasFace(file)) {
             throw new ServiceException(BizCodeEnum.NO_FACE_WAS_DETECTED);
         }
 
-        String url = ossService.uploadObject(inputStream, fileName);
+        String url = ossService.uploadObject(new FileInputStream(file), fileName);
         // 从数据库查询是否有该用户的face 信息 ， 如果有 则返回 对应userId ，否则返回 null 的 id （视为没有对应用户的信息）
         var userFace = userFaceRepo.findByUserId(userId).orElse(new UserFace().setId(null));
         userFaceRepo.save(new UserFace()
@@ -81,7 +77,7 @@ public class AliFaceOssService implements OSSForFaceService {
 
     @Override
     public File downloadFace(Long userId) {
-        return ossService.downloadObject(buildFileName(userId));
+        return ossService.downloadObject(SomeUtils.buildFileName(userId));
     }
 
     @Override
@@ -89,7 +85,4 @@ public class AliFaceOssService implements OSSForFaceService {
         return downloadFace(CurrentUserSession.getUserSession().getUserId());
     }
 
-    private String buildFileName(Long userId) {
-        return faceFilenamePrefix + userId + faceFilenameSuffix;
-    }
 }

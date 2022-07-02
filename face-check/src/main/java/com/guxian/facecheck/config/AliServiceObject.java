@@ -24,6 +24,4 @@ public class AliServiceObject {
     private String bucketName;
 
     private String objectNamePrefix;
-
-
 }
