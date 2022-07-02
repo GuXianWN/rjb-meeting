@@ -3,10 +3,12 @@ package com.guxian.facecheck.controller;
 import com.guxian.common.entity.ResponseData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
+import com.guxian.common.utils.CurrentUserSession;
+import com.guxian.common.utils.FileCacheUtils;
+import com.guxian.common.utils.SomeUtils;
+import com.guxian.facecheck.repo.UserFaceRepo;
 import com.guxian.facecheck.service.FaceCompareService;
 import com.guxian.facecheck.service.OSSForFaceService;
-import com.guxian.facecheck.service.OssService;
-import com.guxian.facecheck.service.provider.AliOssService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,19 +16,20 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
-import java.io.*;
+import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 @RestController
 @RequestMapping("/face")
 @Slf4j
 public class FaceCheckController {
-    private final OssService ossService;
     private final OSSForFaceService faceOss;
     private final FaceCompareService faceCompareService;
-
-    @Resource
-    private AliOssService aliOssService;
+    private final UserFaceRepo userFaceRepo;
 
     @Value("${face-compare.minimum-confidence}")
     private double minimumConfidence = 0.9;
@@ -34,26 +37,46 @@ public class FaceCheckController {
     @Value("${oss.face-filename-suffix}")
     private String faceFilenameSuffix = ".png";
 
-    private String tmpDir = System.getProperty("user.dir").replace('\\', '/') + "/userFace";
-
-    public FaceCheckController(OssService ossService,
-                               OSSForFaceService faceOss,
-                               FaceCompareService faceCompareService) {
-        this.ossService = ossService;
+    public FaceCheckController(
+            OSSForFaceService faceOss,
+            FaceCompareService faceCompareService, UserFaceRepo userFaceRepo) {
         this.faceOss = faceOss;
         this.faceCompareService = faceCompareService;
+        this.userFaceRepo = userFaceRepo;
     }
 
     @PostMapping("/compare")
-    public ResponseData compareFace(File file) {
-        return ResponseData.is(faceCompareService.checkFaceSimilarRate(file) >= minimumConfidence
+    @SneakyThrows
+    //todo 文件夹中保存的文件命名为ULR 相关参数，减少从服务器的下载。
+    public ResponseData compareFace(@RequestParam(name = "file") MultipartFile file) {
+        if (file.isEmpty()) {
+            throw new ServiceException(BizCodeEnum.NUMBER_OF_UPLOADED_FILE_NOT_ONE);
+        }
+
+        var user = userFaceRepo.findByUserId(CurrentUserSession.getUserSession().getUserId());
+
+        var faceUrl = user.orElseThrow(() -> new ServiceException(BizCodeEnum.USER_FACE_NOT_EXIST))
+                .getFaceUrl();
+
+        if (!StringUtils.hasText(faceUrl)) {
+            throw new ServiceException(BizCodeEnum.USER_FACE_NOT_EXIST);
+        }
+
+        var fileCacheUtils = new FileCacheUtils("/face");
+        var remoteUserFaceImg = fileCacheUtils.saveFileFromRemote(new URL(faceUrl)
+                , SomeUtils.buildFileName(CurrentUserSession.getUserSession().getUserId()));
+
+        var paramFaceImg = fileCacheUtils.saveFile(file, SomeUtils.buildFileName(CurrentUserSession.getUserSession().getUserId()));
+
+        return ResponseData.is(faceCompareService
+                        .checkFaceSimilarRate(remoteUserFaceImg, paramFaceImg) >= minimumConfidence
                 , BizCodeEnum.FACE_CONTRAST_INCONSISTENT);
     }
 
 
     @PostMapping("/upload")
     @SneakyThrows
-    public ResponseData upload(@RequestParam MultipartFile file) {
+    public ResponseData upload(@RequestParam(name = "file") MultipartFile file) {
         if (file.isEmpty()) {
             throw new ServiceException(BizCodeEnum.NUMBER_OF_UPLOADED_FILE_NOT_ONE);
         }

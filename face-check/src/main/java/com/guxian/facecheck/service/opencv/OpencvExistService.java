@@ -35,16 +35,16 @@ public class OpencvExistService implements CheckFaceExistService {
 
     public boolean hasFace(String url) {
         String altXmlPath = ClassLoader.getSystemResource("haarcascade_frontalface_alt.xml").getPath();
-        var file1 = new File(altXmlPath);
-        log.info("file1.canRead():{} ", file1.canRead());
+        var file = new File(altXmlPath);
+        CascadeClassifier faceDetector = new CascadeClassifier(file.getPath());
+
+        log.info("file.canRead():{} ", file.canRead());
         Mat image = Imgcodecs.imread(url, 1);// 读取图片，第二个参数是图片读取方式0：灰度 1,彩色
         // 对图片检测
         MatOfRect faceDetections = new MatOfRect();
         //获取当前项目路径
-        var file = new File(altXmlPath);
         log.info("当前训练集路径: {}   可读：{}", file.getPath(), file.canRead());
 
-        CascadeClassifier faceDetector = new CascadeClassifier(file.getPath());
         faceDetector.detectMultiScale(image, faceDetections);
         Rect[] rects = faceDetections.toArray();
         return rects.length != 0;

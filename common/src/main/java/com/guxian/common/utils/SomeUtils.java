@@ -1,5 +1,7 @@
 package com.guxian.common.utils;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -9,6 +11,20 @@ public class SomeUtils {
     }
 
     private static final Random random = new Random();
+
+    private static String FACE_FILENAME_PREFIX = "FACE_";
+
+    private static String FACE_FILENAME_SUFFIX = ".png";
+
+    @Value("${oss.face-filename-prefix}")
+    public void setFaceFilenamePrefix(String faceFilenamePrefix) {
+        SomeUtils.FACE_FILENAME_PREFIX = faceFilenamePrefix;
+    }
+
+    @Value("${oss.face-filename-suffix}")
+    public void setFaceFilenameSuffix(String faceFilenameSuffix) {
+        SomeUtils.FACE_FILENAME_SUFFIX = faceFilenameSuffix;
+    }
 
     public static String addStringToArrayBetween(String str, String... array) {
         StringBuilder sb = new StringBuilder();
@@ -42,4 +58,8 @@ public class SomeUtils {
         return Objects.requireNonNull(SomeUtils.class.getClassLoader().getResource(path)).getPath();
     }
 
+
+    public static String buildFileName(Long userId) {
+        return SomeUtils.FACE_FILENAME_PREFIX + userId + SomeUtils.FACE_FILENAME_SUFFIX;
+    }
 }

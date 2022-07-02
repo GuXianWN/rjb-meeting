@@ -14,39 +14,40 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 
-@Service
-public class AliFaceCompareService implements FaceCompareService {
-
-    private final AliServiceObject aliServiceObject;
-
-    private final UserFaceRepo userFaceRepo;
-
-    public AliFaceCompareService(AliServiceObject aliServiceObject, UserFaceRepo userFaceRepo) {
-        this.aliServiceObject = aliServiceObject;
-        this.userFaceRepo = userFaceRepo;
-    }
-
-    @SneakyThrows
-    @Override
-    public double checkFaceSimilarRate(File faceFileA) {
-        var client = aliServiceObject.getClient();
-        CompareFaceRequest request = new CompareFaceRequest();
-        request.setQualityScoreThreshold(28F);
-        var user = userFaceRepo.findByUserId(CurrentUserSession.getUserSession().getUserId());
-//todo file should is inputstream
-        try (var fileInputStream = new FileInputStream(faceFileA)) {
-            request.setImageDataA(fileInputStream.readAllBytes());
-        }
-        var faceUrl = user.orElseThrow(() -> new ServiceException(BizCodeEnum.USER_FACE_NOT_EXIST))
-                .getFaceUrl();
-
-        if (!StringUtils.hasText(faceUrl)) {
-            throw new ServiceException(BizCodeEnum.USER_FACE_NOT_EXIST);
-        }
-
-        request.setImageURLB(faceUrl);
-        var runtime = new RuntimeOptions();
-        return client.compareFaceWithOptions(request, runtime).getBody().getData().getConfidence();
-    }
-}
+//@Service
+//public class AliFaceCompareService implements FaceCompareService {
+//
+//    private final AliServiceObject aliServiceObject;
+//
+//    private final UserFaceRepo userFaceRepo;
+//
+//    public AliFaceCompareService(AliServiceObject aliServiceObject, UserFaceRepo userFaceRepo) {
+//        this.aliServiceObject = aliServiceObject;
+//        this.userFaceRepo = userFaceRepo;
+//    }
+//
+//    @SneakyThrows
+//    @Override
+//    public double checkFaceSimilarRate(File faceFileA, File faceFileB) {
+//        var client = aliServiceObject.getClient();
+//        CompareFaceRequest request = new CompareFaceRequest();
+//        request.setQualityScoreThreshold(28F);
+//
+//
+//
+//        request.setImageDataA(faceFileA);
+//
+//        var faceUrl = user.orElseThrow(() -> new ServiceException(BizCodeEnum.USER_FACE_NOT_EXIST))
+//                .getFaceUrl();
+//
+//        if (!StringUtils.hasText(faceUrl)) {
+//            throw new ServiceException(BizCodeEnum.USER_FACE_NOT_EXIST);
+//        }
+//
+//        request.setImageURLB(faceUrl);
+//        var runtime = new RuntimeOptions();
+//        return client.compareFaceWithOptions(request, runtime).getBody().getData().getConfidence();
+//    }
+//}
