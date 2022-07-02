@@ -56,7 +56,7 @@ public class FileCacheUtils {
         var file = buildFilenameWithPath(filename);
         try (InputStream in = url.openStream();
         ) {
-            Files.copy(in, Paths.get(file.getPath()), StandardCopyOption.REPLACE_EXISTING);
+            saveFile(in, filename);
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }

@@ -1,6 +1,8 @@
 package com.guxian.facecheck.service.opencv;
 
 import com.alibaba.cloud.commons.lang.StringUtils;
+import com.guxian.common.exception.BizCodeEnum;
+import com.guxian.common.exception.ServiceException;
 import com.guxian.facecheck.service.FaceCompareService;
 import lombok.extern.log4j.Log4j2;
 import org.opencv.core.*;
@@ -10,17 +12,13 @@ import org.opencv.objdetect.CascadeClassifier;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
 
 @Log4j2
 @Service
 public class OpencvFaceCompareService implements FaceCompareService {
     private CascadeClassifier faceDetector;
-
 
     public OpencvFaceCompareService() {
         URL url = ClassLoader.getSystemResource("lib/opencv/opencv_java455.dll");
@@ -89,6 +87,7 @@ public class OpencvFaceCompareService implements FaceCompareService {
         }
         if (null == face) {
             log.info("conv_Mat未识别出该图像中的人脸，img={}", img);
+            throw new ServiceException(BizCodeEnum.NO_FACE_WAS_DETECTED);
         }
         return face;
     }

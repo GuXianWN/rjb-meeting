@@ -68,8 +68,10 @@ public class FaceCheckController {
 
         var paramFaceImg = fileCacheUtils.saveFile(file, SomeUtils.buildFileName(CurrentUserSession.getUserSession().getUserId()));
 
-        return ResponseData.is(faceCompareService
-                        .checkFaceSimilarRate(remoteUserFaceImg, paramFaceImg) >= minimumConfidence
+        var rate = faceCompareService
+                .checkFaceSimilarRate(remoteUserFaceImg, paramFaceImg);
+        log.warn("current rate is {}=======", rate);
+        return ResponseData.is(rate >= minimumConfidence
                 , BizCodeEnum.FACE_CONTRAST_INCONSISTENT);
     }
 
