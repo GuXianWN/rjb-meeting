@@ -3,6 +3,7 @@ package com.guxian.facecheck.service;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
 
 public interface CheckFaceExistService {
