@@ -34,7 +34,7 @@ public class AliFaceCompareService implements FaceCompareService {
         CompareFaceRequest request = new CompareFaceRequest();
         request.setQualityScoreThreshold(28F);
         var user = userFaceRepo.findByUserId(CurrentUserSession.getUserSession().getUserId());
-
+//todo file should is inputstream
         try (var fileInputStream = new FileInputStream(faceFileA)) {
             request.setImageDataA(fileInputStream.readAllBytes());
         }

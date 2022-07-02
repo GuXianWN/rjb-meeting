@@ -7,6 +7,7 @@ import com.guxian.facecheck.repo.UserFaceRepo;
 import com.guxian.facecheck.service.OSSForFaceService;
 import com.guxian.facecheck.service.OssService;
 import lombok.Data;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Order;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 
 
@@ -33,28 +35,14 @@ public class AliOssService implements OssService {
     }
 
 
+    @SneakyThrows
     @Override
-    public String uploadObject(File file, String filename) {
+    public String uploadObject(InputStream inputStream, String filename) {
         var objectName = aliServiceObject.getObjectNamePrefix() + filename;
-        PutObjectRequest putObjectRequest = new PutObjectRequest(aliServiceObject.getBucketName(), objectName, file);
+        PutObjectRequest putObjectRequest = new PutObjectRequest(aliServiceObject.getBucketName(), objectName, inputStream);
         aliServiceObject.getOss().putObject(putObjectRequest);
         aliServiceObject.getOss().shutdown();
         return aliServiceObject.getDownloadPathPrefix() + filename;
-    }
-
-    @Override
-    public String uploadMultipart(MultipartFile file) {
-        var objectName = UUID.randomUUID().toString() + file.getOriginalFilename();
-        try {
-            aliServiceObject.getOss()
-                    .putObject(aliServiceObject.getBucketName(),
-                            aliServiceObject.getObjectNamePrefix() + objectName,
-                            new ByteArrayInputStream(file.getBytes()));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        aliServiceObject.getOss().shutdown();
-        return aliServiceObject.getDownloadPathPrefix() + objectName;
     }
 
     @Override

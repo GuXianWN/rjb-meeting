@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.InputStream;
 
 public interface OssService {
     /**
@@ -14,7 +15,7 @@ public interface OssService {
      * @return 图片URL
      */
 
-    String uploadObject(File file, String name);
+    String uploadObject(InputStream file, String name);
 
 
 
@@ -24,5 +25,4 @@ public interface OssService {
 
     File downloadObject(String filename);
 
-    String uploadMultipart(MultipartFile file);
 }

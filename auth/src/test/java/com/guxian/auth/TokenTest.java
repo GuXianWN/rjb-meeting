@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,20 +33,20 @@ class TokenTest {
     }
 
     @Test
-    public void matches(){
-        String rawPassword="123456";
+    public void matches() {
+        String rawPassword = "123456";
         String encodedPassword = passwordEncoder.encode(rawPassword);
-        System.out.println(passwordEncoder.matches(rawPassword,encodedPassword));
+        System.out.println(passwordEncoder.matches(rawPassword, encodedPassword));
     }
 
     @Test
-    public void toToken(){
+    public void toToken() {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", 1);
 
         Date nowDate = new Date();
         //过期时间
-        Date expireDate = new Date(nowDate.getTime() + 1);
+        Date expireDate = Date.from(Instant.now().plusMillis(24 * 60));
         String token = Jwts.builder()
                 .setHeaderParam("type", "JWT")
                 .setClaims(claims)
@@ -55,8 +56,13 @@ class TokenTest {
         System.out.println(token);
     }
 
+
     @Test
-    public void parse(){
+    void  generateToken(){
+        System.out.println(jwtUtils.generateToken(1L));
+    }
+    @Test
+    public void parse() {
         jwtUtils.getClaimByToken("eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFM1MTIifQ.eyJleHAiOjE2NTU4NjUyMTEsInVzZXJJZCI6MX0.kCm2exOHsT2uKPIcofl_cGpotY5p3g_AyYtRbxxrS75ZVM0tASbtdNr2LSIul0DmrxGdd3PAHM-YUA2z0nX1CA");
     }
 }
