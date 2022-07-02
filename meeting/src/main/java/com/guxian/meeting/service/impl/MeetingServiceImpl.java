@@ -51,7 +51,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     @Override
     public Optional<Meeting> addMeeting(Meeting meeting, Long uid) {
         meeting.setCreateTime(new Date());
-        this.save(meeting.setCreateUid(uid));
+        this.save(meeting.setCreateUid(uid).setState(0));
         return Optional.ofNullable(meeting.getId() != null ? meeting : null);
     }
 
@@ -71,8 +71,11 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
 
     @Override
     public Meeting getMeetingById(Long id) {
-        return Optional.ofNullable(baseMapper.selectById(id))
+        Meeting meeting = Optional.ofNullable(baseMapper.selectById(id))
                 .orElseThrow(() -> new ServiceException(BizCodeEnum.MEETING_NOT_EXIST));
+        //检查状态
+        checkMeetingState(meeting);
+        return meeting;
     }
 
     @Override
@@ -84,7 +87,11 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     public PageData getAll(Long page, Long size) {
         Page<Meeting> meetingPage = new Page<>(page, size);
         IPage<Meeting> iPage = baseMapper.selectPage(meetingPage, new QueryWrapper<Meeting>());
-        return new PageData(page, size, iPage.getTotal(), iPage.getRecords());
+        //检查状态
+        List<Meeting> meetingList = iPage.getRecords();
+        meetingList.forEach(this::checkMeetingState);
+
+        return new PageData(page, size, iPage.getTotal(), meetingList);
     }
 
     @Override
@@ -92,15 +99,23 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
         PageData joinList = userMeetingService.getMeetingJoinList(uid, page, size);
         List<UserMeeting> list = (List<UserMeeting>) joinList.getData();
         List<Meeting> meetings=new ArrayList<>();
+
         list.forEach(v->{
             meetings.add(getMeetingById(v.getMid()));
         });
+
+        //检查状态
+        meetings.forEach(this::checkMeetingState);
         return joinList.setData(meetings);
     }
 
     @Override
     public MeetingInfor getMeetingInfo(Long id) {
         Meeting meeting = baseMapper.selectById(id);
+
+        //检查状态
+        checkMeetingState(meeting);
+
         if (meeting == null) {
             throw new ServiceException(BizCodeEnum.MEETING_NOT_EXIST);
         }
@@ -119,10 +134,41 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
                 .eq(Meeting::getCreateUid, uid));
         List<MeetingInfor> list=new ArrayList<>();
         List<Meeting> meetingList = iPage.getRecords();
+
+        //检查状态
+        meetingList.forEach(this::checkMeetingState);
+
         meetingList.forEach(v->{
             list.add(getMeetingInfo(v.getId()));
         });
         return new PageData(page,size,iPage.getTotal(), list);
+    }
+
+    @Override
+    public void checkMeetingState(Meeting meeting) {
+        Date date = new Date();
+        //会议还没开始
+        if (date.before(meeting.getBeginTime())){
+            check(meeting,0);
+            return;
+        }
+        //会议在进行中
+        if (date.after(meeting.getBeginTime())&&date.before(meeting.getEndTime())){
+            check(meeting,1);
+            return;
+        }
+        //会议结束
+        if (date.after(meeting.getEndTime())){
+            check(meeting,2);
+            return;
+        }
+    }
+
+    public void check(Meeting meeting,Integer state){
+        if (!meeting.getState().equals(state)){
+            meeting.setState(state);
+            baseMapper.updateById(meeting);
+        }
     }
 }
 

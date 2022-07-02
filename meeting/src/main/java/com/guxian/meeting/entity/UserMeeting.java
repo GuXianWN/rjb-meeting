@@ -48,13 +48,19 @@ public class UserMeeting implements Serializable {
     /**
      * 加入时间
      */
-    @JsonFormat
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date joinTime;
 
     /**
      * 退出时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date exitTime;
+
+    /**
+     * 加入状态
+     */
+    private Integer joinState;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

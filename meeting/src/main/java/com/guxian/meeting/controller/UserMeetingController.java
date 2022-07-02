@@ -1,5 +1,6 @@
 package com.guxian.meeting.controller;
 
+import com.guxian.common.entity.PageData;
 import com.guxian.common.entity.ResponseData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/meeting/user")
@@ -38,17 +40,53 @@ public class UserMeetingController {
 
     /**
      * 会议的参与者
-     *
-     * @param mid
-     * @return
      */
     @GetMapping("/{mid}")
     public ResponseData getUserByMeeting(@PathVariable("mid") Long mid) {
         return ResponseData.success().data(userMeetingService.getUserByMeeting(mid));
     }
 
+    /**
+     * 加入会议
+     */
     @PostMapping("/join/{mid}")
     public ResponseData joinMeeting(@PathVariable Long mid, HttpServletRequest request) {
         return ResponseData.success().data(userMeetingService.joinMeeting(mid, jwtUtils.getUid(request)));
+    }
+
+    /**
+     * 会议主持接受加入
+     */
+    @PutMapping("/join/{umid}")
+    public ResponseData acceptJoin(@PathVariable Long umid) {
+        boolean join = userMeetingService.acceptJoin(umid);
+        return join ? ResponseData.success("加入成功") : ResponseData.error("加入失败");
+    }
+
+    /**
+     * 邀请别人加入
+     */
+    @PostMapping("/invite/{mid}")
+    public ResponseData invite(@RequestBody List<Long> uids, @PathVariable Long mid) {
+        userMeetingService.invite(uids, mid);
+        return ResponseData.success();
+    }
+
+    /**
+     * 用户接受邀请
+     */
+    @PutMapping("/invite/{umid}")
+    public ResponseData acceptInvite(@PathVariable Long umid) {
+        boolean invite = userMeetingService.acceptInvite(umid);
+        return invite ? ResponseData.success("加入成功") : ResponseData.error("加入失败");
+    }
+
+    /**
+     * 我加入的会议
+     */
+    @GetMapping("/list")
+    public ResponseData list(Long page, Long size) {
+        PageData pageData = userMeetingService.list(page, size);
+        return ResponseData.success().data(pageData);
     }
 }
