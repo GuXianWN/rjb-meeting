@@ -30,8 +30,6 @@ public class AliFaceOssService implements OSSForFaceService {
 
     private final OssService ossService;
 
-
-
     private final UserFaceRepo userFaceRepo;
 
     private final CheckFaceExistService checkFaceExistService;
@@ -45,7 +43,6 @@ public class AliFaceOssService implements OSSForFaceService {
     }
 
 
-    @SneakyThrows
     @Override
     public String uploadFace(InputStream inputStream) {
         return uploadFace(inputStream, CurrentUserSession.getUserSession().getUserId());
@@ -84,5 +81,4 @@ public class AliFaceOssService implements OSSForFaceService {
     public File downloadFace() {
         return downloadFace(CurrentUserSession.getUserSession().getUserId());
     }
-
 }

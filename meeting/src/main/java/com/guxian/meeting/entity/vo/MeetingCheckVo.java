@@ -19,7 +19,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 会议发起的签到记录，统计每一场会议发起的签到，主要解决的是一场会议发起了多次签到的问题
+ * 会议发起的签到记录，统计每一场会议发起的签到，
+ * 主要解决的是一场会议发起了多次签到的问题
+ *  传入参数
  *
  * @TableName meeting_check
  */
