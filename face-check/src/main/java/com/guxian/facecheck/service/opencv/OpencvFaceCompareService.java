@@ -15,6 +15,9 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 
+/**
+ * 比对2张图的人脸相似度 （越接近1越相似）
+ */
 @Log4j2
 @Service
 public class OpencvFaceCompareService implements FaceCompareService {
@@ -29,7 +32,7 @@ public class OpencvFaceCompareService implements FaceCompareService {
 
     @Override
     public double checkFaceSimilarRate(File faceFileA, File faceFileB) {
-//         2- 比对本地2张图的人脸相似度 （越接近1越相似）
+
         Mat mat_1 = conv_Mat(faceFileA.getAbsolutePath());
         Mat mat_2 = conv_Mat(faceFileB.getAbsolutePath());
         Mat hist_1 = new Mat();
@@ -45,6 +48,7 @@ public class OpencvFaceCompareService implements FaceCompareService {
 
         // CORREL 相关系数
         double res = Imgproc.compareHist(hist_1, hist_2, Imgproc.CV_COMP_CORREL);
+        log.info("当前比较的结果系数为： {}", res);
         return res;
     }
 
