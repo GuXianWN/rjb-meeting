@@ -16,6 +16,11 @@ public class ServiceException extends RuntimeException {
         this.status = status.value();
     }
 
+    public ServiceException(String message,Integer code){
+        super(message);
+        this.status = code;
+    }
+
     public ServiceException(BizCodeEnum bizCodeEnum) {
         super(bizCodeEnum.getMsg());
         this.status = bizCodeEnum.getCode();

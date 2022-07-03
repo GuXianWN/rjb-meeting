@@ -22,7 +22,7 @@ public class CheckDataVo {
     @NotNull(message = "会议ID不能为空")
     Long meetingId;
     String code;
-    MultipartFile face;
     @NotNull(message = "签到方式不能为空")
     CheckWay checkWay;
+    MultipartFile face;
 }

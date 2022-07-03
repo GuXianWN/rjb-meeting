@@ -1,13 +1,13 @@
 package com.guxian.common.entity;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.guxian.common.exception.BizCodeEnum;
+import com.guxian.common.exception.ServiceException;
 import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Objects;
 
 /**
  * 公共返回对象
@@ -22,6 +22,11 @@ public class ResponseData {
 
     private ResponseData() {
     }
+
+    private static final String DEFAULT_SUCCESS_MESSAGE = "success";
+    private static final String DEFAULT_ERROR_MESSAGE = "error";
+    private static final Integer DEFAULT_ERROR_CODE = -1;
+    private static final Integer DEFAULT_SUCCESS_CODE = 0;
 
     @JsonProperty("code")
     private Integer code;
@@ -38,6 +43,9 @@ public class ResponseData {
         return respBean;
     }
 
+    /*************************
+     *        success
+     ************************/
     public static ResponseData success(Integer code, String message) {
         ResponseData respData = new ResponseData();
         respData.setCode(code);
@@ -47,55 +55,33 @@ public class ResponseData {
 
     public static ResponseData success(Object data) {
         ResponseData respBean = new ResponseData();
-        respBean.setCode(0);
-        respBean.setMessage("success");
+        respBean.setCode(DEFAULT_SUCCESS_CODE);
+        respBean.setMessage(DEFAULT_SUCCESS_MESSAGE);
         respBean.setData(data);
         return respBean;
     }
 
     public static ResponseData success(String key, Object data) {
         ResponseData respBean = new ResponseData();
-        respBean.setCode(0);
-        respBean.setMessage("success");
+        respBean.setCode(DEFAULT_SUCCESS_CODE);
+        respBean.setMessage(DEFAULT_SUCCESS_MESSAGE);
         var tmp = new HashMap<>();
         tmp.put(key, data);
         respBean.setData(tmp);
         return respBean;
     }
 
-    public static ResponseData error(Integer code, String message) {
-        ResponseData respBean = new ResponseData();
-        respBean.setCode(code);
-        respBean.setMessage(message);
-        return respBean;
-    }
-
     public static ResponseData success(String message) {
         ResponseData respBean = new ResponseData();
-        respBean.setCode(0);
-        respBean.setMessage(message);
-        return respBean;
-    }
-
-    public static ResponseData error(String message) {
-        ResponseData respBean = new ResponseData();
-        respBean.setCode(-1);
+        respBean.setCode(DEFAULT_SUCCESS_CODE);
         respBean.setMessage(message);
         return respBean;
     }
 
     public static ResponseData success() {
         ResponseData respBean = new ResponseData();
-        respBean.setCode(0);
-        respBean.setMessage("success");
-        return respBean;
-    }
-
-
-    public static ResponseData error() {
-        ResponseData respBean = new ResponseData();
-        respBean.setCode(-1);
-        respBean.setMessage("error");
+        respBean.setCode(DEFAULT_SUCCESS_CODE);
+        respBean.setMessage(DEFAULT_SUCCESS_MESSAGE);
         return respBean;
     }
 
@@ -114,6 +100,43 @@ public class ResponseData {
         return this;
     }
 
+
+    /*************************
+     *         error
+     ************************/
+
+    public static ResponseData error(BizCodeEnum bizCodeEnum) {
+        return error().setMessage(bizCodeEnum.getMsg()).setCode(bizCodeEnum.getCode());
+    }
+
+
+    public static ResponseData error(Integer code, String message) {
+        ResponseData respBean = new ResponseData();
+        respBean.setCode(code);
+        respBean.setMessage(message);
+        return respBean;
+    }
+
+
+    public static ResponseData error(String message) {
+        ResponseData respBean = new ResponseData();
+        respBean.setCode(DEFAULT_ERROR_CODE);
+        respBean.setMessage(message);
+        return respBean;
+    }
+
+
+    public static ResponseData error() {
+        ResponseData respBean = new ResponseData();
+        respBean.setCode(DEFAULT_ERROR_CODE);
+        respBean.setMessage(DEFAULT_ERROR_MESSAGE);
+        return respBean;
+    }
+
+
+    /************
+     * judge
+     ************/
     public static ResponseData is(boolean bool) {
         return bool ? success() : error();
     }
@@ -125,13 +148,14 @@ public class ResponseData {
     public static <T> ResponseData is(boolean bool, BizCodeEnum bizCodeEnum, T object) {
         return bool ? success().data(object) : atBizCodeEnum(bizCodeEnum);
     }
-    public static ResponseData error(BizCodeEnum bizCodeEnum){
-        return error().data(bizCodeEnum.getMsg()).setCode(bizCodeEnum.getCode());
-    }
+
 
     //检测响应是否正常
     public static boolean returnIs(ResponseData responseData) {
-        return responseData.getCode() != 0;
+        if (!Objects.equals(DEFAULT_SUCCESS_CODE, responseData.getCode())) {
+            throw new ServiceException(responseData.message, responseData.code);
+        }
+        return true;
     }
 
 

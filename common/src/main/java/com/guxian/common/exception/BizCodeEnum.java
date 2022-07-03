@@ -10,7 +10,6 @@ import lombok.Getter;
 @Getter
 public enum BizCodeEnum {
 
-
     SERVER_ERROR(10000,"服务器内部异常，请重试！"),
     VALID_EXCEPTION(10001, "参数校验异常"),
     OSS_INIT_EXCEPTION(10002, "服务器初始OSS异常"),

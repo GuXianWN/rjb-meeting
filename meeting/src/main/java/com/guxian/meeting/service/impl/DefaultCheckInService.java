@@ -8,6 +8,7 @@ import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.openfegin.facecheck.FaceCheckController;
 import com.guxian.common.redis.RedisUtils;
+import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.meeting.clients.FaceCheckClient;
 import com.guxian.meeting.entity.CheckIn;
 import com.guxian.meeting.entity.Meeting;
@@ -36,8 +37,7 @@ import java.util.List;
 
 @Service
 @Log4j2
-public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn>
-        implements CheckInService {
+public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn> implements CheckInService {
     @Autowired
     private UserMeetingService userMeetingService;
     @Autowired
@@ -58,15 +58,15 @@ public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn>
 
     @Override
     public boolean checkIn(CheckDataVo checkDataVo) {
-
-        if (checkDataVo.getCheckWay() == CheckWay.FACE) {
-            return checkInUseFace(checkDataVo);
+        if (checkDataVo.getCheckWay() == CheckWay.FACE && checkInUseFace(checkDataVo)) {
+            userMeetingService.checkIn(CurrentUserSession.getUserSession().getUserId(),
+                    checkDataVo.getCheckWay());
         }
 
-        if (checkDataVo.getCheckWay() == CheckWay.CODE) {
-            return checkInUseCode(checkDataVo);
+        if (checkDataVo.getCheckWay() == CheckWay.CODE && checkInUseFace(checkDataVo)) {
+            userMeetingService.checkIn(CurrentUserSession.getUserSession().getUserId(),
+                    checkDataVo.getCheckWay());
         }
-
         return false;
     }
 
@@ -90,7 +90,7 @@ public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn>
     public boolean checkInUseFace(CheckDataVo checkDataVo) {
         var face = checkDataVo.getFace();
         var responseData = faceCheckClient.compareFace(face);
-        return true;
+        return ResponseData.returnIs(responseData);
     }
 
     @Override

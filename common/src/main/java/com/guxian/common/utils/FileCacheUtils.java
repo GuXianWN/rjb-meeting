@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.stream.FileCacheImageInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -18,7 +19,7 @@ import java.nio.file.StandardCopyOption;
 @Log4j2
 public class FileCacheUtils {
     private static final String ROOT_TMP_DIR = System.getProperty("user.dir")
-            .replace('\\', '/') + "/tmp";
+            .replace('\\', '/') + "/static";
 
     private String localPath;
 
@@ -33,6 +34,11 @@ public class FileCacheUtils {
     @SneakyThrows
     public File saveFile(MultipartFile file, String fileName) {
         return saveFile(file.getInputStream(), fileName);
+    }
+
+    @SneakyThrows
+    public File saveFile(File file) {
+        return saveFile(new FileInputStream(file), file.getName());
     }
 
     public File saveFile(InputStream file, String fileName) {
