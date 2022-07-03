@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
 import java.io.File;
@@ -21,7 +22,7 @@ public class CheckDataVo {
     @NotNull(message = "会议ID不能为空")
     Long meetingId;
     String code;
-    File face;
+    MultipartFile face;
     @NotNull(message = "签到方式不能为空")
     CheckWay checkWay;
 }

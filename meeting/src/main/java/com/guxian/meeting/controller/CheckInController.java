@@ -5,7 +5,6 @@ import com.guxian.common.utils.JwtUtils;
 import com.guxian.meeting.entity.vo.CheckDataVo;
 import com.guxian.meeting.entity.vo.ReCheckVo;
 import com.guxian.meeting.service.CheckInService;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +18,11 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/check-in")
 public class CheckInController {
     private final CheckInService checkInService;
-    @Autowired
-    private JwtUtils jwtUtils;
+    private final JwtUtils jwtUtils;
 
-    public CheckInController(CheckInService checkInService) {
+    public CheckInController(CheckInService checkInService, JwtUtils jwtUtils) {
         this.checkInService = checkInService;
+        this.jwtUtils = jwtUtils;
     }
 
     @PostMapping

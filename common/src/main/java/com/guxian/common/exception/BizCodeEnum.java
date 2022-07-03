@@ -11,10 +11,12 @@ import lombok.Getter;
 public enum BizCodeEnum {
 
 
-    UNKNOWN_EXCEPTION(10000, "未知异常"),
+    SERVER_ERROR(10000,"服务器内部异常，请重试！"),
     VALID_EXCEPTION(10001, "参数校验异常"),
     OSS_INIT_EXCEPTION(10002, "服务器初始OSS异常"),
     UPLOAD_ERROR(10003, "上传异常"),
+    UNKNOWN_EXCEPTION(10004, "未知异常"),
+
 
 
     CREATE_MEETING_FAILED(11001, "创建会议失败"),

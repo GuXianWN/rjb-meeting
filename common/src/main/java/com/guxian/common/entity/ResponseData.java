@@ -125,9 +125,14 @@ public class ResponseData {
     public static <T> ResponseData is(boolean bool, BizCodeEnum bizCodeEnum, T object) {
         return bool ? success().data(object) : atBizCodeEnum(bizCodeEnum);
     }
+    public static ResponseData error(BizCodeEnum bizCodeEnum){
+        return error().data(bizCodeEnum.getMsg()).setCode(bizCodeEnum.getCode());
+    }
 
     //检测响应是否正常
     public static boolean returnIs(ResponseData responseData) {
         return responseData.getCode() != 0;
     }
+
+
 }

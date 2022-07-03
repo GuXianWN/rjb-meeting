@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -36,4 +37,13 @@ public class ExceptionHandle {
         return ResponseEntity.ok().body(ResponseData.error(e.getMessage())
                 .setCode(e.getStatus()));
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ResponseData> handleFileNotFoundException(Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.ok().body(
+                ResponseData.error(BizCodeEnum.SERVER_ERROR)
+        );
+    }
+
 }

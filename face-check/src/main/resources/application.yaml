@@ -54,4 +54,4 @@ oss:
   face-filename-prefix: FACE_
   face-filename-suffix: .png
 face-compare:
-  minimum-confidence: 0.8
+  minimum-confidence: 0.75

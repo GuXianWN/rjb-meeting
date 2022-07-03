@@ -6,6 +6,7 @@ import com.guxian.common.utils.JwtUtils;
 import com.guxian.common.utils.SomeUtils;
 import com.guxian.common.valid.AddGroup;
 import com.guxian.common.valid.UpdateGroup;
+import com.guxian.meeting.entity.MeetingCheck;
 import com.guxian.meeting.entity.vo.MeetingCheckVo;
 import com.guxian.meeting.service.MeetingCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +31,15 @@ public class MeetingCheckController {
     }
 
     /**
-     * smjb
+     * 获取会议的签到相关信息，通过会议id进行获取
      *
      * @param id
      * @return
      */
     @GetMapping("/{id}")
-    public ResponseData getMeetingCheckById(@PathVariable String id) {
-        return ResponseData.success(meetingCheckService.getById(id));
+    public ResponseData getMeetingCheckById(@PathVariable Long id) {
+        var byId = meetingCheckService.listByMap(Map.of("meeting_id", id));
+        return ResponseData.success(byId);
     }
 
     /**
