@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
 
 import javax.annotation.meta.When;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.Objects;
@@ -56,6 +58,10 @@ public class SomeUtils {
         return null;
     }
 
+
+    public static InputStream getResourceAsStream(String filename){
+        return Thread.currentThread().getContextClassLoader().getResourceAsStream(filename);
+    }
 
     public static String getResource(String filename) {
         var resource = SomeUtils.class.getClassLoader().getResource(filename);
