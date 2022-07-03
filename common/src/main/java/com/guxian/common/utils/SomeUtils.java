@@ -57,10 +57,14 @@ public class SomeUtils {
     }
 
 
-    public static String getResource(String path) {
-        var resource = SomeUtils.class.getClassLoader().getResource(path);
-        Assert.notNull(resource,"\n\n\n\n警告！face-check的核心文件未装载成功！！！！！！！\n\n\n\n");
-        return Objects.requireNonNull(resource).getPath();
+    public static String getResource(String filename) {
+        var resource = SomeUtils.class.getClassLoader().getResource(filename);
+        Assert.notNull(resource, "\n\n\n\n警告！face-check的核心文件未装载成功！！！！！！！\n\n\n\n");
+        var path = resource.getPath();
+        if (path.charAt(0) == '/') {
+            path = path.substring(1);
+        }
+        return path;
     }
 
 
