@@ -32,7 +32,7 @@ public class FaceCheckController {
     private final UserFaceRepo userFaceRepo;
 
     @Value("${face-compare.minimum-confidence}")
-    private double minimumConfidence = 0.9;
+    private double minimumConfidence = 0.7;
 
     @Value("${oss.face-filename-suffix}")
     private String faceFilenameSuffix = ".png";

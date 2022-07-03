@@ -103,4 +103,5 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
     </dependencies>
+
 </project>
