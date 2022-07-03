@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -29,6 +30,13 @@ public class ExceptionHandle {
                 .setCode(BizCodeEnum.VALID_EXCEPTION.getCode())
                 .data(errorMap));
 
+    }
+
+
+    @ExceptionHandler(org.springframework.validation.BindException.class)
+    public ResponseEntity<ResponseData> bindExceptionHandle(BindException e) {
+        return ResponseEntity.ok().body(
+                ResponseData.error("参数缺失！"));
     }
 
     @ExceptionHandler(ServiceException.class)

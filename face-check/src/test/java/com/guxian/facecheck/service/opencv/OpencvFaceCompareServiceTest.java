@@ -36,7 +36,7 @@ class OpencvFaceCompareServiceTest {
     void testConv_Mat() {
         // Setup
         // Run the test
-        final Mat result = opencvFaceCompareServiceUnderTest.conv_Mat("img");
+        final Mat result = opencvFaceCompareServiceUnderTest.convMat("img");
 
         // Verify the results
     }

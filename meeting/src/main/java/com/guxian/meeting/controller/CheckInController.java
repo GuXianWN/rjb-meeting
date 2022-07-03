@@ -5,6 +5,7 @@ import com.guxian.common.utils.JwtUtils;
 import com.guxian.meeting.entity.vo.CheckDataVo;
 import com.guxian.meeting.entity.vo.ReCheckVo;
 import com.guxian.meeting.service.CheckInService;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -27,17 +28,19 @@ public class CheckInController {
 
     @PostMapping
     public ResponseData check(
-            @RequestBody @Validated CheckDataVo checkDataVo) {
-        if (checkDataVo.getMeetingId() != null) {
-            return ResponseData.error("会议ID不能为空");
-        }
+            @Validated CheckDataVo checkDataVo) {
         return ResponseData.is(checkInService.checkIn(checkDataVo));
     }
 
     @PostMapping("/reCheck")
-    public ResponseData reCheck(@RequestBody ReCheckVo reCheckVo, HttpServletRequest request){
+    public ResponseData reCheck(@RequestBody ReCheckVo reCheckVo, HttpServletRequest request) {
         Long uid = jwtUtils.getUid(request);
-        checkInService.reCheck(reCheckVo,uid);
-        return  ResponseData.success();
+        checkInService.reCheck(reCheckVo, uid);
+        return ResponseData.success();
+    }
+
+    @GetMapping
+    public String test() {
+        return "success";
     }
 }

@@ -3,7 +3,6 @@ package com.guxian.facecheck.service.opencv;
 import com.alibaba.cloud.commons.lang.StringUtils;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
-import com.guxian.common.utils.SomeUtils;
 import com.guxian.facecheck.service.FaceCompareService;
 import lombok.extern.log4j.Log4j2;
 import org.opencv.core.*;
@@ -13,7 +12,6 @@ import org.opencv.objdetect.CascadeClassifier;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -30,21 +28,21 @@ public class OpencvFaceCompareService implements FaceCompareService {
 
     @Override
     public double checkFaceSimilarRate(File faceFileA, File faceFileB) {
-        Mat mat_1 = conv_Mat(faceFileA.getAbsolutePath());
-        Mat mat_2 = conv_Mat(faceFileB.getAbsolutePath());
-        Mat hist_1 = new Mat();
-        Mat hist_2 = new Mat();
+        Mat mat1 = convMat(faceFileA.getAbsolutePath());
+        Mat mat2 = convMat(faceFileB.getAbsolutePath());
+        Mat hist1 = new Mat();
+        Mat hist2 = new Mat();
 
         //颜色范围
         MatOfFloat ranges = new MatOfFloat(0f, 256f);
         //直方图大小， 越大匹配越精确 (越慢)
         MatOfInt histSize = new MatOfInt(100000);
 
-        Imgproc.calcHist(List.of(mat_1), new MatOfInt(0), new Mat(), hist_1, histSize, ranges);
-        Imgproc.calcHist(List.of(mat_2), new MatOfInt(0), new Mat(), hist_2, histSize, ranges);
+        Imgproc.calcHist(List.of(mat1), new MatOfInt(0), new Mat(), hist1, histSize, ranges);
+        Imgproc.calcHist(List.of(mat2), new MatOfInt(0), new Mat(), hist2, histSize, ranges);
 
         // CORREL 相关系数
-        double res = Imgproc.compareHist(hist_1, hist_2, Imgproc.CV_COMP_CORREL);
+        double res = Imgproc.compareHist(hist1, hist2, Imgproc.CV_COMP_CORREL);
         log.info("当前比较的结果系数为： {}", res);
         return res;
     }
@@ -55,7 +53,7 @@ public class OpencvFaceCompareService implements FaceCompareService {
      * @param img
      * @return
      */
-    public Mat conv_Mat(String img) {
+    public Mat convMat(String img) {
         if (StringUtils.isBlank(img)) {
             return null;
         }

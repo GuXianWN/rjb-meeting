@@ -1,5 +1,6 @@
 package com.guxian;
 
+import com.guxian.common.utils.FileCacheUtils;
 import com.guxian.common.utils.SomeUtils;
 import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.annotation.Aspect;
@@ -28,11 +29,14 @@ public class FaceCheckBootStrap {
 
     @Bean
     CascadeClassifier cascadeClassifier() {
-        var resource = SomeUtils.getResource("lib/opencv/opencv_java455.dll");
-        log.info("{}================", resource);
-        System.load(resource);
-        String altXmlPath = SomeUtils.getResource("haarcascade_frontalface_alt.xml");
-        return new CascadeClassifier(new File(altXmlPath).getPath());
+        var dllPath = SomeUtils.getResource("lib/opencv/opencv_java455.dll");
+        var altXmlPath = SomeUtils.getResource("haarcascade_frontalface_alt.xml");
+        var fileCacheUtils = new FileCacheUtils("/face-check-core");
+        var static_dll = fileCacheUtils.saveFile(new File(dllPath));
+        var static_altXml = fileCacheUtils.saveFile(new File(altXmlPath));
+        log.info("{}================", dllPath);
+        System.load(static_dll.getAbsolutePath());
+        return new CascadeClassifier(static_altXml.getAbsolutePath());
     }
 
 

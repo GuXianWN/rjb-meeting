@@ -40,7 +40,6 @@ class DefaultCheckInServiceTest {
     }
 
 
-
     @Test
     @Transactional
     void testCheckInUseCodeWillReturnTrue() {
