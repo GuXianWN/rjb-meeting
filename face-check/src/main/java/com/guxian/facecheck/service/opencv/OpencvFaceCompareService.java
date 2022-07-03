@@ -48,6 +48,7 @@ public class OpencvFaceCompareService implements FaceCompareService {
 
         // CORREL 相关系数
         double res = Imgproc.compareHist(hist_1, hist_2, Imgproc.CV_COMP_CORREL);
+        log.info("当前比较的结果系数为： {}", res);
         return res;
     }
 
