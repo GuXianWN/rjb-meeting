@@ -18,7 +18,8 @@ import java.nio.file.StandardCopyOption;
 
 @Log4j2
 public class FileCacheUtils {
-    private static final String ROOT_TMP_DIR = System.getProperty("user.dir")
+    private static final String ROOT_TMP_DIR = FileCacheUtils.class.getClassLoader().getResource("")
+            .getPath()
             .replace('\\', '/') + "/static";
 
     private String localPath;
