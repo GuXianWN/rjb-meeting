@@ -1,7 +1,10 @@
 package com.guxian.common.utils;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.Assert;
 
+import javax.annotation.meta.When;
+import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -55,7 +58,9 @@ public class SomeUtils {
 
 
     public static String getResource(String path) {
-        return Objects.requireNonNull(SomeUtils.class.getClassLoader().getResource(path)).getPath();
+        var resource = SomeUtils.class.getClassLoader().getResource(path);
+        Assert.notNull(resource,"\n\n\n\n警告！face-check的核心文件未装载成功！！！！！！！\n\n\n\n");
+        return Objects.requireNonNull(resource).getPath();
     }
 
 

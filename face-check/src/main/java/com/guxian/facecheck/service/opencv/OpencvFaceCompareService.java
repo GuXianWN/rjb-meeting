@@ -3,6 +3,7 @@ package com.guxian.facecheck.service.opencv;
 import com.alibaba.cloud.commons.lang.StringUtils;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
+import com.guxian.common.utils.SomeUtils;
 import com.guxian.facecheck.service.FaceCompareService;
 import lombok.extern.log4j.Log4j2;
 import org.opencv.core.*;
@@ -21,18 +22,14 @@ import java.util.List;
 @Log4j2
 @Service
 public class OpencvFaceCompareService implements FaceCompareService {
-    private CascadeClassifier faceDetector;
+    private final CascadeClassifier faceDetector;
 
-    public OpencvFaceCompareService() {
-        URL url = ClassLoader.getSystemResource("lib/opencv/opencv_java455.dll");
-        System.load(url.getPath());
-        String altXmlPath = ClassLoader.getSystemResource("haarcascade_frontalface_alt.xml").getPath();
-        this.faceDetector = new CascadeClassifier(new File(altXmlPath).getPath());
+    public OpencvFaceCompareService(CascadeClassifier cascadeClassifier) {
+        this.faceDetector = cascadeClassifier;
     }
 
     @Override
     public double checkFaceSimilarRate(File faceFileA, File faceFileB) {
-
         Mat mat_1 = conv_Mat(faceFileA.getAbsolutePath());
         Mat mat_2 = conv_Mat(faceFileB.getAbsolutePath());
         Mat hist_1 = new Mat();

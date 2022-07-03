@@ -1,5 +1,6 @@
 package com.guxian.facecheck.service.opencv;
 
+import com.guxian.common.utils.SomeUtils;
 import com.guxian.facecheck.service.CheckFaceExistService;
 import lombok.extern.log4j.Log4j2;
 import org.opencv.core.Mat;
@@ -17,10 +18,10 @@ import java.net.URL;
 @Service
 @Log4j2
 public class OpencvExistService implements CheckFaceExistService {
+    private final CascadeClassifier faceDetector;
 
-    public OpencvExistService() {
-        URL url = ClassLoader.getSystemResource("lib/opencv/opencv_java455.dll");
-        System.load(url.getPath());
+    public OpencvExistService(CascadeClassifier cascadeClassifier) {
+        this.faceDetector = cascadeClassifier;
     }
 
     @Override
@@ -34,16 +35,11 @@ public class OpencvExistService implements CheckFaceExistService {
      */
 
     public boolean hasFace(String url) {
-        String altXmlPath = ClassLoader.getSystemResource("haarcascade_frontalface_alt.xml").getPath();
-        var file = new File(altXmlPath);
-        CascadeClassifier faceDetector = new CascadeClassifier(file.getPath());
 
-        log.info("file.canRead():{} ", file.canRead());
         Mat image = Imgcodecs.imread(url, 1);// 读取图片，第二个参数是图片读取方式0：灰度 1,彩色
         // 对图片检测
         MatOfRect faceDetections = new MatOfRect();
         //获取当前项目路径
-        log.info("当前训练集路径: {}   可读：{}", file.getPath(), file.canRead());
 
         faceDetector.detectMultiScale(image, faceDetections);
         Rect[] rects = faceDetections.toArray();

@@ -15,7 +15,7 @@ class OpencvFaceCompareServiceTest {
 
     @BeforeEach
     void setUp() {
-        opencvFaceCompareServiceUnderTest = new OpencvFaceCompareService();
+//        opencvFaceCompareServiceUnderTest = new OpencvFaceCompareService();
     }
 
     @Test

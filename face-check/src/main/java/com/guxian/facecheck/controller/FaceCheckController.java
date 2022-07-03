@@ -39,7 +39,8 @@ public class FaceCheckController {
 
     public FaceCheckController(
             OSSForFaceService faceOss,
-            FaceCompareService faceCompareService, UserFaceRepo userFaceRepo) {
+            FaceCompareService faceCompareService,
+            UserFaceRepo userFaceRepo) {
         this.faceOss = faceOss;
         this.faceCompareService = faceCompareService;
         this.userFaceRepo = userFaceRepo;
