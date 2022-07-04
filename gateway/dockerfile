@@ -3,4 +3,4 @@ MAINTAINER om
 ADD ./target/gateway-0.0.1-SNAPSHOT.jar gateway.jar
 RUN bash -c 'touch /gateway.jar'
 ENTRYPOINT ["java","-jar","-Duser.timezone=GMT+8","gateway.jar"]
-EXPOSE 10000
+EXPOSE 10010

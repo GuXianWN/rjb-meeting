@@ -29,15 +29,25 @@ public class FaceCheckBootStrap {
 
     @Bean
     CascadeClassifier cascadeClassifier() {
-        var dllPath = SomeUtils.getResourceAsStream("lib/opencv/opencv_java455.dll");
-        var altXmlPath = SomeUtils.getResourceAsStream("haarcascade_frontalface_alt.xml");
-        var fileCacheUtils = new FileCacheUtils("/face-check-core");
-        var static_dll = fileCacheUtils.saveFile(dllPath,"opencv_java455.dll");
-        var static_altXml = fileCacheUtils.saveFile(altXmlPath,"haarcascade_frontalface_alt.xml");
-        log.info("{}================", dllPath);
-        System.load(static_dll.getAbsolutePath());
-        return new CascadeClassifier(static_altXml.getAbsolutePath());
+        log.info("file demo========>");
+
+        StringBuilder path= new StringBuilder(SomeUtils.getResource("application.yaml"));
+        log.info("===========>{}",path);
+        String[] split = path.toString().split("/");
+        path = new StringBuilder();
+        for (int i = 0; i < split.length-4; i++) {
+            path.append(split[i]).append("/");
+        }
+        path.append("static/face-check-core");
+        String dll=path.append("/opencv_java455.dll").toString();
+        String xml=path.append("/haarcascade_frontalface_alt.xml").toString();
+        dll="/"+dll;
+        xml="/"+xml;
+        File file = new File(dll);
+        log.info("=========>{}",dll);
+        log.info("can read=========>{}",file.canRead());
+        log.info("can write=========>{}",file.canWrite());
+//        System.load(dll);
+        return new CascadeClassifier(xml.toString());
     }
-
-
 }
