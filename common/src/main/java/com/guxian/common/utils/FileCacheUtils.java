@@ -19,10 +19,9 @@ import java.nio.file.StandardCopyOption;
 @Log4j2
 public class FileCacheUtils {
     private static final String ROOT_TMP_DIR = FileCacheUtils.class.getClassLoader().getResource("")
-            .getPath()
-            .replace('\\', '/') + "/static";
+            .getPath() + "\\static";
 
-    private String localPath;
+    private final String localPath;
 
     /**
      * @param childrenDir must use /
@@ -44,7 +43,7 @@ public class FileCacheUtils {
 
     public File saveFile(InputStream file, String fileName) {
         // 复制文件
-        File targetFile = new File(localPath + "/" + fileName, "");
+        File targetFile = new File(localPath + "\\" + fileName, "");
         try {
             FileUtils.writeByteArrayToFile(targetFile, file.readAllBytes());
         } catch (IOException e) {
@@ -70,11 +69,21 @@ public class FileCacheUtils {
         return file;
     }
 
+
+    public File getFile(String filename) {
+        var file = new File(localPath + filename);
+        if (!file.canRead()) {
+            log.error("当前FileCache获取到文件为空！ filename: {}", file.getAbsolutePath());
+            return null;
+        }
+        return file;
+    }
+
     /**
      * @param filename 返回当前设置的文件路径加文件名组成的文件
      * @return
      */
     private File buildFilenameWithPath(String filename) {
-        return new File(localPath + "/" + filename);
+        return new File(localPath + "\\" + filename);
     }
 }

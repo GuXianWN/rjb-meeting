@@ -12,6 +12,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.util.Assert;
 
 import java.io.File;
 import java.net.URL;
@@ -29,15 +30,11 @@ public class FaceCheckBootStrap {
 
     @Bean
     CascadeClassifier cascadeClassifier() {
-        var dllPath = SomeUtils.getResourceAsStream("lib/opencv/opencv_java455.dll");
-        var altXmlPath = SomeUtils.getResourceAsStream("haarcascade_frontalface_alt.xml");
-        var fileCacheUtils = new FileCacheUtils("/face-check-core");
-        var static_dll = fileCacheUtils.saveFile(dllPath,"opencv_java455.dll");
-        var static_altXml = fileCacheUtils.saveFile(altXmlPath,"haarcascade_frontalface_alt.xml");
-        log.info("{}================", dllPath);
+        var fileCacheUtils = new FileCacheUtils("\\face-check-core");
+        var static_dll = fileCacheUtils.getFile("\\opencv_java455.dll");
+        var static_altXml = fileCacheUtils.getFile("\\haarcascade_frontalface_alt.xml");
+        log.info("{}================", fileCacheUtils);
         System.load(static_dll.getAbsolutePath());
         return new CascadeClassifier(static_altXml.getAbsolutePath());
     }
-
-
 }
