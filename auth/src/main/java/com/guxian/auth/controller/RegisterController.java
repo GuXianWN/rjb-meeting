@@ -26,8 +26,6 @@ public class RegisterController {
 
     @PostMapping("/register")
     public ResponseData responseData(@RequestBody RegisterVo user) {
-
         return ResponseData.success(userService.register(user).orElseThrow(() -> new ServiceException(BizCodeEnum.UNKNOWN_EXCEPTION)));
-
     }
 }

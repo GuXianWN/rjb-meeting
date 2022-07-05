@@ -1,6 +1,5 @@
 package com.guxian.auth.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -11,7 +10,7 @@ import com.guxian.auth.entity.vo.LoginVo;
 import com.guxian.auth.entity.vo.RegisterVo;
 import com.guxian.auth.service.UserService;
 import com.guxian.auth.mapper.UserMapper;
-import com.guxian.common.RoleType;
+import com.guxian.auth.entity.RoleType;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.utils.JwtUtils;
@@ -88,7 +87,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                 .setAccount(user.getAccount())
                 .setCreateTime(Date.from(Instant.now()))
                 .setStatus(UserStatus.NORMAL)
-                .setRole(RoleType.ROLE_USER);
+                .setRoleId(RoleType.ROLE_USER);
         this.save(user1);
         return Optional.of(user1);
     }

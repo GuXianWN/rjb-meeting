@@ -1,13 +1,17 @@
 package com.guxian.auth.entity;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 
+@Getter
 @AllArgsConstructor
-@NoArgsConstructor
-@Accessors(chain = true)
+@Slf4j
 public enum UserStatus {
 
     /**
@@ -25,9 +29,10 @@ public enum UserStatus {
      */
     DELETE(2, "删除");
 
-
-    Integer value;
-    String describe;
+    @EnumValue
+    @JsonValue
+    private final Integer value;
+    private final String describe;
 
     public Integer getValue() {
         return ordinal();

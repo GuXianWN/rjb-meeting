@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 public class UserSession {
     private Long userId;
     private String userName;
-    private RoleType role;
+    private String role;
     private String token;
     private String ip;
 
@@ -24,7 +24,7 @@ public class UserSession {
         return new UserSession()
                 .setUserId(user.getId())
                 .setUserName(user.getUsername())
-                .setRole(RoleType.valueOf(user.getRoleId()))
+                .setRole(user.getRoleId().getDescribe())
                 .setToken(token)
                 .setIp(request.getRemoteAddr());
     }
