@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.guxian.common.CheckWay;
+import com.guxian.common.entity.PageData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.redis.RedisUtils;
@@ -23,10 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -110,7 +108,21 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
     @Override
     public MeetingCheck getCheckById(Long checkId) {
         return Optional.ofNullable(baseMapper.selectById(checkId))
-                .orElseThrow(()->new ServiceException(BizCodeEnum.CHECK_DOES_NOT_EXIST));
+                .orElseThrow(() -> new ServiceException(BizCodeEnum.CHECK_DOES_NOT_EXIST));
+    }
+
+    @Override
+    public Map<Integer,Long> getMeetingTypeList() {
+
+        var length = CheckWay.values().length;
+        var map = new HashMap<Integer,Long>();
+        for (int i = 0; i < length; i++) {
+            var tmp = baseMapper.selectCount(new QueryWrapper<>(new MeetingCheck())
+                    .eq("check_way", (i)));
+            map.put(i, tmp);
+        }
+
+        return map;
     }
 }
 

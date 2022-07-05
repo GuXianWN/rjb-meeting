@@ -80,4 +80,11 @@ public class MeetingCheckController {
     public ResponseData listMeetingCheck(@PathVariable String uid) {
         return ResponseData.success(meetingCheckService.listByMap(Map.of("uid", uid)));
     }
+
+
+    @GetMapping("/list/types")
+    public ResponseData getMeetingTypes() {
+        var map = meetingCheckService.getMeetingTypeList();
+        return ResponseData.success(map);
+    }
 }
