@@ -2,7 +2,6 @@ package com.guxian.meeting.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.guxian.common.CheckWay;
@@ -19,7 +18,6 @@ import com.guxian.meeting.entity.UserMeeting;
 import com.guxian.meeting.service.MeetingService;
 import com.guxian.meeting.service.UserMeetingService;
 import com.guxian.meeting.mapper.UserMeetingMapper;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -75,24 +73,6 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
                 .setMid(mid)));
     }
 
-
-    @Override
-    public UserMeeting joinMeeting(Long mid, Long uid) {
-        UserMeeting userMeeting1 = baseMapper.selectOne(new LambdaQueryWrapper<UserMeeting>()
-                .eq(UserMeeting::getUid, uid)
-                .eq(UserMeeting::getMid, mid));
-        if (userMeeting1 != null) {
-            throw new ServiceException(BizCodeEnum.JOINED);
-        }
-
-        UserMeeting userMeeting = new UserMeeting();
-        userMeeting.setMid(mid)
-                .setUid(uid)
-                .setJoinState(MeetingJoinState.JoinWaitingToBeAccepted.getExplain());
-        baseMapper.insert(userMeeting);
-        return userMeeting;
-    }
-
     @Override
     public PageData getMeetingJoinList(Long uid, Long page, Long size) {
         Page<UserMeeting> page1 = new Page<>();
@@ -101,59 +81,77 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
         return new PageData(page, size, iPage.getTotal(), iPage.getRecords());
     }
 
-    @Override
-    public void invite(List<Long> uids, Long mid) {
-        Meeting meeting = meetingService.getMeetingById(mid);
-        if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())) {
-            throw new ServiceException(BizCodeEnum.NO_ACCESS);
-        }
+//    @Override
+//    public void invite(List<Long> uids, Long mid) {
+//        Meeting meeting = meetingService.getMeetingById(mid);
+//        if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())) {
+//            throw new ServiceException(BizCodeEnum.NO_ACCESS);
+//        }
+//
+//        //TODO 可以换批量插入插件
+//        uids.forEach(v -> {
+//            UserMeeting one = baseMapper.selectOne(new LambdaQueryWrapper<UserMeeting>()
+//                    .eq(UserMeeting::getMid, mid)
+//                    .eq(UserMeeting::getUid, v));
+//
+//            if (one == null) {
+//                baseMapper.insert(new UserMeeting()
+//                        .setUid(v)
+//                        .setMid(mid)
+//                        .setJoinState(MeetingJoinState.InviteWaitingToBeAccepted.getExplain()));
+//            }
+//        });
+//    }
+//
+//    /**
+//     * 用户接受会议主持的邀请
+//     */
+//    @Override
+//    public boolean acceptInvite(Long umid) {
+//        UserMeeting userMeeting = selectById(umid);
+//        if (!userMeeting.getUid().equals(CurrentUserSession.getUserSession().getUserId())) {
+//            throw new ServiceException(BizCodeEnum.NO_ACCESS);
+//        }
+//        int update = baseMapper.updateById(userMeeting
+//                .setJoinState(MeetingJoinState.Accepted.getExplain())
+//                .setJoinTime(new Date()));
+//        return update != 0;
+//    }
+//
+//    /**
+//     * 会议主持接受用户的加入
+//     */
+//    @Override
+//    public boolean acceptJoin(Long umid) {
+//        UserMeeting userMeeting = selectById(umid);
+//        Meeting meeting = meetingService.getMeetingById(userMeeting.getMid());
+//        if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())) {
+//            throw new ServiceException(BizCodeEnum.NO_ACCESS);
+//        }
+//        int update = baseMapper.updateById(userMeeting
+//                .setType("ok")
+//                .setJoinState(MeetingJoinState.Accepted.getExplain())
+//                .setJoinTime(new Date()));
+//        return update != 0;
+//    }
+//
+//    @Override
+//    public UserMeeting joinMeeting(Long mid, Long uid) {
+//        UserMeeting userMeeting1 = baseMapper.selectOne(new LambdaQueryWrapper<UserMeeting>()
+//                .eq(UserMeeting::getUid, uid)
+//                .eq(UserMeeting::getMid, mid));
+//        if (userMeeting1 != null) {
+//            throw new ServiceException(BizCodeEnum.JOINED);
+//        }
+//
+//        UserMeeting userMeeting = new UserMeeting();
+//        userMeeting.setMid(mid)
+//                .setUid(uid)
+//                .setJoinState(MeetingJoinState.JoinWaitingToBeAccepted.getExplain());
+//        baseMapper.insert(userMeeting);
+//        return userMeeting;
+//    }
 
-        //TODO 可以换批量插入插件
-        uids.forEach(v -> {
-            UserMeeting one = baseMapper.selectOne(new LambdaQueryWrapper<UserMeeting>()
-                    .eq(UserMeeting::getMid, mid)
-                    .eq(UserMeeting::getUid, v));
-
-            if (one == null) {
-                baseMapper.insert(new UserMeeting()
-                        .setUid(v)
-                        .setMid(mid)
-                        .setJoinState(MeetingJoinState.InviteWaitingToBeAccepted.getExplain()));
-            }
-        });
-    }
-
-    /**
-     * 用户接受会议主持的邀请
-     */
-    @Override
-    public boolean acceptInvite(Long umid) {
-        UserMeeting userMeeting = selectById(umid);
-        if (!userMeeting.getUid().equals(CurrentUserSession.getUserSession().getUserId())) {
-            throw new ServiceException(BizCodeEnum.NO_ACCESS);
-        }
-        int update = baseMapper.updateById(userMeeting
-                .setJoinState(MeetingJoinState.Accepted.getExplain())
-                .setJoinTime(new Date()));
-        return update != 0;
-    }
-
-    /**
-     * 会议主持接受用户的加入
-     */
-    @Override
-    public boolean acceptJoin(Long umid) {
-        UserMeeting userMeeting = selectById(umid);
-        Meeting meeting = meetingService.getMeetingById(userMeeting.getMid());
-        if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())) {
-            throw new ServiceException(BizCodeEnum.NO_ACCESS);
-        }
-        int update = baseMapper.updateById(userMeeting
-                .setType("ok")
-                .setJoinState(MeetingJoinState.Accepted.getExplain())
-                .setJoinTime(new Date()));
-        return update != 0;
-    }
 
     @Override
     public UserMeeting selectById(Long umid) {
@@ -167,6 +165,50 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
         Page<UserMeeting> page2 = baseMapper.selectPage(page1, new LambdaQueryWrapper<UserMeeting>()
                 .eq(UserMeeting::getUid, CurrentUserSession.getUserSession().getUserId()));
         return new PageData(page, size, page2.getTotal(), page2.getRecords());
+    }
+
+    /**
+     * 加入会议 (需要白名单)
+     */
+    @Override
+    public UserMeeting joinMeeting(Long mid, Long uid) {
+        UserMeeting userMeeting = baseMapper.selectOne(new LambdaQueryWrapper<UserMeeting>()
+                .eq(UserMeeting::getUid, uid)
+                .eq(UserMeeting::getMid, mid));
+        if (userMeeting == null) {
+            throw new ServiceException(BizCodeEnum.NOT_WHITE_LISTED);
+        }
+        if (userMeeting.getJoinState().equals(MeetingJoinState.WHITELIST.getExplain())) {
+            baseMapper.updateById(userMeeting
+                    .setJoinTime(new Date())
+                    .setJoinState(MeetingJoinState.Accepted.getExplain()));
+        }
+        return userMeeting;
+    }
+
+
+    /**
+     * 添加白名单
+     */
+    @Override
+    public void addWhiteListed(List<Long> list, Long mid) {
+        Meeting meeting = meetingService.getMeetingById(mid);
+        if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())){
+            throw new ServiceException(BizCodeEnum.NO_ACCESS);
+        }
+
+        list.forEach(v->{
+            UserMeeting userMeeting = baseMapper.selectOne(new LambdaQueryWrapper<UserMeeting>()
+                    .eq(UserMeeting::getUid, v)
+                    .eq(UserMeeting::getMid, meeting));
+
+            if (userMeeting==null){
+                baseMapper.insert(new UserMeeting()
+                        .setJoinState(MeetingJoinState.WHITELIST.getExplain())
+                        .setUid(v)
+                        .setMid(mid));
+            }
+        });
     }
 }
 

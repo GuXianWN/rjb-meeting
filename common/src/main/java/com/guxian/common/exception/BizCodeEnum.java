@@ -24,6 +24,7 @@ public enum BizCodeEnum {
     JOINED(11002, "已加入"),
 
     MEETING_NOT_EXIST(11003, "会议不存在"),
+    NOT_WHITE_LISTED(11004,"不在该会议白名单"),
 
     CHECK_IN_CODE_NOT_EXIST(12001, "不存在签到码方式"),
     CHECK_IN_CODE_ERROR(12002, "签到码错误"),
