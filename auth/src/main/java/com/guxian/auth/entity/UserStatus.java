@@ -29,4 +29,7 @@ public enum UserStatus {
     Integer value;
     String describe;
 
+    public Integer getValue() {
+        return ordinal();
+    }
 }
