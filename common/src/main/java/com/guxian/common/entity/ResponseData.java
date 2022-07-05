@@ -78,6 +78,9 @@ public class ResponseData {
         return respBean;
     }
 
+
+
+
     public static ResponseData success() {
         ResponseData respBean = new ResponseData();
         respBean.setCode(DEFAULT_SUCCESS_CODE);

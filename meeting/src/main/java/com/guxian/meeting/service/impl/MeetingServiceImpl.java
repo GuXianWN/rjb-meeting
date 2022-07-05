@@ -12,16 +12,13 @@ import com.guxian.common.exception.ServiceException;
 import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.common.utils.JwtUtils;
 import com.guxian.meeting.clients.UserClient;
-import com.guxian.meeting.entity.CheckInfor;
-import com.guxian.meeting.entity.MeetingInfor;
-import com.guxian.meeting.entity.UserMeeting;
+import com.guxian.meeting.entity.*;
 import com.guxian.meeting.entity.vo.UserVo;
 import com.guxian.meeting.service.MeetingCheckService;
 import com.guxian.meeting.service.UserMeetingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.guxian.meeting.entity.Meeting;
 import com.guxian.meeting.service.MeetingService;
 import com.guxian.meeting.mapper.MeetingMapper;
 import org.springframework.stereotype.Service;
@@ -171,12 +168,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
         }
     }
 
-    @Override
-    public PageData getMeetingTypeList(Long page, Long size) {
-        baseMapper.selectCount(new QueryWrapper<>(new Meeting())
-                .eq("", ""));
-        return null;
-    }
+
 }
 
 

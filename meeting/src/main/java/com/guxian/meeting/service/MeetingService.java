@@ -33,5 +33,4 @@ public interface MeetingService extends IService<Meeting> {
     void checkMeetingState(Meeting meeting);
 
 
-    PageData getMeetingTypeList(Long page, Long size);
 }
