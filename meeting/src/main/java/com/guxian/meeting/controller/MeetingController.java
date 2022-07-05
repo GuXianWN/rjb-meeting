@@ -125,11 +125,7 @@ public class MeetingController {
                 .data(meetingService.getMeetingJoinList(page, size, CurrentUserSession.getUserSession().getUserId()));
     }
 
-    @GetMapping("/list/types/{page}/{size}")
-    public ResponseData getMeetingTypes(@PathVariable String page, @PathVariable String size) {
-//        meetingService.get
-        return null;
-    }
+
 }
 
 
