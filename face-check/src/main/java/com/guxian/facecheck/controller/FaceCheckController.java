@@ -56,6 +56,10 @@ public class FaceCheckController {
             throw new ServiceException(BizCodeEnum.NUMBER_OF_UPLOADED_FILE_NOT_ONE);
         }
 
+        if (!StringUtils.endsWithIgnoreCase(file.getOriginalFilename(), faceFilenameSuffix)) {
+            return ResponseData.error("文件格式错误");
+        }
+
         var user = userFaceRepo.findByUserId(CurrentUserSession.getUserSession().getUserId());
 
         var faceUrl = user.orElseThrow(() -> new ServiceException(BizCodeEnum.USER_FACE_NOT_EXIST))
@@ -78,8 +82,14 @@ public class FaceCheckController {
         var rate = faceCompareService
                 .checkFaceSimilarRate(remoteUserFaceImg, paramFaceImg);
         log.warn("current rate is {}=======", rate);
+
+
+
+        //删图跑路
+        remoteUserFaceImg.delete();
+        paramFaceImg.delete();
         return ResponseData.is(rate >= minimumConfidence
-                , BizCodeEnum.FACE_CONTRAST_INCONSISTENT);
+                , BizCodeEnum.FACE_CONTRAST_INCONSISTENT).data(rate);
     }
 
     @PostMapping("/upload")

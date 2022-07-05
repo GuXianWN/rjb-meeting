@@ -20,18 +20,42 @@ public interface UserMeetingService extends IService<UserMeeting> {
     int removeUserByMeeting(Long mid, Long uid);
 
     List<UserMeeting> getUserByMeeting(Long mid);
-
-    UserMeeting joinMeeting(Long mid, Long uid);
-
     PageData getMeetingJoinList(Long uid, Long page, Long size);
 
-    void invite(List<Long> uids,Long mid);
+    /**
+     * 用户接受邀请
+     */
+//    boolean acceptInvite(Long mid);
 
-    boolean acceptInvite(Long mid);
 
-    boolean acceptJoin(Long umid);
+    /**
+     * 加入会议
+     */
+//    UserMeeting joinMeeting(Long mid, Long uid);
+
+    /**
+     * 邀请别人加入
+     */
+//    void invite(List<Long> uids,Long mid);
+
+    /**
+     * 会议主持接受加入
+     */
+//    boolean acceptJoin(Long umid);
 
     UserMeeting selectById(Long umid);
 
     PageData list(Long page, Long size);
+
+    /**
+     * 加入会议 (需要白名单)
+     */
+    UserMeeting joinMeeting(Long mid, Long uid);
+
+    /**
+     * 添加会议白名单
+     */
+    void addWhiteListed(List<Long> list, Long mid);
+
+    void deleteWhiteListed(Long uid, Long mid);
 }

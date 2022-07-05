@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 import java.io.File;
-import java.net.URL;
 
 @SpringBootApplication
 @EnableFeignClients
@@ -30,7 +29,6 @@ public class FaceCheckBootStrap {
 
     @Bean
     CascadeClassifier cascadeClassifier() {
-        String dll=SomeUtils.getPath()+"static/opencv_java455.dll";
         nu.pattern.OpenCV.loadShared();
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 

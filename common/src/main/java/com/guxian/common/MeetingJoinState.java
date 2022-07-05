@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 public enum MeetingJoinState {
     InviteWaitingToBeAccepted(0),
     JoinWaitingToBeAccepted(1),
-    Accepted(2);
+    Accepted(2),
+    WHITELIST(3);
 
     Integer explain;
 }
