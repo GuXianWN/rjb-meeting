@@ -129,7 +129,7 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
     @Override
     public boolean acceptInvite(Long umid) {
         UserMeeting userMeeting = selectById(umid);
-        if (!userMeeting.getUid().equals(CurrentUserSession.getUserSession().getUserId())){
+        if (!userMeeting.getUid().equals(CurrentUserSession.getUserSession().getUserId())) {
             throw new ServiceException(BizCodeEnum.NO_ACCESS);
         }
         int update = baseMapper.updateById(userMeeting
@@ -145,10 +145,11 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
     public boolean acceptJoin(Long umid) {
         UserMeeting userMeeting = selectById(umid);
         Meeting meeting = meetingService.getMeetingById(userMeeting.getMid());
-        if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())){
+        if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())) {
             throw new ServiceException(BizCodeEnum.NO_ACCESS);
         }
         int update = baseMapper.updateById(userMeeting
+                .setType("ok")
                 .setJoinState(MeetingJoinState.Accepted.getExplain())
                 .setJoinTime(new Date()));
         return update != 0;
@@ -157,7 +158,7 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
     @Override
     public UserMeeting selectById(Long umid) {
         return Optional.ofNullable(baseMapper.selectById(umid))
-                .orElseThrow(()->new ServiceException(BizCodeEnum.NOTJOINED_OR_NOTINVITE));
+                .orElseThrow(() -> new ServiceException(BizCodeEnum.NOTJOINED_OR_NOTINVITE));
     }
 
     @Override
@@ -165,7 +166,7 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
         Page<UserMeeting> page1 = new Page<>(page, size);
         Page<UserMeeting> page2 = baseMapper.selectPage(page1, new LambdaQueryWrapper<UserMeeting>()
                 .eq(UserMeeting::getUid, CurrentUserSession.getUserSession().getUserId()));
-        return new PageData(page,size,page2.getTotal(),page2.getRecords());
+        return new PageData(page, size, page2.getTotal(), page2.getRecords());
     }
 }
 
