@@ -85,7 +85,7 @@ public class FileCacheUtils {
      */
     private File buildFilenameWithPath(String filename) {
         log.info("fileName=====>{}",filename);
-        log.info("buildFilenameWithPath======>{}", SomeUtils.getPath() + filename);
-        return new File(SomeUtils.getPath() + filename);
+        log.info("buildFilenameWithPath======>{}", SomeUtils.getPath() +"\\ph\\"+ filename);
+        return new File(SomeUtils.getPath() +"\\ph\\"+ filename);
     }
 }

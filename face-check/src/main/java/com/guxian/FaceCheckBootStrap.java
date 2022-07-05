@@ -30,14 +30,18 @@ public class FaceCheckBootStrap {
 
     @Bean
     CascadeClassifier cascadeClassifier() {
-        String xml= SomeUtils.getPath()+"haarcascade_frontalface_alt.xml";
+        String dll=SomeUtils.getPath()+"static/opencv_java455.dll";
+        nu.pattern.OpenCV.loadShared();
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+//        System.load(dll);
+
+
+        String xml= SomeUtils.getPath()+"static/haarcascade_frontalface_alt.xml";
         log.info("xml=========>{}",xml);
         File xmlFile = new File(xml);
         log.info("xml can read=========>{}",xmlFile.canRead());
         log.info("xml can write=========>{}",xmlFile.canWrite());
 
-        nu.pattern.OpenCV.loadShared();
-//        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         return new CascadeClassifier(xml.toString());
     }
 }

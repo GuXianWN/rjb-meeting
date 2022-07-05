@@ -68,12 +68,12 @@ public class FaceCheckController {
         var fileCacheUtils = new FileCacheUtils("/face");
         var remoteUserFaceImg = fileCacheUtils.saveFileFromRemote(new URL(faceUrl)
 //                , SomeUtils.buildFileName(CurrentUserSession.getUserSession().getUserId()));
-                , UUID.randomUUID() + ".jpg");
-        log.info("remoteUserFaceImg ok");
+                , UUID.randomUUID() + ".png");
+        log.info("remoteUserFaceImg ok{}",remoteUserFaceImg.getAbsolutePath());
         var paramFaceImg = fileCacheUtils.saveFile(file,
 //                SomeUtils.buildFileName(CurrentUserSession.getUserSession().getUserId()));
-                UUID.randomUUID() + ".jpg");
-        log.info("paramFaceImg ok");
+                UUID.randomUUID() + ".png");
+        log.info("paramFaceImg ok{}",paramFaceImg.getAbsolutePath());
         var rate = faceCompareService
                 .checkFaceSimilarRate(remoteUserFaceImg, paramFaceImg);
         log.warn("current rate is {}=======", rate);
