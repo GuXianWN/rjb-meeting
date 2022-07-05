@@ -4,6 +4,7 @@ import com.guxian.common.utils.FileCacheUtils;
 import com.guxian.common.utils.SomeUtils;
 import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.annotation.Aspect;
+import org.opencv.core.Core;
 import org.opencv.objdetect.CascadeClassifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -29,25 +30,14 @@ public class FaceCheckBootStrap {
 
     @Bean
     CascadeClassifier cascadeClassifier() {
-        log.info("file demo========>");
+        String xml= SomeUtils.getPath()+"haarcascade_frontalface_alt.xml";
+        log.info("xml=========>{}",xml);
+        File xmlFile = new File(xml);
+        log.info("xml can read=========>{}",xmlFile.canRead());
+        log.info("xml can write=========>{}",xmlFile.canWrite());
 
-        StringBuilder path= new StringBuilder(SomeUtils.getResource("application.yaml"));
-        log.info("===========>{}",path);
-        String[] split = path.toString().split("/");
-        path = new StringBuilder();
-        for (int i = 0; i < split.length-4; i++) {
-            path.append(split[i]).append("/");
-        }
-        path.append("static/face-check-core");
-        String dll=path.append("/opencv_java455.dll").toString();
-        String xml=path.append("/haarcascade_frontalface_alt.xml").toString();
-        dll="/"+dll;
-        xml="/"+xml;
-        File file = new File(dll);
-        log.info("=========>{}",dll);
-        log.info("can read=========>{}",file.canRead());
-        log.info("can write=========>{}",file.canWrite());
-//        System.load(dll);
+        nu.pattern.OpenCV.loadShared();
+//        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         return new CascadeClassifier(xml.toString());
     }
 }

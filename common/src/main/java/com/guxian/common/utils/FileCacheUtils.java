@@ -43,7 +43,7 @@ public class FileCacheUtils {
 
     public File saveFile(InputStream file, String fileName) {
         // 复制文件
-        File targetFile = new File(localPath + "\\" + fileName, "");
+        File targetFile = new File(SomeUtils.getPath() + "\\ph\\" + fileName, "");
         try {
             FileUtils.writeByteArrayToFile(targetFile, file.readAllBytes());
         } catch (IOException e) {
@@ -59,9 +59,9 @@ public class FileCacheUtils {
     }
 
     public File saveFileFromRemote(URL url, String filename) {
+        log.info("fileName=====>{}",filename);
         var file = buildFilenameWithPath(filename);
-        try (InputStream in = url.openStream();
-        ) {
+        try (InputStream in = url.openStream();) {
             saveFile(in, filename);
         } catch (IOException ioException) {
             ioException.printStackTrace();
@@ -84,6 +84,8 @@ public class FileCacheUtils {
      * @return
      */
     private File buildFilenameWithPath(String filename) {
-        return new File(localPath + "\\" + filename);
+        log.info("fileName=====>{}",filename);
+        log.info("buildFilenameWithPath======>{}", SomeUtils.getPath() + filename);
+        return new File(SomeUtils.getPath() + filename);
     }
 }

@@ -17,8 +17,8 @@ spring:
           filters:
             - RewritePath= /api/(?<segment>.*),/$\{segment}
         - id: face
-          uri: lb://face-check
+          uri: lb://face
           predicates:
             - Path=/api/face/**
           filters:
-            - RewritePath= /api/(?<segment>.*),/$\{segment}    -
+            - RewritePath= /api/(?<segment>.*),/$\{segment}

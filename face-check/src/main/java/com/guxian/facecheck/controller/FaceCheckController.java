@@ -22,6 +22,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/face")
@@ -63,12 +64,16 @@ public class FaceCheckController {
             throw new ServiceException(BizCodeEnum.USER_FACE_NOT_EXIST);
         }
 
+
         var fileCacheUtils = new FileCacheUtils("/face");
         var remoteUserFaceImg = fileCacheUtils.saveFileFromRemote(new URL(faceUrl)
-                , SomeUtils.buildFileName(CurrentUserSession.getUserSession().getUserId()));
-
-        var paramFaceImg = fileCacheUtils.saveFile(file, SomeUtils.buildFileName(CurrentUserSession.getUserSession().getUserId()));
-
+//                , SomeUtils.buildFileName(CurrentUserSession.getUserSession().getUserId()));
+                , UUID.randomUUID() + ".jpg");
+        log.info("remoteUserFaceImg ok");
+        var paramFaceImg = fileCacheUtils.saveFile(file,
+//                SomeUtils.buildFileName(CurrentUserSession.getUserSession().getUserId()));
+                UUID.randomUUID() + ".jpg");
+        log.info("paramFaceImg ok");
         var rate = faceCompareService
                 .checkFaceSimilarRate(remoteUserFaceImg, paramFaceImg);
         log.warn("current rate is {}=======", rate);
