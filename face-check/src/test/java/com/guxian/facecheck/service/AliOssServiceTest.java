@@ -2,9 +2,7 @@ package com.guxian.facecheck.service;
 
 import com.guxian.facecheck.config.AliServiceBuilder;
 import com.guxian.facecheck.config.OssProperties;
-import com.guxian.facecheck.entity.UserFace;
 import com.guxian.facecheck.repo.UserFaceRepo;
-import com.guxian.facecheck.service.provider.AliOssService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,14 +13,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.io.File;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
@@ -47,7 +41,7 @@ class AliOssServiceTest {
 
     @Test
     void testUpload() {
-        AliServiceBuilder aliServiceBuilder = new AliServiceBuilder(ossProperties);
+//        AliServiceBuilder aliServiceBuilder = new AliServiceBuilder(ossProperties, oss);
 //        AliOssService aliOssUploadServiceUnderTest=new AliOssService(mockUserFaceRepo, aliServiceBuilder.aliServiceBean());
 
         // Setup

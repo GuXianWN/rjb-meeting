@@ -11,5 +11,5 @@ import java.io.File;
 @FeignClient(value = "face-check")
 public interface FaceCheckClient {
     @PostMapping("/face/compare")
-    public ResponseData compareFace(@RequestParam(name = "file") MultipartFile file);
+    public ResponseData  compareFace(@RequestParam(name = "file") MultipartFile file);
 }

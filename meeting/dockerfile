@@ -3,3 +3,4 @@ MAINTAINER GuXianWN
 ADD target/meeting-0.0.1-SNAPSHOT.jar meeting.jar
 RUN bash -c 'touch /meeting.jar'
 ENTRYPOINT ["java","-jar","-Duser.timezone=GMT+8","meeting.jar"]
+EXPOSE 10012

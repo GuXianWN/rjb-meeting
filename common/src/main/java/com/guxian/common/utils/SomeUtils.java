@@ -1,5 +1,6 @@
 package com.guxian.common.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
 
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
+@Slf4j
 public class SomeUtils {
     private SomeUtils() {
     }
@@ -78,5 +80,16 @@ public class SomeUtils {
 
     public static String buildFileName(Long userId) {
         return SomeUtils.FACE_FILENAME_PREFIX + userId + SomeUtils.FACE_FILENAME_SUFFIX;
+    }
+
+    public static String getPath(){
+        StringBuilder path= new StringBuilder(SomeUtils.getResource("application.yaml"));
+        String[] split = path.toString().split("/");
+        path = new StringBuilder();
+        for (int i = 0; i < split.length-4; i++) {
+            path.append(split[i]).append("/");
+        }
+        log.info("getPath=========>{}", path);
+        return path.toString();
     }
 }

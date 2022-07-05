@@ -21,4 +21,4 @@ spring:
           predicates:
             - Path=/api/face/**
           filters:
-            - RewritePath= /api/(?<segment>.*),/$\{segment}    -
+            - RewritePath= /api/(?<segment>.*),/$\{segment}
