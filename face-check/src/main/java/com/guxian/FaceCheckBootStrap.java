@@ -33,8 +33,6 @@ public class FaceCheckBootStrap {
         String dll=SomeUtils.getPath()+"static/opencv_java455.dll";
         nu.pattern.OpenCV.loadShared();
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-//        System.load(dll);
-
 
         String xml= SomeUtils.getPath()+"static/haarcascade_frontalface_alt.xml";
         log.info("xml=========>{}",xml);
