@@ -1,6 +1,7 @@
 package com.guxian.auth.entity;
 
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -60,7 +61,8 @@ public class User {
     /**
      * 状态
      */
-    private UserStatus status;
+    @EnumValue
+    private Integer status;
 
     /**
      *
@@ -69,13 +71,18 @@ public class User {
     private Date createTime;
 
 
-    private String roleId;
+    private Integer roleId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
     public User setRole(RoleType roleId) {
-        this.roleId = roleId.name();
+        this.roleId = roleId.getValue();
+        return this;
+    }
+
+    public User setStatus(UserStatus status) {
+        this.status = status.getValue();
         return this;
     }
 }

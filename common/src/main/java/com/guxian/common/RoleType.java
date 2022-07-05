@@ -17,4 +17,17 @@ public enum RoleType {
     ROLE_GUEST(1);
     Integer explain;
 
+
+    public int getValue() {
+        return ordinal();
+    }
+
+    public  static RoleType valueOf(Integer or) {
+        for (var i : RoleType.values()) {
+            if ((i.getValue() == or)) {
+                return i;
+            }
+        }
+        return null;
+    }
 }

@@ -24,6 +24,8 @@ public class UserController {
                 .data(UserDTO.form(user));
     }
 
+
+
     @GetMapping("/test")
     public ResponseData test(){
         Long uid = CurrentUserSession.getUserSession().getUserId();
