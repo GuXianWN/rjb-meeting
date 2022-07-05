@@ -200,7 +200,7 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
         list.forEach(v->{
             UserMeeting userMeeting = baseMapper.selectOne(new LambdaQueryWrapper<UserMeeting>()
                     .eq(UserMeeting::getUid, v)
-                    .eq(UserMeeting::getMid, meeting));
+                    .eq(UserMeeting::getMid, mid));
 
             if (userMeeting==null){
                 baseMapper.insert(new UserMeeting()
@@ -209,6 +209,27 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
                         .setMid(mid));
             }
         });
+    }
+
+    @Override
+    public void deleteWhiteListed(Long uid, Long mid) {
+        Meeting meeting = meetingService.getMeetingById(mid);
+        if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())){
+            throw new ServiceException(BizCodeEnum.NO_ACCESS);
+        }
+
+        UserMeeting userMeeting = baseMapper.selectOne(new LambdaQueryWrapper<UserMeeting>()
+                .eq(UserMeeting::getUid, uid)
+                .eq(UserMeeting::getMid, mid));
+
+        if (userMeeting==null){
+            throw new ServiceException(BizCodeEnum.NOT_WHITE_LISTED);
+        }
+        if (!userMeeting.getJoinState().equals(MeetingJoinState.WHITELIST.getExplain())){
+            throw new ServiceException(BizCodeEnum.NOT_WHITE_LISTED);
+        }
+
+        baseMapper.deleteById(userMeeting.getId());
     }
 }
 

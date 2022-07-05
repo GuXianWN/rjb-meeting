@@ -56,4 +56,6 @@ public interface UserMeetingService extends IService<UserMeeting> {
      * 添加会议白名单
      */
     void addWhiteListed(List<Long> list, Long mid);
+
+    void deleteWhiteListed(Long uid, Long mid);
 }

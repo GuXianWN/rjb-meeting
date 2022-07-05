@@ -106,4 +106,13 @@ public class UserMeetingController {
         userMeetingService.addWhiteListed(list,mid);
         return  ResponseData.success();
     }
+
+    /**
+     * 移出会议白名单
+     */
+    @DeleteMapping("/whiteListed/{mid}/{uid}")
+    public ResponseData deleteWhiteListed(@PathVariable Long uid,@PathVariable Long mid){
+        userMeetingService.deleteWhiteListed(uid,mid);
+        return  ResponseData.success();
+    }
 }
