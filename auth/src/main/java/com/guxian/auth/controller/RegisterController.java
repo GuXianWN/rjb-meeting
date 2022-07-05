@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/register")
+@RequestMapping("/auth")
 @Setter(onMethod_ = @Autowired)
 public class RegisterController {
     private UserService userService;
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseData responseData(@RequestBody RegisterVo user) {
 
         return ResponseData.success(userService.register(user).orElseThrow(() -> new ServiceException(BizCodeEnum.UNKNOWN_EXCEPTION)));
