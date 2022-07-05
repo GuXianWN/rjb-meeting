@@ -176,7 +176,6 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
         baseMapper.selectCount(new QueryWrapper<>(new Meeting())
                 .eq("", ""));
         return null;
-
     }
 }
 
