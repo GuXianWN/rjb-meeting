@@ -1,6 +1,6 @@
 spring:
   application:
-    name: face-check # 服务名称
+    name: face # 服务名称
   cloud:
     nacos:
       discovery:
