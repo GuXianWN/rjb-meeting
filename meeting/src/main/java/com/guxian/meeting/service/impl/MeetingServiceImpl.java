@@ -170,6 +170,14 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
             baseMapper.updateById(meeting);
         }
     }
+
+    @Override
+    public PageData getMeetingTypeList(Long page, Long size) {
+        baseMapper.selectCount(new QueryWrapper<>(new Meeting())
+                .eq("", ""));
+        return null;
+
+    }
 }
 
 

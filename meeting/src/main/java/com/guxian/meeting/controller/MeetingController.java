@@ -5,6 +5,7 @@ import com.guxian.common.RoleType;
 import com.guxian.common.entity.ResponseData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
+import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.common.utils.JwtUtils;
 import com.guxian.common.valid.AddGroup;
 import com.guxian.common.valid.UpdateGroup;
@@ -68,7 +69,7 @@ public class MeetingController {
         Long uid = jwtUtils.getUid(request);
         return ResponseData.success()
                 .data(
-                        meetingService.updateMeeting(meeting.toMeeting(),uid)
+                        meetingService.updateMeeting(meeting.toMeeting(), uid)
                                 .orElseThrow(() -> new ServiceException(BizCodeEnum.UPDATE_MEETING_FAILED)));
     }
 
@@ -101,9 +102,9 @@ public class MeetingController {
     }
 
     @GetMapping("/list/me/info")
-    public ResponseData getMeetingListInfo(Long page,Long size,HttpServletRequest request) {
+    public ResponseData getMeetingListInfo(Long page, Long size, HttpServletRequest request) {
         return ResponseData.success()
-                .data(meetingService.getMeetingListInfo(jwtUtils.getUid(request),page,size));
+                .data(meetingService.getMeetingListInfo(jwtUtils.getUid(request), page, size));
     }
 
     @GetMapping
@@ -119,10 +120,15 @@ public class MeetingController {
     }
 
     @GetMapping("/list/join")
-    public ResponseData getMeetingJoinList(Long page, Long size, HttpServletRequest request) {
-        Long uid = jwtUtils.getUid(request);
+    public ResponseData getMeetingJoinList(Long page, Long size) {
         return ResponseData.success()
-                .data(meetingService.getMeetingJoinList(page, size, uid));
+                .data(meetingService.getMeetingJoinList(page, size, CurrentUserSession.getUserSession().getUserId()));
+    }
+
+    @GetMapping("/list/types/{page}/{size}")
+    public ResponseData getMeetingTypes(@PathVariable String page, @PathVariable String size) {
+//        meetingService.get
+        return null;
     }
 }
 

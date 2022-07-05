@@ -1,6 +1,11 @@
 package com.guxian.common;
 
 public enum CheckWay {
+
+    /**
+     * 无需签到
+     */
+    NONE,
     /**
      * 人脸识别
      */
@@ -11,10 +16,6 @@ public enum CheckWay {
      */
     CODE,
 
-    /**
-     * 无需签到
-     */
-    NONE
     ;
     public int getValue() {
         return ordinal();
