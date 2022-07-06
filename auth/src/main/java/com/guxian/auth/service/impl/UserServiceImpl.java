@@ -1,8 +1,8 @@
 package com.guxian.auth.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.guxian.auth.entity.User;
 import com.guxian.auth.entity.UserSession;
@@ -12,9 +12,9 @@ import com.guxian.auth.entity.vo.RegisterVo;
 import com.guxian.auth.service.UserService;
 import com.guxian.auth.mapper.UserMapper;
 import com.guxian.auth.entity.RoleType;
+import com.guxian.common.entity.PageData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
-import com.guxian.common.redis.RedisUtils;
 import com.guxian.common.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +22,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
@@ -47,7 +46,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
 
     @Override
-    public Optional<User> findByUsernameLimitOne(String account) {
+    public Optional<User> findByAccountLimitOne(String account) {
         return Optional.ofNullable(this.getOne(new QueryWrapper<User>().eq("account", account)));
     }
 
@@ -84,9 +83,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     //todo : add email to check user.
     @Override
     public Optional<User> register(RegisterVo user) {
-        var byOne=this.getOne(new QueryWrapper<User>()
+        var byOne = this.getOne(new QueryWrapper<User>()
                 .eq("username", user.getUsername()));
-        if(byOne!=null){
+        if (byOne != null) {
             throw new ServiceException(BizCodeEnum.USER_EXIST_EXCEPTION);
         }
         User user1 = new User()
@@ -104,6 +103,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public Optional<User> getByUsername(String username) {
         return Optional.ofNullable(this.getOne(new QueryWrapper<User>()
                 .eq("username", username)));
+    }
+
+    @Override
+    public void modifyUserById(User user) {
+        var byId = this.getById(user.getId());
+        if (byId == null || // Id don't exist or update return false
+                !this.updateById(user)) {
+            throw new ServiceException(BizCodeEnum.USER_NOT_EXIST);
+        }
+    }
+
+    @Override
+    public PageData getUserList(Long page, Long size) {
+        var userPage = new Page<User>(page, size);
+        var list = baseMapper.selectPage(userPage, null);
+
+        return new PageData(page, size, list.getTotal(), list.getRecords());
     }
 }
 

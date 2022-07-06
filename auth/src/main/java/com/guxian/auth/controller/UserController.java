@@ -7,11 +7,12 @@ import com.guxian.common.entity.ResponseData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.utils.CurrentUserSession;
-import org.assertj.core.util.Lists;
+import com.guxian.common.valid.UpdateGroup;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
@@ -31,6 +32,11 @@ public class UserController {
                 .data(UserDTO.form(user));
     }
 
+    @PatchMapping
+    public ResponseData updateUser(@Validated(UpdateGroup.class) @Valid @RequestBody UserDTO userDTO) {
+        userService.modifyUserById(UserDTO.toUser(userDTO));
+        return ResponseData.success();
+    }
 
     @GetMapping
     public ResponseData whoAmI() {
@@ -47,6 +53,9 @@ public class UserController {
                 .data(UserDTO.form(user));
     }
 
-    //org.springframework.web.HttpRequestMethodNotSupportedException
-
+    @GetMapping("/{page}/{size}")
+    public ResponseData getUserList(@PathVariable Long page, @PathVariable Long size) {
+        return ResponseData.success()
+                .data(userService.getUserList(page, size));
+    }
 }
