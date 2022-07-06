@@ -85,6 +85,12 @@ public class MeetingController {
         return ResponseData.success().data(data);
     }
 
+    @GetMapping("/list/me/info")
+    public ResponseData getMeetingListInfo(Long page, Long size) {
+        return ResponseData.success()
+                .data(meetingService.getMeetingListInfo(CurrentUserSession.getUserSession().getUserId(), page, size));
+    }
+
     @GetMapping("/{id}")
     public ResponseData getMeeting(@PathVariable("id") Long id) {
         //todo 修改获取会议的加入人数的方式 ，并且把这个加入人数的方式放到service层
@@ -106,11 +112,7 @@ public class MeetingController {
                 .data(meetingService.getMeetingInfo(id));
     }
 
-    @GetMapping("/list/me/info")
-    public ResponseData getMeetingListInfo(Long page, Long size) {
-        return ResponseData.success()
-                .data(meetingService.getMeetingListInfo(CurrentUserSession.getUserSession().getUserId(), page, size));
-    }
+
 
     @GetMapping
     public ResponseData getMeetingByName(String name) {
