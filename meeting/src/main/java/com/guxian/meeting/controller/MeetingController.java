@@ -1,7 +1,6 @@
 package com.guxian.meeting.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.guxian.common.RoleType;
 import com.guxian.common.entity.PageData;
 import com.guxian.common.entity.ResponseData;
 import com.guxian.common.exception.BizCodeEnum;
@@ -16,11 +15,8 @@ import com.guxian.meeting.entity.vo.MeetingVo;
 import com.guxian.meeting.service.MeetingService;
 import com.guxian.meeting.service.UserMeetingService;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * 对会议的操作
@@ -32,18 +28,23 @@ public class MeetingController {
     /**
      * JWT工具类
      */
-    @Autowired
-    private JwtUtils jwtUtils;
+    private final JwtUtils jwtUtils;
     /**
      * 会议服务类
      */
-    @Autowired
-    private MeetingService meetingService;
+    private final MeetingService meetingService;
     /**
      * 用户与会议<strong style="color:red">关系</strong>服务类
      **/
-    @Autowired
-    private UserMeetingService userMeetingService;
+    private final UserMeetingService userMeetingService;
+
+    public MeetingController(JwtUtils jwtUtils
+            , MeetingService meetingService
+            , UserMeetingService userMeetingService) {
+        this.jwtUtils = jwtUtils;
+        this.meetingService = meetingService;
+        this.userMeetingService = userMeetingService;
+    }
 
 
     /**
@@ -80,7 +81,7 @@ public class MeetingController {
     }
 
     @GetMapping("/list/me")
-    public ResponseData listMe(Long page,Long size){
+    public ResponseData listMe(Long page, Long size) {
         PageData data = meetingService.listMe(page, size, CurrentUserSession.getUserSession().getUserId());
         return ResponseData.success().data(data);
     }
@@ -113,7 +114,6 @@ public class MeetingController {
     }
 
 
-
     @GetMapping
     public ResponseData getMeetingByName(String name) {
         return ResponseData.success()
@@ -130,6 +130,12 @@ public class MeetingController {
     public ResponseData getMeetingJoinList(Long page, Long size) {
         return ResponseData.success()
                 .data(meetingService.getMeetingJoinList(page, size, CurrentUserSession.getUserSession().getUserId()));
+    }
+
+    @GetMapping("/list/status")
+    public ResponseData countMeetingStatus(Long page, Long size) {
+        return ResponseData.success()
+                .data(meetingService.countMeetingStatus(page, size));
     }
 }
 

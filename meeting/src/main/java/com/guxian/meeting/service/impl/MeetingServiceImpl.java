@@ -95,9 +95,9 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     public PageData getMeetingJoinList(Long page, Long size, Long uid) {
         PageData joinList = userMeetingService.getMeetingJoinList(uid, page, size);
         List<UserMeeting> list = (List<UserMeeting>) joinList.getData();
-        List<Meeting> meetings=new ArrayList<>();
+        List<Meeting> meetings = new ArrayList<>();
 
-        list.forEach(v->{
+        list.forEach(v -> {
             meetings.add(getMeetingById(v.getMid()));
         });
 
@@ -125,44 +125,44 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     }
 
     @Override
-    public PageData getMeetingListInfo(Long uid,Long page,Long size) {
-        Page<Meeting> page1=new Page<>(page,size);
-        IPage<Meeting> iPage = baseMapper.selectPage(page1,new LambdaQueryWrapper<Meeting>()
+    public PageData getMeetingListInfo(Long uid, Long page, Long size) {
+        Page<Meeting> page1 = new Page<>(page, size);
+        IPage<Meeting> iPage = baseMapper.selectPage(page1, new LambdaQueryWrapper<Meeting>()
                 .eq(Meeting::getCreateUid, uid));
-        List<MeetingInfor> list=new ArrayList<>();
+        List<MeetingInfor> list = new ArrayList<>();
         List<Meeting> meetingList = iPage.getRecords();
 
         //检查状态
         meetingList.forEach(this::checkMeetingState);
 
-        meetingList.forEach(v->{
+        meetingList.forEach(v -> {
             list.add(getMeetingInfo(v.getId()));
         });
-        return new PageData(page,size,iPage.getTotal(), list);
+        return new PageData(page, size, iPage.getTotal(), list);
     }
 
     @Override
     public void checkMeetingState(Meeting meeting) {
         Date date = new Date();
         //会议还没开始
-        if (date.before(meeting.getBeginTime())){
-            check(meeting,0);
+        if (date.before(meeting.getBeginTime())) {
+            check(meeting, 0);
             return;
         }
         //会议在进行中
-        if (date.after(meeting.getBeginTime())&&date.before(meeting.getEndTime())){
-            check(meeting,1);
+        if (date.after(meeting.getBeginTime()) && date.before(meeting.getEndTime())) {
+            check(meeting, 1);
             return;
         }
         //会议结束
-        if (date.after(meeting.getEndTime())){
-            check(meeting,2);
+        if (date.after(meeting.getEndTime())) {
+            check(meeting, 2);
             return;
         }
     }
 
-    public void check(Meeting meeting,Integer state){
-        if (!meeting.getState().equals(state)){
+    public void check(Meeting meeting, Integer state) {
+        if (!meeting.getState().equals(state)) {
             meeting.setState(state);
             baseMapper.updateById(meeting);
         }
@@ -173,7 +173,16 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
         Page<Meeting> page1 = new Page<>(page, size);
         Page<Meeting> page2 = baseMapper.selectPage(page1, new LambdaQueryWrapper<Meeting>()
                 .eq(Meeting::getCreateUid, userId));
-        return new PageData(page,size,page2.getTotal(),page2.getRecords());
+        return new PageData(page, size, page2.getTotal(), page2.getRecords());
+    }
+
+    @Override
+    public PageData countMeetingStatus(Long page, Long size) {
+        var meetingPage = new Page<Meeting>(page, size);
+        var page2 = baseMapper.selectPage(meetingPage,
+                new LambdaQueryWrapper<Meeting>()
+                        .eq(Meeting::getBeginTime, 1));
+        return new PageData(page, size, page2.getTotal(), page2.getRecords());
     }
 }
 
