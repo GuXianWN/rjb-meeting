@@ -25,10 +25,10 @@ public class UserController {
     }
 
 
-
-    @GetMapping("/test")
-    public ResponseData test(){
-        Long uid = CurrentUserSession.getUserSession().getUserId();
-        return ResponseData.success().data(userService.getById(uid));
+    @GetMapping("/user")
+    public ResponseData whoAmI(){
+        var byId = userService.getById(CurrentUserSession.getUserSession().getUserId());
+        return ResponseData.success().data(UserDTO.form(byId));
     }
+
 }
