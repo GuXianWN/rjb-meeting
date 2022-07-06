@@ -101,15 +101,15 @@ public class JwtUtils {
         return expiration.before(new Date());
     }
 
-    public boolean RoleVerifyAndException(Long uid,HttpServletRequest request, RoleType roleType){
-        Long uid1 = getUid(request);
-        if (uid==uid1){
-            return true;
-        }
-        UserSession user = getUserForRedis(uid1);
-        if (user.getRole()>=roleType.getExplain()){
-            return true;
-        }
-        throw new ServiceException(BizCodeEnum.NO_ACCESS);
-    }
+//    public boolean RoleVerifyAndException(Long uid,HttpServletRequest request, RoleType roleType){
+//        Long uid1 = getUid(request);
+//        if (uid==uid1){
+//            return true;
+//        }
+//        UserSession user = getUserForRedis(uid1);
+//        if (user.getRole()>=roleType.getExplain()){
+//            return true;
+//        }
+//        throw new ServiceException(BizCodeEnum.NO_ACCESS);
+//    }
 }

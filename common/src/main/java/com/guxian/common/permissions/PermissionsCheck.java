@@ -37,7 +37,7 @@ import java.util.List;
 @Log4j2
 @Component
 @NoArgsConstructor
-public class PermissionsCheck implements HandlerInterceptor {
+public class PermissionsCheck implements HandlerInterceptor ,WebMvcConfigurer{
 
     static final String USER_PREFIX = "user:";
     static final String ROLE_PREFIX = "role:";
@@ -49,7 +49,8 @@ public class PermissionsCheck implements HandlerInterceptor {
     private boolean closed = true;
 
     @Autowired
-    public PermissionsCheck(JwtUtils jwtUtils, RedisTemplate<String, String> redisTemplate) {
+    public PermissionsCheck(JwtUtils jwtUtils,
+                            RedisTemplate<String, String> redisTemplate) {
         this.jwtUtils = jwtUtils;
         this.redisTemplate = redisTemplate;
     }
@@ -78,7 +79,7 @@ public class PermissionsCheck implements HandlerInterceptor {
         }
         List<String> accessUrls = JSON.parseArray(ops.get(ROLE_PREFIX + currentRole.toString()), String.class);
 
-        assert accessUrls != null;
+//        assert accessUrls != null;
 
         CurrentUserSession.setUserSession(user,closed);
 
@@ -91,5 +92,9 @@ public class PermissionsCheck implements HandlerInterceptor {
 //        throw new ServiceException(BizCodeEnum.NO_ACCESS);
     }
 
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(this);
+    }
 }
 
