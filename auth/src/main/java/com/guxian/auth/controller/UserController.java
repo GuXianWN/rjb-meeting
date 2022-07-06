@@ -4,17 +4,23 @@ import com.guxian.auth.entity.User;
 import com.guxian.auth.entity.dto.UserDTO;
 import com.guxian.auth.service.UserService;
 import com.guxian.common.entity.ResponseData;
+import com.guxian.common.exception.BizCodeEnum;
+import com.guxian.common.exception.ServiceException;
 import com.guxian.common.utils.CurrentUserSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/user")
 public class UserController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/infor/{id}")
     @Cacheable(value = {"userInfor"}, key = "#id",sync = true)
@@ -25,9 +31,10 @@ public class UserController {
     }
 
 
-    @GetMapping("/user")
+    @GetMapping
     public ResponseData whoAmI(){
-        var byId = userService.getById(CurrentUserSession.getUserSession().getUserId());
+        var byId = Optional.ofNullable(userService.getById(CurrentUserSession.getUserSession().getUserId()))
+                .orElseThrow(()->new ServiceException(BizCodeEnum.NOT_LOGGED_IN));
         return ResponseData.success().data(UserDTO.form(byId));
     }
 
