@@ -1,5 +1,6 @@
 package com.guxian.common.redis;
 
+import lombok.Data;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 
 @Component
+@Data
 public class RedisUtils {
 
     public  static ValueOperations<String, Object> ops;
@@ -20,4 +22,6 @@ public class RedisUtils {
     public void init() {
         RedisUtils.ops=redisTemplate.opsForValue();
     }
+
+
 }

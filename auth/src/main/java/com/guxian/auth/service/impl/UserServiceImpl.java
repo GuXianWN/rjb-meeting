@@ -1,6 +1,7 @@
 package com.guxian.auth.service.impl;
 
-import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.guxian.auth.entity.User;
@@ -13,6 +14,7 @@ import com.guxian.auth.mapper.UserMapper;
 import com.guxian.auth.entity.RoleType;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
+import com.guxian.common.redis.RedisUtils;
 import com.guxian.common.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,9 +38,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Autowired
     private JwtUtils jwtUtils;
     @Autowired
-    private RedisTemplate<String, String> redisTemplate;
-    @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private RedisTemplate<String,String> redisTemplate;
     @Value("${guxian.jwt.expire}")
     private Long expire;
 
@@ -64,9 +66,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         //生成token
         String token = jwtUtils.generateToken(user.getId());
         //用户放入redis 并且设置过期时间
-        ValueOperations<String, String> opsForValue = redisTemplate.opsForValue();
         UserSession userSession = UserSession.forUser(user, request, token);
-        opsForValue.set("user:" + user.getId(), JSON.toJSONString(userSession), expire, TimeUnit.SECONDS);
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+        ops.set("user:" + user.getId(), JSON.toJSONString(userSession), expire, TimeUnit.SECONDS);
         return token;
     }
 
