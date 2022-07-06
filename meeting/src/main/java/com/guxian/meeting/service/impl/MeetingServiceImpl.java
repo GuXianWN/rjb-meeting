@@ -168,7 +168,13 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
         }
     }
 
-
+    @Override
+    public PageData listMe(Long page, Long size, Long userId) {
+        Page<Meeting> page1 = new Page<>(page, size);
+        Page<Meeting> page2 = baseMapper.selectPage(page1, new LambdaQueryWrapper<Meeting>()
+                .eq(Meeting::getCreateUid, userId));
+        return new PageData(page,size,page2.getTotal(),page2.getRecords());
+    }
 }
 
 

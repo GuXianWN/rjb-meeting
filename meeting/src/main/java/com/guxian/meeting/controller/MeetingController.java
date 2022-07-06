@@ -80,6 +80,11 @@ public class MeetingController {
         return ResponseData.is(meetingService.removeById(mid));
     }
 
+    @GetMapping("/list/me")
+    public ResponseData listMe(Long page,Long size){
+        return ResponseData.success().data(meetingService.listMe(page,size,CurrentUserSession.getUserSession().getUserId()));
+    }
+
     @GetMapping("/{id}")
     public ResponseData getMeeting(@PathVariable("id") Long id) {
         //todo 修改获取会议的加入人数的方式 ，并且把这个加入人数的方式放到service层
@@ -102,7 +107,8 @@ public class MeetingController {
     }
 
     @GetMapping("/list/me/info")
-    public ResponseData getMeetingListInfo(Long page, Long size, HttpServletRequest request) {
+    public ResponseData
+    getMeetingListInfo(Long page, Long size, HttpServletRequest request) {
         return ResponseData.success()
                 .data(meetingService.getMeetingListInfo(jwtUtils.getUid(request), page, size));
     }
@@ -124,8 +130,6 @@ public class MeetingController {
         return ResponseData.success()
                 .data(meetingService.getMeetingJoinList(page, size, CurrentUserSession.getUserSession().getUserId()));
     }
-
-
 }
 
 
