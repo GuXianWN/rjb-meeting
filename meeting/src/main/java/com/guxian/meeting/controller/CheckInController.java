@@ -1,6 +1,7 @@
 package com.guxian.meeting.controller;
 
 import com.guxian.common.entity.ResponseData;
+import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.common.utils.JwtUtils;
 import com.guxian.meeting.entity.vo.CheckDataVo;
 import com.guxian.meeting.entity.vo.ReCheckVo;
@@ -34,13 +35,11 @@ public class CheckInController {
 
     @PostMapping("/reCheck")
     public ResponseData reCheck(@RequestBody ReCheckVo reCheckVo, HttpServletRequest request) {
-        Long uid = jwtUtils.getUid(request);
+        Long uid = CurrentUserSession.getUserSession().getUserId();
+
         checkInService.reCheck(reCheckVo, uid);
         return ResponseData.success();
     }
 
-    @GetMapping
-    public String test() {
-        return "success";
-    }
+
 }
