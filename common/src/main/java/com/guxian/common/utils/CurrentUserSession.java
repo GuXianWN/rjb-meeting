@@ -2,6 +2,7 @@ package com.guxian.common.utils;
 
 import com.guxian.common.entity.UserSession;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 
 @Log4j2
 public class CurrentUserSession {
@@ -9,8 +10,8 @@ public class CurrentUserSession {
     }
 
     private static final ThreadLocal<UserSession> userSession = new ThreadLocal<>();
-
-    private static boolean closed=false;
+    @Value("${close-token-check}")
+    private static boolean closed=true;
 
     public static void setUserSession(UserSession userSession) {
         CurrentUserSession.userSession.set(userSession);

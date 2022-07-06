@@ -57,16 +57,16 @@ public class MeetingController {
      */
 
     @PostMapping
-    public ResponseData createMeeting(@RequestBody @Validated(AddGroup.class) MeetingVo meeting, HttpServletRequest request) {
-        Long uid = jwtUtils.getUid(request);
+    public ResponseData createMeeting(@RequestBody @Validated(AddGroup.class) MeetingVo meeting) {
+        Long uid = CurrentUserSession.getUserSession().getUserId();
         return ResponseData.success()
                 .data(meetingService.addMeeting(meeting.toMeeting(), uid)
                         .orElseThrow(() -> new ServiceException(BizCodeEnum.CREATE_MEETING_FAILED)));
     }
 
     @PatchMapping
-    public ResponseData updateMeeting(@RequestBody @Validated(UpdateGroup.class) @NotNull MeetingVo meeting, HttpServletRequest request) {
-        Long uid = jwtUtils.getUid(request);
+    public ResponseData updateMeeting(@RequestBody @Validated(UpdateGroup.class) @NotNull MeetingVo meeting) {
+        Long uid = CurrentUserSession.getUserSession().getUserId();
         return ResponseData.success()
                 .data(
                         meetingService.updateMeeting(meeting.toMeeting(), uid)
@@ -74,9 +74,11 @@ public class MeetingController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseData deleteMeeting(@PathVariable("id") Long mid, HttpServletRequest request) {
+    public ResponseData deleteMeeting(@PathVariable("id") Long mid) {
         Meeting meeting = meetingService.getMeetingById(mid);
-        jwtUtils.RoleVerifyAndException(meeting.getCreateUid(), request, RoleType.ROLE_ADMIN);
+        if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())) {
+            throw new ServiceException(BizCodeEnum.NO_ACCESS);
+        }
         return ResponseData.is(meetingService.removeById(mid));
     }
 
@@ -107,10 +109,9 @@ public class MeetingController {
     }
 
     @GetMapping("/list/me/info")
-    public ResponseData
-    getMeetingListInfo(Long page, Long size, HttpServletRequest request) {
+    public ResponseData getMeetingListInfo(Long page, Long size) {
         return ResponseData.success()
-                .data(meetingService.getMeetingListInfo(jwtUtils.getUid(request), page, size));
+                .data(meetingService.getMeetingListInfo(CurrentUserSession.getUserSession().getUserId(), page, size));
     }
 
     @GetMapping
