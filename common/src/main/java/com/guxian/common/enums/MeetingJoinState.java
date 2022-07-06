@@ -1,5 +1,6 @@
 package com.guxian.common.enums;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,10 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public enum MeetingJoinState {
-    InviteWaitingToBeAccepted(0),
-    JoinWaitingToBeAccepted(1),
     Accepted(2),
     WHITELIST(3);
 
+    @EnumValue
     Integer explain;
 }

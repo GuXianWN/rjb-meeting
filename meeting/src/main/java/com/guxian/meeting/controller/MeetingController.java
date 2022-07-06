@@ -16,6 +16,7 @@ import com.guxian.meeting.entity.UserMeeting;
 import com.guxian.meeting.entity.vo.MeetingVo;
 import com.guxian.meeting.service.MeetingService;
 import com.guxian.meeting.service.UserMeetingService;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
  */
 //todo 是不是应该直接给表加 joinNum 字段？ 如果不是，那么这个字段应该是计算出来的
 @RestController
+@Slf4j
 @RequestMapping("/meeting")
 public class MeetingController {
     /**
@@ -66,6 +68,7 @@ public class MeetingController {
 
     @PatchMapping
     public ResponseData updateMeeting(@RequestBody @Validated(UpdateGroup.class) @NotNull MeetingVo meeting) {
+        log.info("{}",meeting);
         Long uid = CurrentUserSession.getUserSession().getUserId();
         return ResponseData.success()
                 .data(

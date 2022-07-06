@@ -47,41 +47,6 @@ public class UserMeetingController {
     }
 
     /**
-     * 加入会议
-     */
-//    @PostMapping("/join/{mid}")
-//    public ResponseData joinMeeting(@PathVariable Long mid, HttpServletRequest request) {
-//        return ResponseData.success().data(userMeetingService.joinMeeting(mid, jwtUtils.getUid(request)));
-//    }
-//
-    /**
-     * 会议主持接受加入
-     */
-//    @PutMapping("/join/{umid}")
-//    public ResponseData acceptJoin(@PathVariable Long umid) {
-//        boolean join = userMeetingService.acceptJoin(umid);
-//        return join ? ResponseData.success("加入成功") : ResponseData.error("加入失败");
-//    }
-
-    /**
-     * 邀请别人加入
-     */
-//    @PostMapping("/invite/{mid}")
-//    public ResponseData invite(@RequestBody List<Long> uids, @PathVariable Long mid) {
-//        userMeetingService.invite(uids, mid);
-//        return ResponseData.success();
-//    }
-//
-    /**
-     * 用户接受邀请
-     */
-//    @PutMapping("/invite/{umid}")
-//    public ResponseData acceptInvite(@PathVariable Long umid) {
-//        boolean invite = userMeetingService.acceptInvite(umid);
-//        return invite ? ResponseData.success("加入成功") : ResponseData.error("加入失败");
-//    }
-
-    /**
      * 我加入的会议
      */
     @GetMapping("/list")

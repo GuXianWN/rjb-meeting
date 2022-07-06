@@ -7,13 +7,12 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum MeetingState {
-    WAIT_TO_START(0, "等待开始"),
-    PROCESSING(1, "进行中"),
-    OVER(2, "结束");
+public enum MeetingJoinType {
+    DEFAULT(0, "默认"),
+    WHITELIST(1, "白名单加入");
 
     @EnumValue
     @JsonValue
-    private final Integer explain;
-    private final String dis;
+    private final Integer value;
+    private final String explain;
 }

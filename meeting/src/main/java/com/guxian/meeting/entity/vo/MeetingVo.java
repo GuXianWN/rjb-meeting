@@ -1,6 +1,7 @@
 package com.guxian.meeting.entity.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.guxian.common.enums.MeetingJoinType;
 import com.guxian.common.enums.MeetingState;
 import com.guxian.common.valid.AddGroup;
 import com.guxian.common.valid.UpdateGroup;
@@ -55,8 +56,12 @@ public class MeetingVo {
      */
     private Integer joinNum;
 
+    @NotNull(message = "会议加入方式不能为空", groups = {AddGroup.class})
+    private MeetingJoinType joinType;
+
     public Meeting toMeeting() {
         return new Meeting()
+                .setJoinType(this.joinType)
                 .setBeginTime(this.beginTime)
                 .setCreateTime(this.createTime)
                 .setCreateUid(this.createUid)
@@ -70,6 +75,7 @@ public class MeetingVo {
 
     public static MeetingVo fromMeeting(Meeting meeting) {
         return new MeetingVo()
+                .setJoinType(meeting.getJoinType())
                 .setJoinNum(0)
                 .setBeginTime(meeting.getBeginTime())
                 .setCreateTime(meeting.getCreateTime())
