@@ -4,7 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.guxian.common.RoleType;
+import com.guxian.common.enums.MeetingState;
+import com.guxian.common.enums.RoleType;
 import com.guxian.common.entity.PageData;
 import com.guxian.common.entity.UserSession;
 import com.guxian.common.exception.BizCodeEnum;
@@ -48,7 +49,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     @Override
     public Optional<Meeting> addMeeting(Meeting meeting, Long uid) {
         meeting.setCreateTime(new Date());
-        this.save(meeting.setCreateUid(uid).setState(0));
+        this.save(meeting.setCreateUid(uid).setState(MeetingState.WAIT_TO_START));
         return Optional.ofNullable(meeting.getId() != null ? meeting : null);
     }
 
@@ -146,22 +147,22 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
         Date date = new Date();
         //会议还没开始
         if (date.before(meeting.getBeginTime())) {
-            check(meeting, 0);
+            check(meeting, MeetingState.WAIT_TO_START);
             return;
         }
         //会议在进行中
         if (date.after(meeting.getBeginTime()) && date.before(meeting.getEndTime())) {
-            check(meeting, 1);
+            check(meeting, MeetingState.PROCESSING);
             return;
         }
         //会议结束
         if (date.after(meeting.getEndTime())) {
-            check(meeting, 2);
+            check(meeting, MeetingState.OVER);
             return;
         }
     }
 
-    public void check(Meeting meeting, Integer state) {
+    public void check(Meeting meeting, MeetingState state) {
         if (!meeting.getState().equals(state)) {
             meeting.setState(state);
             baseMapper.updateById(meeting);
@@ -177,12 +178,10 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     }
 
     @Override
-    public PageData countMeetingStatus(Long page, Long size) {
-        var meetingPage = new Page<Meeting>(page, size);
-        var page2 = baseMapper.selectPage(meetingPage,
-                new LambdaQueryWrapper<Meeting>()
-                        .eq(Meeting::getBeginTime, 1));
-        return new PageData(page, size, page2.getTotal(), page2.getRecords());
+    public Long countMeetingStatus(MeetingState over) {
+        return baseMapper.selectCount(new LambdaQueryWrapper<Meeting>()
+                .eq(Meeting::getCreateUid, CurrentUserSession.getUserSession().getUserId())
+                .eq(Meeting::getState, over));
     }
 }
 

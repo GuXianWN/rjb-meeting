@@ -1,6 +1,6 @@
 package com.guxian.meeting.entity.vo;
 
-import com.guxian.common.CheckWay;
+import com.guxian.common.enums.CheckWay;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +8,6 @@ import lombok.experimental.Accessors;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
-import java.io.File;
 
 /**
  * 签到时需要传递的数据

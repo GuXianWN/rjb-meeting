@@ -1,6 +1,7 @@
 package com.guxian.meeting.entity.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.guxian.common.enums.MeetingState;
 import com.guxian.common.valid.AddGroup;
 import com.guxian.common.valid.UpdateGroup;
 import com.guxian.meeting.entity.Meeting;
@@ -46,7 +47,7 @@ public class MeetingVo {
     @FutureOrPresent(message = "结束时间必须大于开始时间", groups = {AddGroup.class})
     private Date endTime;
 
-    private Integer state;
+    private MeetingState state;
 
 
     /**

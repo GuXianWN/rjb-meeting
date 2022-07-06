@@ -1,7 +1,6 @@
 package com.guxian.common.entity;
 
 
-import com.guxian.common.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,6 +1,6 @@
 package com.guxian.meeting.service;
 
-import com.guxian.common.CheckWay;
+import com.guxian.common.enums.CheckWay;
 import com.guxian.common.entity.PageData;
 import com.guxian.meeting.entity.MeetingCheck;
 import com.guxian.meeting.entity.UserMeeting;

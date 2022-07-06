@@ -2,7 +2,9 @@ package com.guxian.meeting.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.guxian.common.entity.PageData;
+import com.guxian.common.entity.Resp;
 import com.guxian.common.entity.ResponseData;
+import com.guxian.common.enums.MeetingState;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.utils.CurrentUserSession;
@@ -133,9 +135,11 @@ public class MeetingController {
     }
 
     @GetMapping("/list/status")
-    public ResponseData countMeetingStatus(Long page, Long size) {
-        return ResponseData.success()
-                .data(meetingService.countMeetingStatus(page, size));
+    public Resp countMeetingStatus() {
+        return Resp.success()
+                .data(MeetingState.WAIT_TO_START.getDis(), meetingService.countMeetingStatus(MeetingState.WAIT_TO_START))
+                .data(MeetingState.PROCESSING.getDis(), meetingService.countMeetingStatus(MeetingState.PROCESSING))
+                .data(MeetingState.OVER.getDis(), meetingService.countMeetingStatus(MeetingState.OVER));
     }
 }
 

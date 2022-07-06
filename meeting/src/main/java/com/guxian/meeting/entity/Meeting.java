@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.guxian.common.enums.MeetingState;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -67,7 +68,7 @@ public class Meeting implements Serializable {
      * 状态
      */
     //0待开始 1进行中 2已结束
-    private Integer state;
+    private MeetingState state;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

@@ -1,31 +1,19 @@
 package com.guxian.common.permissions;
 
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson2.JSON;
-import com.guxian.common.RoleType;
+import com.guxian.common.enums.RoleType;
 import com.guxian.common.entity.UserSession;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.common.utils.JwtUtils;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import org.apache.catalina.User;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.http.server.ServletServerHttpRequest;
-import org.springframework.lang.NonNullApi;
-import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
-import org.springframework.util.Assert;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -46,7 +34,7 @@ public class PermissionsCheck implements HandlerInterceptor ,WebMvcConfigurer{
     AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     @Value("${close-token-check}")
-    private boolean closed = true;
+    private boolean closed = false;
 
     @Autowired
     public PermissionsCheck(JwtUtils jwtUtils,

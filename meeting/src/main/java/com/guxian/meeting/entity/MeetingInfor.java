@@ -1,6 +1,7 @@
 package com.guxian.meeting.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.guxian.common.enums.MeetingState;
 import com.guxian.meeting.entity.vo.UserVo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,7 +32,7 @@ public class MeetingInfor {
     //全部参会人信息
     List<CheckInfor> attendDetail;
     //0待开始 1进行中 2已结束
-    Integer status;
+    MeetingState status;
     //会议签到码
     String signinCode;
 

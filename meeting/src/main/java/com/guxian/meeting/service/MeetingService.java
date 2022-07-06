@@ -1,11 +1,11 @@
 package com.guxian.meeting.service;
 
 import com.guxian.common.entity.PageData;
+import com.guxian.common.enums.MeetingState;
 import com.guxian.meeting.entity.Meeting;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.guxian.meeting.entity.MeetingInfor;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -35,5 +35,5 @@ public interface MeetingService extends IService<Meeting> {
 
     PageData listMe(Long page, Long size, Long userId);
 
-    PageData countMeetingStatus(Long page, Long size);
+    Long countMeetingStatus(MeetingState state);
 }

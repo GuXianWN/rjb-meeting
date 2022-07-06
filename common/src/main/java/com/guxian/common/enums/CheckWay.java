@@ -1,4 +1,4 @@
-package com.guxian.common;
+package com.guxian.common.enums;
 
 public enum CheckWay {
 

@@ -1,13 +1,10 @@
 package com.guxian.meeting.service.impl;
 
-import com.guxian.common.CheckWay;
-import com.guxian.meeting.entity.UserMeeting;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
 
 class UserMeetingServiceImplTest {
 

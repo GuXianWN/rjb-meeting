@@ -2,11 +2,10 @@ package com.guxian.meeting.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.guxian.common.CheckWay;
+import com.guxian.common.enums.CheckWay;
 import com.guxian.common.entity.ResponseData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
-import com.guxian.common.openfegin.facecheck.FaceCheckController;
 import com.guxian.common.redis.RedisUtils;
 import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.meeting.clients.FaceCheckClient;
@@ -18,14 +17,11 @@ import com.guxian.meeting.entity.vo.ReCheckVo;
 import com.guxian.meeting.service.CheckInService;
 import com.guxian.meeting.mapper.CheckInMapper;
 import com.guxian.meeting.service.MeetingCheckService;
-import com.guxian.meeting.service.MeetingService;
 import com.guxian.meeting.service.UserMeetingService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.Date;
 import java.util.List;
 

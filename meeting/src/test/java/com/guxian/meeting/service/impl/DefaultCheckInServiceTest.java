@@ -1,7 +1,5 @@
 package com.guxian.meeting.service.impl;
 
-import com.guxian.common.CheckWay;
-import com.guxian.common.exception.ServiceException;
 import com.guxian.common.redis.RedisUtils;
 import com.guxian.common.redis.config.RedisTemplateConfigurer;
 import com.guxian.common.utils.SomeUtils;
