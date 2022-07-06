@@ -39,11 +39,14 @@ public class UserController {
         return ResponseData.success().data(UserDTO.form(byId));
     }
 
-    @GetMapping
-    public ResponseData information(@RequestBody String username) {
+    @GetMapping("/username/{username}")
+    public ResponseData information(@PathVariable String username) {
+        var user = userService.getByUsername(username)
+                .orElseThrow(() -> new ServiceException(BizCodeEnum.USER_NOT_EXIST));
         return ResponseData.success()
-                .data(userService.getByUsername(username)
-                        .orElseThrow(() -> new ServiceException(BizCodeEnum.USER_NOT_EXIST)));
+                .data(UserDTO.form(user));
     }
+
+    //org.springframework.web.HttpRequestMethodNotSupportedException
 
 }
