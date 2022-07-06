@@ -1,8 +1,6 @@
 spring:
-  main:
-    allow-circular-references: true
   application:
-    name: meeting # 服务名称
+    name: face # 服务名称
   cloud:
     nacos:
       discovery:
@@ -13,7 +11,5 @@ spring:
         namespace: rjb_G
         file-extension: yaml # 文件后缀名
         ext-config[0].data-id: db.yaml
-mybatis-plus:
-  global-config:
-    db-config:
-      update-strategy: not_empty
+
+

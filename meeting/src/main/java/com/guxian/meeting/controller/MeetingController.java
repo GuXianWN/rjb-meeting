@@ -78,11 +78,8 @@ public class MeetingController {
 
     @DeleteMapping("/{id}")
     public ResponseData deleteMeeting(@PathVariable("id") Long mid) {
-        Meeting meeting = meetingService.getMeetingById(mid);
-        if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())) {
-            throw new ServiceException(BizCodeEnum.NO_ACCESS);
-        }
-        return ResponseData.is(meetingService.removeById(mid));
+        meetingService.deleteMeeting(mid);
+        return ResponseData.success();
     }
 
     @GetMapping("/list/me")

@@ -36,4 +36,6 @@ public interface MeetingService extends IService<Meeting> {
     PageData listMe(Long page, Long size, Long userId);
 
     Long countMeetingStatus(MeetingState state);
+
+    void deleteMeeting(Long mid);
 }

@@ -189,6 +189,16 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
                 .eq(Meeting::getCreateUid, CurrentUserSession.getUserSession().getUserId())
                 .eq(Meeting::getState, over));
     }
+
+    @Override
+    public void deleteMeeting(Long mid) {
+        Meeting meeting = baseMapper.selectById(mid);
+        if (meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())){
+            throw new ServiceException(BizCodeEnum.NO_ACCESS);
+        }
+
+        userMeetingService.deleteByMid(mid);
+    }
 }
 
 
