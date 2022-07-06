@@ -20,4 +20,6 @@ public interface UserService extends IService<User> {
     void logout(HttpServletRequest request);
 
     Optional<User> register(RegisterVo user);
+
+    Optional<User> getByUsername(String username);
 }

@@ -76,4 +76,9 @@ public class Resp {
         this.data.put(key, value);
         return this;
     }
+
+    public Resp data(Integer integer,Object value){
+        this.data.put(String.valueOf(integer), value);
+        return this;
+    }
 }

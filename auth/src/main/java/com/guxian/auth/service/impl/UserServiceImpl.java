@@ -22,6 +22,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
@@ -40,7 +41,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private RedisTemplate<String,String> redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
     @Value("${guxian.jwt.expire}")
     private Long expire;
 
@@ -83,6 +84,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     //todo : add email to check user.
     @Override
     public Optional<User> register(RegisterVo user) {
+        var byOne=this.getOne(new QueryWrapper<User>()
+                .eq("username", user.getUsername()));
+        if(byOne!=null){
+            throw new ServiceException(BizCodeEnum.USER_EXIST_EXCEPTION);
+        }
         User user1 = new User()
                 .setUsername(user.getUsername())
                 .setPassword(passwordEncoder.encode(user.getPassword()))
@@ -92,6 +98,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                 .setRoleId(RoleType.ROLE_USER);
         this.save(user1);
         return Optional.of(user1);
+    }
+
+    @Override
+    public Optional<User> getByUsername(String username) {
+        return Optional.ofNullable(this.getOne(new QueryWrapper<User>()
+                .eq("username", username)));
     }
 }
 
