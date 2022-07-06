@@ -82,8 +82,8 @@ public class MeetingCheckController {
     }
 
 
-    @GetMapping("/list/types")
-    public ResponseData getMeetingTypes() {
+    @GetMapping("/list/check/types")
+    public ResponseData getMeetingCheckTypes() {
         var map = meetingCheckService.getMeetingTypeList();
         return ResponseData.success(map);
     }
