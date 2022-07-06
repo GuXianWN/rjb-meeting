@@ -69,10 +69,9 @@ public class PermissionsCheck implements HandlerInterceptor {
         if (jwtUtils.hasToken(request)) { // 如果有token 有权限
             uid = jwtUtils.getUid(request);
             user = JSON.parseObject(ops.get(USER_PREFIX + uid), UserSession.class);
-
             if (user == null) {
                 log.error("user is not UserSession");
-                throw new ServiceException(BizCodeEnum.USER_NOT_EXIST);
+                throw new ServiceException(BizCodeEnum.NOT_LOGGED_IN);
             }
             currentRole = user.getRole();
         }

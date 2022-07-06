@@ -2,6 +2,7 @@ package com.guxian.meeting.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.guxian.common.RoleType;
+import com.guxian.common.entity.PageData;
 import com.guxian.common.entity.ResponseData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
@@ -31,23 +32,19 @@ public class MeetingController {
     /**
      * JWT工具类
      */
-    private final JwtUtils jwtUtils;
+    @Autowired
+    private JwtUtils jwtUtils;
     /**
      * 会议服务类
      */
-    private final MeetingService meetingService;
+    @Autowired
+    private MeetingService meetingService;
     /**
      * 用户与会议<strong style="color:red">关系</strong>服务类
      **/
-    private final UserMeetingService userMeetingService;
+    @Autowired
+    private UserMeetingService userMeetingService;
 
-    public MeetingController(@Autowired MeetingService meetingService
-            , @Autowired JwtUtils jwtUtils
-            , @Autowired UserMeetingService userMeetingService) {
-        this.meetingService = meetingService;
-        this.jwtUtils = jwtUtils;
-        this.userMeetingService = userMeetingService;
-    }
 
     /**
      * 添加会议
@@ -82,7 +79,8 @@ public class MeetingController {
 
     @GetMapping("/list/me")
     public ResponseData listMe(Long page,Long size){
-        return ResponseData.success().data(meetingService.listMe(page,size,CurrentUserSession.getUserSession().getUserId()));
+        PageData data = meetingService.listMe(page, size, CurrentUserSession.getUserSession().getUserId());
+        return ResponseData.success().data(data);
     }
 
     @GetMapping("/{id}")

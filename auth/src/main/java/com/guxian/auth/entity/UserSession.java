@@ -1,7 +1,6 @@
 package com.guxian.auth.entity;
 
 
-import com.guxian.common.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 public class UserSession {
     private Long userId;
     private String userName;
-    private String role;
+    private RoleType role;
     private String token;
     private String ip;
 
@@ -24,7 +23,7 @@ public class UserSession {
         return new UserSession()
                 .setUserId(user.getId())
                 .setUserName(user.getUsername())
-                .setRole(user.getRoleId().getDescribe())
+                .setRole(user.getRoleId())
                 .setToken(token)
                 .setIp(request.getRemoteAddr());
     }
