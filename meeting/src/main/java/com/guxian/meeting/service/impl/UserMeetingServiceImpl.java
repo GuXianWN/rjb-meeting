@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.guxian.common.enums.CheckWay;
 import com.guxian.common.enums.MeetingJoinState;
+import com.guxian.common.enums.MeetingJoinType;
 import com.guxian.common.enums.UserCheckInStatus;
 import com.guxian.common.entity.PageData;
 import com.guxian.common.exception.BizCodeEnum;
@@ -172,17 +173,44 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
      */
     @Override
     public UserMeeting joinMeeting(Long mid, Long uid) {
+        Meeting meeting = meetingService.getMeetingById(mid);
+
         UserMeeting userMeeting = baseMapper.selectOne(new LambdaQueryWrapper<UserMeeting>()
                 .eq(UserMeeting::getUid, uid)
                 .eq(UserMeeting::getMid, mid));
-        if (userMeeting == null) {
-            throw new ServiceException(BizCodeEnum.NOT_WHITE_LISTED);
+
+        //会议加入方式为def直接放进去
+        if (meeting.getJoinType().equals(MeetingJoinType.DEFAULT)) {
+            if (userMeeting == null) {
+                return toJoin(mid, uid);
+            }
         }
-        if (userMeeting.getJoinState().equals(MeetingJoinState.WHITELIST.getExplain())) {
-            baseMapper.updateById(userMeeting
-                    .setJoinTime(new Date())
-                    .setJoinState(MeetingJoinState.Accepted.getExplain()));
+        //会议加入方式为白名单 检查是否为白名单 修改状态
+        if (meeting.getJoinType().equals(MeetingJoinType.WHITELIST)) {
+            if (userMeeting == null) {
+                throw new ServiceException(BizCodeEnum.NOT_WHITE_LISTED);
+            }
+            if (userMeeting.getJoinState().equals(MeetingJoinState.WHITELIST)) {
+                toJoin(userMeeting);
+            }
         }
+        return userMeeting;
+    }
+
+    public UserMeeting toJoin(Long mid, Long uid) {
+        UserMeeting userMeeting = new UserMeeting()
+                .setUid(uid)
+                .setMid(mid)
+                .setJoinTime(new Date())
+                .setJoinState(MeetingJoinState.Accepted);
+        baseMapper.insert(userMeeting);
+        return userMeeting;
+    }
+
+    public UserMeeting toJoin(UserMeeting userMeeting) {
+        userMeeting.setJoinTime(new Date())
+                .setJoinState(MeetingJoinState.Accepted);
+        baseMapper.updateById(userMeeting);
         return userMeeting;
     }
 
@@ -193,18 +221,18 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
     @Override
     public void addWhiteListed(List<Long> list, Long mid) {
         Meeting meeting = meetingService.getMeetingById(mid);
-        if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())){
+        if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())) {
             throw new ServiceException(BizCodeEnum.NO_ACCESS);
         }
 
-        list.forEach(v->{
+        list.forEach(v -> {
             UserMeeting userMeeting = baseMapper.selectOne(new LambdaQueryWrapper<UserMeeting>()
                     .eq(UserMeeting::getUid, v)
                     .eq(UserMeeting::getMid, mid));
 
-            if (userMeeting==null){
+            if (userMeeting == null) {
                 baseMapper.insert(new UserMeeting()
-                        .setJoinState(MeetingJoinState.WHITELIST.getExplain())
+                        .setJoinState(MeetingJoinState.WHITELIST)
                         .setUid(v)
                         .setMid(mid));
             }
@@ -214,7 +242,7 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
     @Override
     public void deleteWhiteListed(Long uid, Long mid) {
         Meeting meeting = meetingService.getMeetingById(mid);
-        if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())){
+        if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())) {
             throw new ServiceException(BizCodeEnum.NO_ACCESS);
         }
 
@@ -222,10 +250,10 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
                 .eq(UserMeeting::getUid, uid)
                 .eq(UserMeeting::getMid, mid));
 
-        if (userMeeting==null){
+        if (userMeeting == null) {
             throw new ServiceException(BizCodeEnum.NOT_WHITE_LISTED);
         }
-        if (!userMeeting.getJoinState().equals(MeetingJoinState.WHITELIST.getExplain())){
+        if (!userMeeting.getJoinState().equals(MeetingJoinState.WHITELIST.getExplain())) {
             throw new ServiceException(BizCodeEnum.NOT_WHITE_LISTED);
         }
 

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.guxian.common.enums.MeetingJoinType;
 import com.guxian.common.enums.MeetingState;
 import com.guxian.common.enums.RoleType;
 import com.guxian.common.entity.PageData;
@@ -48,8 +49,11 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
 
     @Override
     public Optional<Meeting> addMeeting(Meeting meeting, Long uid) {
-        meeting.setCreateTime(new Date());
-        this.save(meeting.setCreateUid(uid).setState(MeetingState.WAIT_TO_START));
+        meeting.setCreateTime(new Date())
+                .setCreateUid(uid)
+                .setJoinType(MeetingJoinType.DEFAULT)
+                .setState(MeetingState.WAIT_TO_START);
+        this.save(meeting);
         return Optional.ofNullable(meeting.getId() != null ? meeting : null);
     }
 
@@ -63,6 +67,8 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
                 throw new ServiceException(BizCodeEnum.NO_ACCESS);
             }
         }
+
+        System.out.println("=======>"+toMeeting.toString());
         baseMapper.updateById(toMeeting);
         return Optional.ofNullable(toMeeting);
     }
