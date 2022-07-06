@@ -3,6 +3,7 @@ package com.guxian.common.exception;
 import lombok.Getter;
 
 /**
+ * 10: 服务器
  * 11:会议
  * 12:签到
  * 15:用户
@@ -15,7 +16,7 @@ public enum BizCodeEnum {
     OSS_INIT_EXCEPTION(10002, "服务器初始OSS异常"),
     UPLOAD_ERROR(10003, "上传异常"),
     UNKNOWN_EXCEPTION(10004, "未知异常"),
-
+    RequestMethodNotSupported(10005, "请求方式不支持"),
 
 
     CREATE_MEETING_FAILED(11001, "创建会议失败"),
