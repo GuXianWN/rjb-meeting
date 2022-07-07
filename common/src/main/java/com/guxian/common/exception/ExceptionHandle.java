@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -45,12 +46,20 @@ public class ExceptionHandle {
                 ResponseData.error("参数缺失！"));
     }
 
+    @ExceptionHandler(FileNotFoundException.class)
+    public ResponseEntity<ResponseData> fileNotFoundExceptionHandle(FileNotFoundException e) {
+        e.printStackTrace();
+        return ResponseEntity.ok().body(
+                ResponseData.error("文件未找到！"));
+    }
+
     @ExceptionHandler(ServiceException.class)
     public ResponseEntity<ResponseData> handleValidException(ServiceException e) {
         log.error("业务异常: {},类型: {}", e.getMessage(), e.getClass());
         return ResponseEntity.ok().body(ResponseData.error(e.getMessage())
                 .setCode(e.getStatus()));
     }
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ResponseData> handleFileNotFoundException(Exception e) {

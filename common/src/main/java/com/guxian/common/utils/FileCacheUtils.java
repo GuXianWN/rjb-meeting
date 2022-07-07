@@ -1,5 +1,6 @@
 package com.guxian.common.utils;
 
+import com.guxian.common.exception.ServiceException;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
@@ -58,14 +59,11 @@ public class FileCacheUtils {
         return file.canExecute() && Files.deleteIfExists(Path.of(file.getPath()));
     }
 
-    public File saveFileFromRemote(URL url, String filename) {
-        log.info("fileName=====>{}",filename);
+    public File saveFileFromRemote(URL url, String filename) throws IOException {
+        log.info("fileName=====>{}", filename);
         var file = buildFilenameWithPath(filename);
-        try (InputStream in = url.openStream();) {
-            saveFile(in, filename);
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        }
+        var in = url.openStream();
+        saveFile(in, filename);
         return file;
     }
 
@@ -84,8 +82,8 @@ public class FileCacheUtils {
      * @return
      */
     private File buildFilenameWithPath(String filename) {
-        log.info("fileName=====>{}",filename);
-        log.info("buildFilenameWithPath======>{}", SomeUtils.getPath() +"\\ph\\"+ filename);
-        return new File(SomeUtils.getPath() +"\\ph\\"+ filename);
+        log.info("fileName=====>{}", filename);
+        log.info("buildFilenameWithPath======>{}", SomeUtils.getPath() + "\\ph\\" + filename);
+        return new File(SomeUtils.getPath() + "\\ph\\" + filename);
     }
 }
