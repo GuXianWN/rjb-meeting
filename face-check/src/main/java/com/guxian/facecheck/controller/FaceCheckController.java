@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -75,14 +76,12 @@ public class FaceCheckController {
         try {
             var url = new URL(faceUrl);
             remoteUserFaceImg = fileCacheUtils.saveFileFromRemote(url
-    //                , SomeUtils.buildFileName(CurrentUserSession.getUserSession().getUserId()));
                     , UUID.randomUUID() + ".png");
-        } catch (MalformedURLException e) {
+        } catch (IOException e) {
             throw new ServiceException(BizCodeEnum.USER_FACE_NOT_EXIST);
         }
         log.info("remoteUserFaceImg ok{}", remoteUserFaceImg.getAbsolutePath());
         var paramFaceImg = fileCacheUtils.saveFile(file,
-//                SomeUtils.buildFileName(CurrentUserSession.getUserSession().getUserId()));
                 UUID.randomUUID() + ".png");
         log.info("paramFaceImg ok{}", paramFaceImg.getAbsolutePath());
         var rate = faceCompareService
