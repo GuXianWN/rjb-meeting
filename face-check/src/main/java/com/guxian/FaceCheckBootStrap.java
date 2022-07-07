@@ -16,7 +16,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 import java.io.File;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.guxian.*")
 @EnableFeignClients
 @EnableDiscoveryClient
 @EntityScan({"com.guxian.facecheck.entity"})
