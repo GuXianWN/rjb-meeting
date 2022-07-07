@@ -94,7 +94,7 @@ public class FaceCheckController {
 
     @PostMapping("/upload")
     @SneakyThrows
-    public ResponseData upload(@RequestParam(name = "file") MultipartFile file) {
+    public ResponseData upload(@RequestPart(value = "file") MultipartFile file) {
         if (file.isEmpty()) {
             throw new ServiceException(BizCodeEnum.NUMBER_OF_UPLOADED_FILE_NOT_ONE);
         }

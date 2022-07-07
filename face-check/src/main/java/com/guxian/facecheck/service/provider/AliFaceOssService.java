@@ -12,17 +12,11 @@ import com.guxian.facecheck.service.OSSForFaceService;
 import com.guxian.facecheck.service.OssService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.time.Instant;
 import java.util.Date;
-import java.util.UUID;
-
-import static org.aspectj.weaver.tools.cache.SimpleCacheFactory.path;
 
 @Service
 @Slf4j
@@ -51,7 +45,7 @@ public class AliFaceOssService implements OSSForFaceService {
     @SneakyThrows
     @Override
     public String uploadFace(InputStream inputStream, Long userId) {
-        String fileName = SomeUtils.buildFileName(userId);
+        String fileName = SomeUtils.buildFaceFileName(userId);
 
         var fileCacheUtils = new FileCacheUtils("/face");
         var file = fileCacheUtils.saveFile(inputStream, fileName);
@@ -74,7 +68,7 @@ public class AliFaceOssService implements OSSForFaceService {
 
     @Override
     public File downloadFace(Long userId) {
-        return ossService.downloadObject(SomeUtils.buildFileName(userId));
+        return ossService.downloadObject(SomeUtils.buildFaceFileName(userId));
     }
 
     @Override

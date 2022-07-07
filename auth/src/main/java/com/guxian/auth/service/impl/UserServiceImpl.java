@@ -13,19 +13,27 @@ import com.guxian.auth.service.UserService;
 import com.guxian.auth.mapper.UserMapper;
 import com.guxian.auth.entity.RoleType;
 import com.guxian.common.entity.PageData;
+import com.guxian.common.entity.ResponseData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
+import com.guxian.common.openfegin.facecheck.FaceCheckController;
+import com.guxian.common.utils.CurrentUserSession;
+import com.guxian.common.utils.FileCacheUtils;
 import com.guxian.common.utils.JwtUtils;
+import com.guxian.common.utils.SomeUtils;
+import org.json.JSONString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
@@ -44,6 +52,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     private RedisTemplate<String, String> redisTemplate;
     @Value("${guxian.jwt.expire}")
     private Long expire;
+
+    @Autowired
+    private FaceCheckController faceCheckController;
 
 
     @Override
@@ -124,6 +135,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             v.setPassword("");
         });
         return new PageData(page, size, list.getTotal(), data);
+    }
+
+    @Override
+    public ResponseData uploadPortrait(MultipartFile file, String buildPortrait) {
+        var json = faceCheckController.uploadFile(file, SomeUtils.buildPortrait(CurrentUserSession.getUserSession().getUserId()));
+        if (!json.startsWith("http")) {
+            return ResponseData.parser(json);
+        }
+        return ResponseData.success().data(json);
     }
 }
 

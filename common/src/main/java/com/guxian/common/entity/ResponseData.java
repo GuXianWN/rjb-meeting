@@ -1,5 +1,8 @@
 package com.guxian.common.entity;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
@@ -79,13 +82,16 @@ public class ResponseData {
     }
 
 
-
-
     public static ResponseData success() {
         ResponseData respBean = new ResponseData();
         respBean.setCode(DEFAULT_SUCCESS_CODE);
         respBean.setMessage(DEFAULT_SUCCESS_MESSAGE);
         return respBean;
+    }
+
+    public static ResponseData parser(String json) {
+        var parse = JSONObject.parseObject(json,ResponseData.class);
+        return ResponseData.returnHas(returnHas(parse));
     }
 
 
@@ -161,5 +167,12 @@ public class ResponseData {
         return true;
     }
 
+    //检测响应是否正常
+    public static ResponseData returnHas(ResponseData responseData) {
+        if (!Objects.equals(DEFAULT_SUCCESS_CODE, responseData.getCode())) {
+            throw new ServiceException(responseData.message, responseData.code);
+        }
+        return responseData;
+    }
 
 }

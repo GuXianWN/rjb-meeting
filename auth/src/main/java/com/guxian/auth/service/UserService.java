@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.guxian.auth.entity.vo.LoginVo;
 import com.guxian.auth.entity.vo.RegisterVo;
 import com.guxian.common.entity.PageData;
+import com.guxian.common.entity.ResponseData;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
@@ -27,4 +29,6 @@ public interface UserService extends IService<User> {
     void modifyUserById(User user);
 
     PageData getUserList(Long page, Long size);
+
+    ResponseData uploadPortrait(MultipartFile file, String buildPortrait);
 }
