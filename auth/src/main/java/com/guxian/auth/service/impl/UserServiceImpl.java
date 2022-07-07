@@ -8,6 +8,7 @@ import com.guxian.auth.entity.User;
 import com.guxian.auth.entity.UserSession;
 import com.guxian.auth.entity.UserStatus;
 import com.guxian.auth.entity.dto.UserDTO;
+import com.guxian.auth.entity.dto.UserFaceDTO;
 import com.guxian.auth.entity.vo.LoginVo;
 import com.guxian.auth.entity.vo.RegisterVo;
 import com.guxian.auth.service.UserService;
@@ -17,7 +18,7 @@ import com.guxian.common.entity.PageData;
 import com.guxian.common.entity.ResponseData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
-import com.guxian.common.openfegin.facecheck.FaceCheckController;
+import com.guxian.common.openfegin.facecheck.FaceCheckClient;
 import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.common.utils.JwtUtils;
 import com.guxian.common.utils.SomeUtils;
@@ -33,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -50,7 +52,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     private Long expire;
 
     @Autowired
-    private FaceCheckController faceCheckController;
+    private FaceCheckClient faceCheckClient;
 
 
     @Override
@@ -124,39 +126,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Override
     public PageData getUserList(Integer page, Integer size) {
-
-        var faces = faceCheckController.getFaces(page, size);
-
-        var faceData = ResponseData.parser(faces, PageData.class);
-
         var userPage = new Page<User>(page, size);
         var list = baseMapper.selectPage(userPage, null);
         var data = list.getRecords();
-        var retList = new ArrayList<UserDTO>();
 
-        var faceUrlList = (List<UserDTO>) faceData.getData();
-
-        int index = 0;
-
-        var userDTOS = List.copyOf(faceUrlList);
-
-        for (User i : data) {
-            var userDTO = userDTOS.get(index);
-            var form = UserDTO.form(i);
-            retList.add(form);
-            if ((Objects.equals(userDTO.getId(), i.getId()))) {
-                form.setFaceUrl(userDTO.getFaceUrl());
-                index++;
-            }
-
-        }
+        List<UserDTO> retList = data.stream().map(v -> {
+            String faceUrl = ResponseData.parser(faceCheckClient.getFaces(v.getId()), UserFaceDTO.class).getFaceUrl();
+            return UserDTO.form(v)
+                    .setFaceUrl(faceUrl);
+        }).collect(Collectors.toList());
 
         return new PageData(Long.valueOf(page), Long.valueOf(size), list.getTotal(), retList);
     }
 
     @Override
     public ResponseData uploadPortrait(MultipartFile file, String buildPortrait) {
-        var json = faceCheckController.uploadFile(file, SomeUtils.buildPortrait(CurrentUserSession.getUserSession().getUserId()));
+        var json = faceCheckClient.uploadFile(file, SomeUtils.buildPortrait(CurrentUserSession.getUserSession().getUserId()));
         if (!json.startsWith("http")) {
             return ResponseData.parser(json);
         }

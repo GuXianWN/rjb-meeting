@@ -10,7 +10,7 @@ import java.io.File;
 
 
 @FeignClient(value = "face", name = "face")
-public interface FaceCheckController {
+public interface FaceCheckClient {
     @PostMapping(value = "/face/compare", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseData compareFace(@RequestPart("file") MultipartFile file);
 
@@ -25,4 +25,6 @@ public interface FaceCheckController {
     @GetMapping(value = "/face/list/{page}/{size}")
     ResponseData getFaces(@PathVariable(name = "page") Integer page, @PathVariable(name = "size") Integer size);
 
+    @GetMapping(value = "/face/{uid}")
+    ResponseData getFaces(@PathVariable Long uid);
 }
