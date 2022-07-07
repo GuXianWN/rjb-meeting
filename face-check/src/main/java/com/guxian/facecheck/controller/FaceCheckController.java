@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -49,9 +50,8 @@ public class FaceCheckController {
     }
 
     @PostMapping("/compare")
-    @SneakyThrows
     //todo 文件夹中保存的文件命名为ULR 相关参数，减少从服务器的下载。
-    public ResponseData compareFace(@RequestParam(name = "file") MultipartFile file) {
+    public ResponseData compareFace(@RequestPart(name = "file") MultipartFile file) {
         if (file.isEmpty()) {
             throw new ServiceException(BizCodeEnum.NUMBER_OF_UPLOADED_FILE_NOT_ONE);
         }
@@ -71,9 +71,15 @@ public class FaceCheckController {
 
 
         var fileCacheUtils = new FileCacheUtils("/face");
-        var remoteUserFaceImg = fileCacheUtils.saveFileFromRemote(new URL(faceUrl)
-//                , SomeUtils.buildFileName(CurrentUserSession.getUserSession().getUserId()));
-                , UUID.randomUUID() + ".png");
+        File remoteUserFaceImg = null;
+        try {
+            var url = new URL(faceUrl);
+            remoteUserFaceImg = fileCacheUtils.saveFileFromRemote(url
+    //                , SomeUtils.buildFileName(CurrentUserSession.getUserSession().getUserId()));
+                    , UUID.randomUUID() + ".png");
+        } catch (MalformedURLException e) {
+            throw new ServiceException(BizCodeEnum.USER_FACE_NOT_EXIST);
+        }
         log.info("remoteUserFaceImg ok{}", remoteUserFaceImg.getAbsolutePath());
         var paramFaceImg = fileCacheUtils.saveFile(file,
 //                SomeUtils.buildFileName(CurrentUserSession.getUserSession().getUserId()));
