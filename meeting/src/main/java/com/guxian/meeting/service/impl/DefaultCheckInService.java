@@ -6,7 +6,7 @@ import com.guxian.common.enums.CheckWay;
 import com.guxian.common.entity.ResponseData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
-import com.guxian.common.openfegin.facecheck.FaceCheckController;
+import com.guxian.common.openfegin.facecheck.FaceCheckClient;
 import com.guxian.common.redis.RedisUtils;
 import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.meeting.entity.CheckIn;
@@ -37,7 +37,7 @@ public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn> i
     @Autowired
     private UserMeetingService userMeetingService;
     @Autowired
-    private FaceCheckController faceCheckController;
+    private FaceCheckClient faceCheckController;
 
     @Autowired
     private MeetingServiceImpl meetingService;

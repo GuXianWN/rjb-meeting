@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import javax.validation.constraints.NegativeOrZero;
 import javax.validation.constraints.PositiveOrZero;
+import java.util.Optional;
 
 @Log4j2
 @RequestMapping("/face")
@@ -27,10 +28,16 @@ public class UserFaceController {
 
     @GetMapping("/list/{page}/{size}")
     ResponseData getFaces(@PathVariable(name = "page") Integer page, @PathVariable(name = "size") Integer size) {
-        page = (page <= 0 ? 0 : page-1);
+        page = (page <= 0 ? 0 : page - 1);
         var userFace = faceRepo.findAll(PageRequest.of(page, size));
         var pageData = new PageData(Long.valueOf(page), Long.valueOf(size), Long.valueOf(userFace.getTotalPages()), userFace.getContent());
-        log.info("pageData :{}",pageData);
+        log.info("pageData :{}", pageData);
         return ResponseData.success().data(pageData);
+    }
+
+    @GetMapping("/{uid}")
+    public ResponseData getFaces(@PathVariable Long uid) {
+        UserFace userFace = faceRepo.findByUserId(uid).orElse(new UserFace().setUserId(uid));
+        return ResponseData.success().data(userFace);
     }
 }
