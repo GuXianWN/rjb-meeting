@@ -2,6 +2,7 @@ package com.guxian.meeting.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.guxian.common.entity.ResponseData;
+import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.common.utils.JwtUtils;
 import com.guxian.common.utils.SomeUtils;
 import com.guxian.common.valid.AddGroup;
@@ -51,15 +52,17 @@ public class MeetingCheckController {
 
     @PostMapping
     public ResponseData createMeetingCheck(@RequestBody @Validated(AddGroup.class) MeetingCheckVo meetingCheck, HttpServletRequest request) {
-        Long uid = jwtUtils.getUid(request);
-        if (SomeUtils.getNotNullValue(meetingCheck.getCode()
-                , meetingCheck.getFaceUrl()) == null) {
-            //todo 无签到方式的处理
-        }
+        Long uid = CurrentUserSession.getUserSession().getUserId();
 
-        String data = SomeUtils.<String>getNotNullValue(meetingCheck.getCode()
-                , meetingCheck.getFaceUrl());
-        return ResponseData.success().data(meetingCheckService.createMeetingCheck(meetingCheck.toMeetingCheck(), data,uid));
+
+        //无code 随机生成
+        if (meetingCheck.getCode() == null) {
+            meetingCheck.setCode(SomeUtils.randomString(4));
+        }
+        meetingCheckService
+                .createMeetingCheck(meetingCheck.toMeetingCheck(), meetingCheck.getCode(), uid);
+        return ResponseData.success()
+                .data(meetingCheck);
     }
 
     /**

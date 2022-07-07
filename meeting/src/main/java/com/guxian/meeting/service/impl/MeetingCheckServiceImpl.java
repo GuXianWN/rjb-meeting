@@ -20,6 +20,7 @@ import com.guxian.meeting.service.UserMeetingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -39,10 +40,9 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
     private UserMeetingService userMeetingService;
 
 
-    public Optional<MeetingCheck> createMeetingCheckUseCode(MeetingCheck meetingCheck, String data) {
+    public Optional<MeetingCheck> createMeetingCheckUseCode(MeetingCheck meetingCheck,@NotNull(message = "code 不能为空") String data) {
 
-
-        RedisUtils.ops.set("meeting_check:check_code:" + meetingCheck.getId(), data != null ? SomeUtils.randomString(4) : data,
+        RedisUtils.ops.set("meeting_check:check_code:" + meetingCheck.getId(), data ,
                 meetingCheck.getDuration(), TimeUnit.SECONDS);
         return Optional.of(meetingCheck);
     }
@@ -67,6 +67,7 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
         if (baseMapper.selectById(meetingCheck.getMeetingId()) != null) {
             baseMapper.deleteById(meetingCheck.getMeetingId());
         }
+
         baseMapper.insert(meetingCheck);
 
 
