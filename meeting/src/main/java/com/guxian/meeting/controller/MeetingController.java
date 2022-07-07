@@ -135,7 +135,7 @@ public class MeetingController {
     }
 
     @GetMapping("/list/status")
-    public Resp countMeetingStatus() {
+    public Resp  countMeetingStatus() {
         return Resp.success()
                 .data(MeetingState.WAIT_TO_START.getDis(), meetingService.countMeetingStatus(MeetingState.WAIT_TO_START))
                 .data(MeetingState.PROCESSING.getDis(), meetingService.countMeetingStatus(MeetingState.PROCESSING))

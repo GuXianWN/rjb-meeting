@@ -28,6 +28,7 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 /**
  *
@@ -118,8 +119,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public PageData getUserList(Long page, Long size) {
         var userPage = new Page<User>(page, size);
         var list = baseMapper.selectPage(userPage, null);
-
-        return new PageData(page, size, list.getTotal(), list.getRecords());
+        var data = list.getRecords();
+        data.forEach(v -> {
+            v.setPassword("");
+        });
+        return new PageData(page, size, list.getTotal(), data);
     }
 }
 
