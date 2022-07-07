@@ -7,10 +7,14 @@ import com.guxian.common.entity.ResponseData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.utils.CurrentUserSession;
+import com.guxian.common.utils.SomeUtils;
 import com.guxian.common.valid.UpdateGroup;
+import lombok.SneakyThrows;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -57,5 +61,12 @@ public class UserController {
     public ResponseData getUserList(@PathVariable Long page, @PathVariable Long size) {
         return ResponseData.success()
                 .data(userService.getUserList(page, size));
+    }
+
+    @SneakyThrows
+    @PostMapping(value = "/upload")
+    public ResponseData upload(@RequestParam(value = "file") MultipartFile file) {
+        return userService.uploadPortrait(file
+                , SomeUtils.buildPortrait(CurrentUserSession.getUserSession().getUserId()));
     }
 }
