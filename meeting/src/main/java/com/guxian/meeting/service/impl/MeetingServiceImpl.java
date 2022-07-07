@@ -18,6 +18,7 @@ import com.guxian.meeting.entity.*;
 import com.guxian.meeting.entity.vo.UserVo;
 import com.guxian.meeting.service.MeetingCheckService;
 import com.guxian.meeting.service.UserMeetingService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -33,6 +34,7 @@ import java.util.*;
  * @createDate 2022-05-31 21:08:48
  */
 @Service
+@Slf4j
 public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
         implements MeetingService {
 
@@ -193,7 +195,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     @Override
     public void deleteMeeting(Long mid) {
         Meeting meeting = baseMapper.selectById(mid);
-        if (meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())){
+        if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())){
             throw new ServiceException(BizCodeEnum.NO_ACCESS);
         }
 

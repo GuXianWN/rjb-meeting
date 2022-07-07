@@ -34,6 +34,7 @@ public class UserDTO {
 
     public static UserDTO form(User user) {
         return new UserDTO()
+                .setId(user.getId())
                 .setAccount(user.getAccount())
                 .setMobile(user.getMobile())
                 .setEmail(user.getEmail())
