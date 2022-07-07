@@ -30,6 +30,8 @@ public class UserDTO {
 
     private String mobile;
 
+    private String faceUrl;
+
     public static UserDTO form(User user) {
         return new UserDTO()
                 .setAccount(user.getAccount())

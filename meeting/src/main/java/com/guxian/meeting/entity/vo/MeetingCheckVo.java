@@ -36,14 +36,10 @@ public class MeetingCheckVo implements Serializable {
 
 
     /**
-     * 如果使用CheckWay.CODE，则需要传入code
+     * 如果使用CheckWay.CODE，则需要传入code 或者自动生成
      */
     private String code;
 
-    /**
-     * 如果使用CheckWay.FACE，则需要传入face的url
-     */
-    private String faceUrl;
 
     public MeetingCheck toMeetingCheck() {
         return new MeetingCheck()

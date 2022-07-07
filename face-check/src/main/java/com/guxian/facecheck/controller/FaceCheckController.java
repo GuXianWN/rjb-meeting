@@ -89,7 +89,6 @@ public class FaceCheckController {
         log.warn("current rate is {}=======", rate);
 
 
-
         //删图跑路
         remoteUserFaceImg.delete();
         paramFaceImg.delete();
@@ -110,4 +109,10 @@ public class FaceCheckController {
         String url = faceOss.uploadFace(file.getInputStream());
         return ResponseData.success().data("url", url);
     }
+
+    @GetMapping("/is/{id}")
+    public ResponseData hasFace(@PathVariable Long id) {
+        return ResponseData.success().data(faceOss.hasFace(id));
+    }
+
 }

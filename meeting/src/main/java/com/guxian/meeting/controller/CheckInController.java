@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
  * 用户签到操作
  */
 @RestController
-@RequestMapping("/check-in")
+@RequestMapping("/meeting/check-in")
 public class CheckInController {
     private final CheckInService checkInService;
     private final JwtUtils jwtUtils;
