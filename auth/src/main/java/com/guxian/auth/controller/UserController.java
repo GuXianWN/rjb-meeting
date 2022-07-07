@@ -11,7 +11,6 @@ import com.guxian.common.utils.SomeUtils;
 import com.guxian.common.valid.UpdateGroup;
 import lombok.SneakyThrows;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -58,7 +57,7 @@ public class UserController {
     }
 
     @GetMapping("/{page}/{size}")
-    public ResponseData getUserList(@PathVariable Long page, @PathVariable Long size) {
+    public ResponseData getUserList(@PathVariable Integer page, @PathVariable Integer size) {
         return ResponseData.success()
                 .data(userService.getUserList(page, size));
     }

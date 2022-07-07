@@ -28,7 +28,7 @@ public interface UserService extends IService<User> {
 
     void modifyUserById(User user);
 
-    PageData getUserList(Long page, Long size);
+    PageData getUserList(Integer page, Integer size);
 
     ResponseData uploadPortrait(MultipartFile file, String buildPortrait);
 }

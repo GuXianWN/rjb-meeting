@@ -75,4 +75,9 @@ public class AliFaceOssService implements OSSForFaceService {
     public File downloadFace() {
         return downloadFace(CurrentUserSession.getUserSession().getUserId());
     }
+
+    @Override
+    public Boolean hasFace(Long userId) {
+        return ossService.hasObject(SomeUtils.buildFaceFileName(userId));
+    }
 }

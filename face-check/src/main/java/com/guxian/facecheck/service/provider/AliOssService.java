@@ -49,4 +49,9 @@ public class AliOssService implements OssService {
         aliServiceObject.getOss().getObject(new GetObjectRequest(aliServiceObject.getBucketName(), filename), file);
         return file;
     }
+
+    @Override
+    public Boolean hasObject(String filename) {
+        return aliServiceObject.getOss().doesObjectExist(aliServiceObject.getBucketName(), filename);
+    }
 }

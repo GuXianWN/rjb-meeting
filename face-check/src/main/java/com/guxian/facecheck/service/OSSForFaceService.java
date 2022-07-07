@@ -19,4 +19,6 @@ public interface OSSForFaceService {
 
     File downloadFace();
 
+    Boolean hasFace(Long userId);
+
 }

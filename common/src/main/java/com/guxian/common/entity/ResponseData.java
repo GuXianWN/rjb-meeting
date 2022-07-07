@@ -90,8 +90,13 @@ public class ResponseData {
     }
 
     public static ResponseData parser(String json) {
-        var parse = JSONObject.parseObject(json,ResponseData.class);
+        var parse = JSONObject.parseObject(json, ResponseData.class);
         return ResponseData.returnHas(returnHas(parse));
+    }
+
+    public static <T> T parser(ResponseData faces, Class<T> t) {
+        var text = JSONObject.toJSONString(returnHas(faces).getData());
+        return JSONObject.parseObject(text, t);
     }
 
 

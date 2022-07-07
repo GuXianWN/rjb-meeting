@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.guxian.auth.entity.User;
 import com.guxian.auth.entity.UserSession;
 import com.guxian.auth.entity.UserStatus;
+import com.guxian.auth.entity.dto.UserDTO;
 import com.guxian.auth.entity.vo.LoginVo;
 import com.guxian.auth.entity.vo.RegisterVo;
 import com.guxian.auth.service.UserService;
@@ -18,10 +19,8 @@ import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.openfegin.facecheck.FaceCheckController;
 import com.guxian.common.utils.CurrentUserSession;
-import com.guxian.common.utils.FileCacheUtils;
 import com.guxian.common.utils.JwtUtils;
 import com.guxian.common.utils.SomeUtils;
-import org.json.JSONString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -32,11 +31,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
-import java.util.Date;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
 
 /**
  *
@@ -127,14 +123,35 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public PageData getUserList(Long page, Long size) {
+    public PageData getUserList(Integer page, Integer size) {
+
+        var faces = faceCheckController.getFaces(page, size);
+
+        var faceData = ResponseData.parser(faces, PageData.class);
+
         var userPage = new Page<User>(page, size);
         var list = baseMapper.selectPage(userPage, null);
         var data = list.getRecords();
-        data.forEach(v -> {
-            v.setPassword("");
-        });
-        return new PageData(page, size, list.getTotal(), data);
+        var retList = new ArrayList<UserDTO>();
+
+        var faceUrlList = (List<UserDTO>) faceData.getData();
+
+        int index = 0;
+
+        var userDTOS = List.copyOf(faceUrlList);
+
+        for (User i : data) {
+            var userDTO = userDTOS.get(index);
+            var form = UserDTO.form(i);
+            retList.add(form);
+            if ((Objects.equals(userDTO.getId(), i.getId()))) {
+                form.setFaceUrl(userDTO.getFaceUrl());
+                index++;
+            }
+
+        }
+
+        return new PageData(Long.valueOf(page), Long.valueOf(size), list.getTotal(), retList);
     }
 
     @Override

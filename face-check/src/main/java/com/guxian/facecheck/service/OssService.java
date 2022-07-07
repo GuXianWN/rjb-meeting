@@ -17,12 +17,11 @@ public interface OssService {
 
     String uploadObject(InputStream file, String name);
 
-
-
-
     void deleteObject(String filename);
 
 
     File downloadObject(String filename);
+
+    Boolean hasObject(String filename);
 
 }
