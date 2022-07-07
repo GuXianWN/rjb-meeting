@@ -11,15 +11,15 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 
 
-@FeignClient(value = "face")
+@FeignClient(value = "face",name = "face")
 public interface FaceCheckController {
-    @PostMapping("/face/compare")
-    ResponseData compareFace(File file);
+    @PostMapping(value = "/face/compare", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    ResponseData compareFace(@RequestPart("file") MultipartFile file);
 
     @PostMapping("/face/upload")
     ResponseData uploadFace(@RequestParam("file") File file);
 
-    @PostMapping(value = "/face/file/upload",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    String uploadFile(@RequestPart(value = "file") MultipartFile file,
-                            @RequestParam("filename") String filename);
+    @PostMapping(value = "/face/file/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    String uploadFile(@RequestPart(value = "file") MultipartFile file
+            , @RequestParam("filename") String filename);
 }

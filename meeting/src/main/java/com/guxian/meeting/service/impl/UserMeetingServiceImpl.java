@@ -39,6 +39,8 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
     private MeetingService meetingService;
     @Autowired
     private JwtUtils jwtUtils;
+
+
     @Resource
     private UserMeetingMapper userMeetingMapper;
 

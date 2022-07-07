@@ -6,9 +6,9 @@ import com.guxian.common.enums.CheckWay;
 import com.guxian.common.entity.ResponseData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
+import com.guxian.common.openfegin.facecheck.FaceCheckController;
 import com.guxian.common.redis.RedisUtils;
 import com.guxian.common.utils.CurrentUserSession;
-import com.guxian.meeting.clients.FaceCheckClient;
 import com.guxian.meeting.entity.CheckIn;
 import com.guxian.meeting.entity.Meeting;
 import com.guxian.meeting.entity.MeetingCheck;
@@ -37,7 +37,7 @@ public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn> i
     @Autowired
     private UserMeetingService userMeetingService;
     @Autowired
-    private FaceCheckClient faceCheckClient;
+    private FaceCheckController faceCheckController;
 
     @Autowired
     private MeetingServiceImpl meetingService;
@@ -85,7 +85,7 @@ public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn> i
 
     public boolean checkInUseFace(CheckDataVo checkDataVo) {
         var face = checkDataVo.getFace();
-        var responseData = faceCheckClient.compareFace(face);
+        var responseData = faceCheckController.compareFace(face);
         return ResponseData.returnIs(responseData);
     }
 
