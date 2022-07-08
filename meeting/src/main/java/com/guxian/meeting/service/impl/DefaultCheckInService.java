@@ -59,7 +59,7 @@ public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn> i
                     checkDataVo.getCheckWay());
         }
 
-        if (checkDataVo.getCheckWay() == CheckWay.CODE && checkInUseFace(checkDataVo)) {
+        if (checkDataVo.getCheckWay() == CheckWay.CODE && checkInUseCode(checkDataVo)) {
             userMeetingService.checkIn(CurrentUserSession.getUserSession().getUserId(),
                     checkDataVo.getCheckWay());
         }
