@@ -19,19 +19,6 @@ import java.nio.file.StandardCopyOption;
 
 @Log4j2
 public class FileCacheUtils {
-    private static final String ROOT_TMP_DIR = FileCacheUtils.class.getClassLoader().getResource("")
-            .getPath() + "\\static";
-
-    private final String localPath;
-
-    /**
-     * @param childrenDir must use /
-     */
-
-    public FileCacheUtils(String childrenDir) {
-        this.localPath = ROOT_TMP_DIR + childrenDir;
-    }
-
     @SneakyThrows
     public File saveFile(MultipartFile file, String fileName) {
         return saveFile(file.getInputStream(), fileName);
@@ -44,13 +31,18 @@ public class FileCacheUtils {
 
     public File saveFile(InputStream file, String fileName) {
         // 复制文件
-        File targetFile = new File(SomeUtils.getPath() + "\\ph\\" + fileName, "");
+        File targetFile = new File(SomeUtils.getPath() + "ph/" + fileName, "");
         try {
             FileUtils.writeByteArrayToFile(targetFile, file.readAllBytes());
+            log.info("file save to  {}",SomeUtils.getPath() + "ph/" + fileName);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         return targetFile;
+    }
+
+    public File getFaceFile(String fileName){
+        return new File(SomeUtils.getPath() + "ph/" + fileName, "");
     }
 
     @SneakyThrows
@@ -60,20 +52,9 @@ public class FileCacheUtils {
     }
 
     public File saveFileFromRemote(URL url, String filename) throws IOException {
-        log.info("fileName=====>{}", filename);
         var file = buildFilenameWithPath(filename);
         var in = url.openStream();
         saveFile(in, filename);
-        return file;
-    }
-
-
-    public File getFile(String filename) {
-        var file = new File(localPath + filename);
-        if (!file.canRead()) {
-            log.error("当前FileCache获取到文件为空！ filename: {}", file.getAbsolutePath());
-            return null;
-        }
         return file;
     }
 
@@ -82,8 +63,7 @@ public class FileCacheUtils {
      * @return
      */
     private File buildFilenameWithPath(String filename) {
-        log.info("fileName=====>{}", filename);
-        log.info("buildFilenameWithPath======>{}", SomeUtils.getPath() + "\\ph\\" + filename);
-        return new File(SomeUtils.getPath() + "\\ph\\" + filename);
+        log.info("buildFilenameWithPath======>{}", SomeUtils.getPath() + "ph/" + filename);
+        return new File(SomeUtils.getPath() + "ph/" + filename);
     }
 }

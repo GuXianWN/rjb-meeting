@@ -70,7 +70,7 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
             }
         }
 
-        System.out.println("=======>"+toMeeting.toString());
+        System.out.println("=======>" + toMeeting.toString());
         baseMapper.updateById(toMeeting);
         return Optional.ofNullable(toMeeting);
     }
@@ -195,11 +195,22 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     @Override
     public void deleteMeeting(Long mid) {
         Meeting meeting = baseMapper.selectById(mid);
-        if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())){
+        if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())) {
             throw new ServiceException(BizCodeEnum.NO_ACCESS);
         }
 
         userMeetingService.deleteByMid(mid);
+    }
+
+    @Override
+    public void end(Long mid) {
+        Meeting meeting = baseMapper.selectById(mid);
+        if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())) {
+            throw new ServiceException(BizCodeEnum.NO_ACCESS);
+        }
+        meeting.setEndTime(new Date())
+                .setState(MeetingState.OVER);
+        baseMapper.updateById(meeting);
     }
 }
 

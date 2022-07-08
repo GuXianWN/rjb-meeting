@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.io.InputStream;
 import java.util.Random;
+import java.util.UUID;
 
 @Slf4j
 public class SomeUtils {
@@ -15,11 +16,11 @@ public class SomeUtils {
 
     private static String FACE_FILENAME_PREFIX = "FACE_";
 
-    private static String FACE_FILENAME_SUFFIX = ".png";
+    private static String FACE_FILENAME_SUFFIX = ".jpg";
 
     private static String FILENAME_PREFIX = "PORTRAIT_";
 
-    private static String FILENAME_SUFFIX = ".png";
+    private static String FILENAME_SUFFIX = ".jpg";
 
     @Value("${oss.face-filename-prefix}")
     public void setFaceFilenamePrefix(String faceFilenamePrefix) {
@@ -63,6 +64,11 @@ public class SomeUtils {
         return Thread.currentThread().getContextClassLoader().getResourceAsStream(filename);
     }
 
+    public static String getFileNameFromOssUrl(String url){
+        String[] split = url.split("/");
+        return split[split.length - 1];
+    }
+
     public static String getResource(String filename) {
         var resource = SomeUtils.class.getClassLoader().getResource(filename);
         assert resource != null;
@@ -81,6 +87,10 @@ public class SomeUtils {
         return SomeUtils.FACE_FILENAME_PREFIX + userId + SomeUtils.FACE_FILENAME_SUFFIX;
     }
 
+    public static String buildFaceFileUUName() {
+        return SomeUtils.FACE_FILENAME_PREFIX + UUID.randomUUID() + SomeUtils.FACE_FILENAME_SUFFIX;
+    }
+
     public static String buildPortrait(Long userId) {
         return SomeUtils.FILENAME_PREFIX + userId + FILENAME_SUFFIX;
     }
@@ -92,7 +102,6 @@ public class SomeUtils {
         for (int i = 0; i < split.length - 4; i++) {
             path.append(split[i]).append("/");
         }
-        log.info("getPath=========>{}", path);
         return path.toString();
     }
 }

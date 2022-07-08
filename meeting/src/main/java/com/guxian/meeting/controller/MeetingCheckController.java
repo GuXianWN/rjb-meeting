@@ -53,8 +53,6 @@ public class MeetingCheckController {
     @PostMapping
     public ResponseData createMeetingCheck(@RequestBody @Validated(AddGroup.class) MeetingCheckVo meetingCheck, HttpServletRequest request) {
         Long uid = CurrentUserSession.getUserSession().getUserId();
-
-
         //无code 随机生成
         if (meetingCheck.getCode() == null) {
             meetingCheck.setCode(SomeUtils.randomString(4));

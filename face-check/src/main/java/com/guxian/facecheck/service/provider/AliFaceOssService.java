@@ -45,23 +45,31 @@ public class AliFaceOssService implements OSSForFaceService {
     @SneakyThrows
     @Override
     public String uploadFace(InputStream inputStream, Long userId) {
-        String fileName = SomeUtils.buildFaceFileName(userId);
-
-        var fileCacheUtils = new FileCacheUtils("/face");
+        String fileName = SomeUtils.buildFaceFileUUName();
+        var fileCacheUtils = new FileCacheUtils();
         var file = fileCacheUtils.saveFile(inputStream, fileName);
         if (!checkFaceExistService.hasFace(file)) {
+            log.info("{} delete",fileName);
+            file.delete();
             throw new ServiceException(BizCodeEnum.NO_FACE_WAS_DETECTED);
         }
 
         String url = ossService.uploadObject(new FileInputStream(file), fileName);
         // 从数据库查询是否有该用户的face 信息 ， 如果有 则返回 对应userId ，否则返回 null 的 id （视为没有对应用户的信息）
         var userFace = userFaceRepo.findByUserId(userId).orElse(new UserFace().setId(null));
+        //如果有把本地的删掉
+        if (userFace.getFaceUrl()!=null){
+            String ossUrl = SomeUtils.getFileNameFromOssUrl(userFace.getFaceUrl());
+            File faceFile = fileCacheUtils.getFaceFile(ossUrl);
+            faceFile.delete();
+            log.info("delete face {}",ossUrl);
+        }
+
         userFaceRepo.save(new UserFace()
                 .setUserId(userId)
                 .setFaceUrl(url)
                 .setId(userFace.getId())
                 .setCreateTime(Date.from(Instant.now())));
-
         return url;
     }
 

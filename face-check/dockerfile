@@ -2,5 +2,5 @@ FROM openjdk:11
 MAINTAINER om
 ADD cnm cnm
 RUN bash -c 'touch /cnm/face-check-1.0-SNAPSHOT.jar'
-ENTRYPOINT ["java","-jar","-Duser.timezone=GMT+8","cnm/face-check-1.0-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-jar","-Duser.timezone=GMT+8","-Dfile.encoding=utf-8","cnm/face-check-1.0-SNAPSHOT.jar"]
 EXPOSE 10013

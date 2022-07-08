@@ -54,7 +54,6 @@ public class OpencvFaceCompareService implements FaceCompareService {
      * @return
      */
     public Mat convMat(String img) {
-        log.info("imgPath=========>{}",img);
         if (StringUtils.isBlank(img)) {
             return null;
         }

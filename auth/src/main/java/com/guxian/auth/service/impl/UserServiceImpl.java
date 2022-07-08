@@ -1,6 +1,7 @@
 package com.guxian.auth.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -93,8 +94,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     //todo : add email to check user.
     @Override
     public Optional<User> register(RegisterVo user) {
-        var byOne = this.getOne(new QueryWrapper<User>()
-                .eq("username", user.getUsername()));
+        var byOne = this.getOne(new LambdaQueryWrapper<User>()
+                .eq(User::getAccount, user.getAccount()));
         if (byOne != null) {
             throw new ServiceException(BizCodeEnum.USER_EXIST_EXCEPTION);
         }

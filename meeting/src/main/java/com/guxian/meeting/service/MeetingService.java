@@ -38,4 +38,6 @@ public interface MeetingService extends IService<Meeting> {
     Long countMeetingStatus(MeetingState state);
 
     void deleteMeeting(Long mid);
+
+    void end(Long mid);
 }

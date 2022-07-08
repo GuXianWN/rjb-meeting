@@ -18,9 +18,9 @@ public class UserDTO {
     @NotNull(message = "id 不能为空",groups = UpdateGroup.class)
     private Long id;
 
-    @Null(message = "username 无法修改！",groups = UpdateGroup.class)
     private String username;
 
+    @Null(message = "账号 无法修改！",groups = UpdateGroup.class)
     private String account;
 
     @Email(message = "email 格式错误",groups = UpdateGroup.class)
@@ -39,14 +39,12 @@ public class UserDTO {
                 .setMobile(user.getMobile())
                 .setEmail(user.getEmail())
                 .setUsername(user.getUsername())
-                .setAccount(user.getAccount())
                 .setPortraitUrl(user.getPortraitUrl());
     }
 
     public static User toUser(UserDTO userDTO) {
         return new User()
                 .setId(userDTO.getId())
-                .setAccount(userDTO.getAccount())
                 .setEmail(userDTO.getEmail())
                 .setPortraitUrl(userDTO.getPortraitUrl())
                 .setMobile(userDTO.getMobile())

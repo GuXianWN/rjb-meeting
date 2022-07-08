@@ -66,6 +66,12 @@ public class MeetingController {
                         .orElseThrow(() -> new ServiceException(BizCodeEnum.CREATE_MEETING_FAILED)));
     }
 
+    @PostMapping("/end/{mid}")
+    public ResponseData end(@PathVariable Long mid){
+        meetingService.end(mid);
+        return ResponseData.success();
+    }
+
     @PatchMapping
     public ResponseData updateMeeting(@RequestBody @Validated(UpdateGroup.class) @NotNull MeetingVo meeting) {
         log.info("{}",meeting);
@@ -109,7 +115,7 @@ public class MeetingController {
      * @param id
      * @return
      */
-    @GetMapping("/info/{id}")
+    @GetMapping("/infor/{id}")
     public ResponseData getMeetingInfo(@PathVariable("id") Long id) {
         return ResponseData.success()
                 .data(meetingService.getMeetingInfo(id));

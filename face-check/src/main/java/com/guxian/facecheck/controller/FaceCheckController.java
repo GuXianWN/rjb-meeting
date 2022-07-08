@@ -6,9 +6,11 @@ import com.guxian.common.exception.ServiceException;
 import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.common.utils.FileCacheUtils;
 import com.guxian.common.utils.SomeUtils;
+import com.guxian.facecheck.entity.UserFace;
 import com.guxian.facecheck.repo.UserFaceRepo;
 import com.guxian.facecheck.service.FaceCompareService;
 import com.guxian.facecheck.service.OSSForFaceService;
+import com.guxian.facecheck.service.UserFaceService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +18,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +36,8 @@ import java.util.UUID;
 public class FaceCheckController {
     private final OSSForFaceService faceOss;
     private final FaceCompareService faceCompareService;
-    private final UserFaceRepo userFaceRepo;
+    @Resource
+    private UserFaceService userFaceService;
 
     @Value("${face-compare.minimum-confidence}")
     private double minimumConfidence = 0.7;
@@ -43,11 +47,9 @@ public class FaceCheckController {
 
     public FaceCheckController(
             OSSForFaceService faceOss,
-            FaceCompareService faceCompareService,
-            UserFaceRepo userFaceRepo) {
+            FaceCompareService faceCompareService) {
         this.faceOss = faceOss;
         this.faceCompareService = faceCompareService;
-        this.userFaceRepo = userFaceRepo;
     }
 
     @PostMapping("/compare")
@@ -61,37 +63,8 @@ public class FaceCheckController {
             return ResponseData.error("文件格式错误");
         }
 
-        var user = userFaceRepo.findByUserId(CurrentUserSession.getUserSession().getUserId());
+        double rate = userFaceService.compareFace(file);
 
-        var faceUrl = user.orElseThrow(() -> new ServiceException(BizCodeEnum.USER_FACE_NOT_EXIST))
-                .getFaceUrl();
-
-        if (!StringUtils.hasText(faceUrl)) {
-            throw new ServiceException(BizCodeEnum.USER_FACE_NOT_EXIST);
-        }
-
-
-        var fileCacheUtils = new FileCacheUtils("/face");
-        File remoteUserFaceImg = null;
-        try {
-            var url = new URL(faceUrl);
-            remoteUserFaceImg = fileCacheUtils.saveFileFromRemote(url
-                    , UUID.randomUUID() + faceFilenameSuffix);
-        } catch (IOException e) {
-            throw new ServiceException(BizCodeEnum.USER_FACE_NOT_EXIST);
-        }
-        log.info("remoteUserFaceImg ok{}", remoteUserFaceImg.getAbsolutePath());
-        var paramFaceImg = fileCacheUtils.saveFile(file,
-                UUID.randomUUID() + faceFilenameSuffix);
-        log.info("paramFaceImg ok{}", paramFaceImg.getAbsolutePath());
-        var rate = faceCompareService
-                .checkFaceSimilarRate(remoteUserFaceImg, paramFaceImg);
-        log.warn("current rate is {}=======", rate);
-
-
-        //删图跑路
-        remoteUserFaceImg.delete();
-        paramFaceImg.delete();
         return ResponseData.is(rate >= minimumConfidence
                 , BizCodeEnum.FACE_CONTRAST_INCONSISTENT).data(rate);
     }
@@ -114,5 +87,4 @@ public class FaceCheckController {
     public ResponseData hasFace(@PathVariable Long id) {
         return ResponseData.success().data(faceOss.hasFace(id));
     }
-
 }
