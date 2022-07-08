@@ -37,7 +37,6 @@ public class FaceCheckBootStrap {
         File xmlFile = new File(xml);
         log.info("xml can read=========>{}",xmlFile.canRead());
         log.info("xml can write=========>{}",xmlFile.canWrite());
-
         return new CascadeClassifier(xml.toString());
     }
 }

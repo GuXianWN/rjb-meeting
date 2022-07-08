@@ -39,7 +39,7 @@ public class FaceCheckController {
     private double minimumConfidence = 0.7;
 
     @Value("${oss.face-filename-suffix}")
-    private String faceFilenameSuffix = ".png";
+    private String faceFilenameSuffix = ".jpg";
 
     public FaceCheckController(
             OSSForFaceService faceOss,
@@ -76,13 +76,13 @@ public class FaceCheckController {
         try {
             var url = new URL(faceUrl);
             remoteUserFaceImg = fileCacheUtils.saveFileFromRemote(url
-                    , UUID.randomUUID() + ".png");
+                    , UUID.randomUUID() + faceFilenameSuffix);
         } catch (IOException e) {
             throw new ServiceException(BizCodeEnum.USER_FACE_NOT_EXIST);
         }
         log.info("remoteUserFaceImg ok{}", remoteUserFaceImg.getAbsolutePath());
         var paramFaceImg = fileCacheUtils.saveFile(file,
-                UUID.randomUUID() + ".png");
+                UUID.randomUUID() + faceFilenameSuffix);
         log.info("paramFaceImg ok{}", paramFaceImg.getAbsolutePath());
         var rate = faceCompareService
                 .checkFaceSimilarRate(remoteUserFaceImg, paramFaceImg);

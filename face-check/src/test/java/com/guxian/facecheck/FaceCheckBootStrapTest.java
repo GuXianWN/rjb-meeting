@@ -1,5 +1,6 @@
 package com.guxian.facecheck;
 
+import com.guxian.common.utils.SomeUtils;
 import nu.pattern.OpenCV;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -19,18 +21,22 @@ class FaceCheckBootStrapTest {
 
 
     static String resourcePath = System.getProperty("user.dir") + "/src/main/resources";
-
+    CascadeClassifier cascadeClassifier;
 
     @BeforeEach
     void setUp() {
-        URL url = ClassLoader.getSystemResource("lib/opencv/opencv_java455.dll");
-        System.load(url.getPath());
+        nu.pattern.OpenCV.loadShared();
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+
+        String xml = SomeUtils.getPath() + "static/haarcascade_frontalface_alt.xml";
+        File xmlFile = new File(xml);
+        this.cascadeClassifier = new CascadeClassifier(xml.toString());
 
     }
 
     @Test
     void opencvTest() {
-        Mat image = Imgcodecs.imread("D:/File/picture/(95).png", 1);// 读取图片，第二个参数是图片读取方式0：灰度 1,彩色
+        Mat image = Imgcodecs.imread("C:\\Users\\32253\\Desktop\\1.png", 1);// 读取图片，第二个参数是图片读取方式0：灰度 1,彩色
 //        Imgproc.Canny(image, image, 10, 100);// 对图片进行边缘检测
 
         HighGui.imshow("图片", image);// 显示读取的图片
@@ -43,15 +49,14 @@ class FaceCheckBootStrapTest {
         HighGui.imshow("灰度", image2);// 展示灰色的图片
 
         //        Imgproc.cvtColor(image, image, Imgproc.COLOR_BGR2GRAY);// 将读取的图片转为灰色
-//        Imgproc.equalizeHist(image, image);// 对图片进行直方图均衡化
+        Imgproc.equalizeHist(image, image2);// 对图片进行直方图均衡化
 //        Imgproc.resize(image, image, new org.opencv.core.Size(image.cols() / 2, image.rows() / 2));// 将图片缩放到1/2大小
-//        Imgproc.GaussianBlur(image, image, new org.opencv.core.Size(5, 5), 0);// 对图片进行高斯模糊
+        Imgproc.GaussianBlur(image, image, new org.opencv.core.Size(5, 5), 0);// 对图片进行高斯模糊
 
         HighGui.waitKey();// 阻塞进程
 
         HighGui.destroyAllWindows(); // 销毁窗口
     }
-
 
 
     Mat getFace(String url) {
@@ -62,15 +67,15 @@ class FaceCheckBootStrapTest {
         CascadeClassifier faceDetector = new CascadeClassifier(resourcePath + "/haarcascade_frontalface_alt.xml");
         faceDetector.detectMultiScale(image, faceDetections);
         Rect[] rects = faceDetections.toArray();
-        if(rects.length==0) return null;
+        if (rects.length == 0) return null;
         return image.submat(rects[0]);
     }
 
 
     @Test
     void findFaceTest() {
-        var image1=getFace(resourcePath + "/photos/no-face01.png");
-        var image2=getFace(resourcePath + "/photos/02.png");
+        var image1 = getFace(resourcePath + "/photos/no-face01.png");
+        var image2 = getFace(resourcePath + "/photos/02.png");
         printImage(image1);
 
 //        System.out.println(getPSNR(image1, image2));

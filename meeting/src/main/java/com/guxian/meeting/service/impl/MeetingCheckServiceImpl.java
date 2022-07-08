@@ -41,7 +41,6 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
 
 
     public Optional<MeetingCheck> createMeetingCheckUseCode(MeetingCheck meetingCheck,@NotNull(message = "code 不能为空") String data) {
-
         RedisUtils.ops.set("meeting_check:check_code:" + meetingCheck.getId(), data ,
                 meetingCheck.getDuration(), TimeUnit.SECONDS);
         return Optional.of(meetingCheck);
