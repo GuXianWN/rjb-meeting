@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 /**
  * 对会议的操作
  */
-//todo 是不是应该直接给表加 joinNum 字段？ 如果不是，那么这个字段应该是计算出来的
 @RestController
 @Slf4j
 @RequestMapping("/meeting")
