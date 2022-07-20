@@ -11,8 +11,8 @@ import javax.validation.constraints.NotNull;
 @Data
 @Accessors(chain = true)
 public class RegisterVo {
-    @NotNull(message = "账号不能为空")
-    @NotBlank(message = "账号不用为空串")
+    @NotNull(message = "昵称不能为空")
+    @NotBlank(message = "昵称不用为空串")
     @Min(value = 3,message = "账号的长度不能小于3")
     @Max(value = 30,message = "账号的长度不能大于30")
     public String username;
