@@ -93,17 +93,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         redisTemplate.delete("user:" + uid);
     }
 
-
-    //todo : add email to check user.
     @Override
     public Optional<User> register(RegisterVo user) {
-        var byOne = this.getOne(new LambdaQueryWrapper<User>()
+        var byOne = this.getMap(new LambdaQueryWrapper<User>()
                 .eq(User::getAccount, user.getAccount()));
         if (byOne != null) {
             throw new ServiceException(BizCodeEnum.USER_EXIST_EXCEPTION);
         }
         User user1 = new User()
-                .setUsername(user.getUsername())
+                .setUsername(user.getUsername() == null ? user.getAccount() : user.getUsername())
                 .setPassword(passwordEncoder.encode(user.getPassword()))
                 .setAccount(user.getAccount())
                 .setCreateTime(Date.from(Instant.now()))

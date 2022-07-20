@@ -33,10 +33,10 @@ public class ExceptionHandle {
         Map<String, String> errorMap = bindingResult.getFieldErrors().stream()
                 .collect(Collectors.toMap(FieldError::getField, DefaultMessageSourceResolvable::getDefaultMessage));
 
-        return ResponseEntity.ok().body(ResponseData.error(BizCodeEnum.VALID_EXCEPTION.getMsg())
+        return ResponseEntity.ok().body(ResponseData.error()
+                        .setMessage(errorMap.get(errorMap.keySet().iterator().next()))
                 .setCode(BizCodeEnum.VALID_EXCEPTION.getCode())
                 .data(errorMap));
-
     }
 
 

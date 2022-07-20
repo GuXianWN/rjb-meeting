@@ -44,6 +44,7 @@ public class UserDTO {
 
     public static User toUser(UserDTO userDTO) {
         return new User()
+                .setAccount(userDTO.getAccount())
                 .setId(userDTO.getId())
                 .setEmail(userDTO.getEmail())
                 .setPortraitUrl(userDTO.getPortraitUrl())
