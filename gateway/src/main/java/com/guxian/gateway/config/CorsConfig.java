@@ -1,4 +1,4 @@
-package com.guxian.gateway;
+package com.guxian.gateway.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +17,7 @@ public class CorsConfig {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.addAllowedMethod("*");
-        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedOriginPattern("*");
         corsConfiguration.setAllowCredentials(true);
 
         // 向source中注册new出来的配置，并设置任意url都要进行跨域配置

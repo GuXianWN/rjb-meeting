@@ -172,6 +172,7 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
 
     @Override
     public void deleteWhiteListed(Long uid, Long mid) {
+        log.warn("deleteWhiteListed");
         Meeting meeting = meetingService.getMeetingById(mid);
         if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())) {
             throw new ServiceException(BizCodeEnum.NO_ACCESS);
@@ -195,6 +196,13 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
     public void deleteByMid(Long meeting) {
         baseMapper.delete(new LambdaQueryWrapper<UserMeeting>()
                 .eq(UserMeeting::getMid, meeting));
+    }
+
+    @Override
+    public void quit(Long mid) {
+        baseMapper.delete(new LambdaQueryWrapper<UserMeeting>()
+                .eq(UserMeeting::getMid, mid)
+                .eq(UserMeeting::getUid, CurrentUserSession.getUserSession().getUserId()));
     }
 }
 

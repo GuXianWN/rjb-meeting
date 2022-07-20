@@ -24,11 +24,18 @@ public class UserMeetingController {
     @Autowired
     private MeetingService meetingService;
 
+
+    @DeleteMapping("/quit/{mid}")
+    public ResponseData quit(@PathVariable Long mid){
+        userMeetingService.quit(mid);
+        return ResponseData.success();
+    }
+
     @DeleteMapping("/{mid}/{uid}")
     public ResponseData removeUserByMeeting(@PathVariable("mid") Long mid, @PathVariable("uid") Long uid, HttpServletRequest request) {
         Long cuid = jwtUtils.getUid(request);
         Meeting meeting = meetingService.getMeetingById(mid);
-        if (meeting.getCreateUid() != cuid) {
+        if (!meeting.getCreateUid().equals(cuid)) {
             throw new ServiceException(BizCodeEnum.NO_ACCESS);
         }
         int i = userMeetingService.removeUserByMeeting(mid, uid);

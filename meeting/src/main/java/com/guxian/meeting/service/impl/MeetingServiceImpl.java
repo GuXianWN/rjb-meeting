@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.guxian.common.entity.CountVo;
 import com.guxian.common.enums.MeetingJoinType;
 import com.guxian.common.enums.MeetingState;
 import com.guxian.common.enums.RoleType;
@@ -26,6 +27,7 @@ import com.guxian.meeting.service.MeetingService;
 import com.guxian.meeting.mapper.MeetingMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -198,8 +200,8 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
         if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())) {
             throw new ServiceException(BizCodeEnum.NO_ACCESS);
         }
-
         userMeetingService.deleteByMid(mid);
+        baseMapper.deleteById(mid);
     }
 
     @Override
@@ -211,6 +213,22 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
         meeting.setEndTime(new Date())
                 .setState(MeetingState.OVER);
         baseMapper.updateById(meeting);
+    }
+
+    @Override
+    public List<CountVo> countTime() {
+        LocalDateTime now = LocalDateTime.now();
+        List<CountVo> list = new ArrayList<>();
+        for (int i = 1; i < 24; i++) {
+            LocalDateTime r = LocalDateTime.now().minusDays(i);
+            LocalDateTime l = LocalDateTime.now().minusDays(i-1);
+            Long count = baseMapper.selectCount(new LambdaQueryWrapper<Meeting>()
+                    .le(Meeting::getCreateTime, l)
+                    .ge(Meeting::getCreateTime,r));
+            list.add(new CountVo(l,r,count));
+        }
+        log.info("{}",now);
+        return list;
     }
 }
 

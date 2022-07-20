@@ -51,6 +51,11 @@ public class MeetingController {
     }
 
 
+    @GetMapping("/count")
+    public ResponseData count(){
+        return ResponseData.success().data(meetingService.countTime());
+    }
+
     /**
      * 添加会议
      *

@@ -27,6 +27,12 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping("/count")
+    public ResponseData count(){
+        long count = userService.count();
+        return ResponseData.success().data(count);
+    }
+
     @GetMapping("/infor/{id}")
     @Cacheable(value = {"userInfor"}, key = "#id", sync = true)
     public ResponseData infor(@PathVariable("id") Long id) {

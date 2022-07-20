@@ -70,6 +70,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         if (user == null) {
             throw new ServiceException(BizCodeEnum.USER_NOT_EXIST);
         }
+
+        log.warn(passwordEncoder.encode(loginVo.getPassword()));
+
         //校验密码
         if (!passwordEncoder.matches(loginVo.getPassword(), user.getPassword())) {
             throw new ServiceException(BizCodeEnum.LOGIN_ACCOUNT_PASSWORD_EXCEPTION);

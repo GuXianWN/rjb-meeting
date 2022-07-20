@@ -23,27 +23,6 @@ public interface UserMeetingService extends IService<UserMeeting> {
     List<UserMeeting> getUserByMeeting(Long mid);
     PageData getMeetingJoinList(Long uid, Long page, Long size);
 
-    /**
-     * 用户接受邀请
-     */
-//    boolean acceptInvite(Long mid);
-
-
-    /**
-     * 加入会议
-     */
-//    UserMeeting joinMeeting(Long mid, Long uid);
-
-    /**
-     * 邀请别人加入
-     */
-//    void invite(List<Long> uids,Long mid);
-
-    /**
-     * 会议主持接受加入
-     */
-//    boolean acceptJoin(Long umid);
-
     UserMeeting selectById(Long umid);
 
     PageData list(Long page, Long size);
@@ -61,4 +40,6 @@ public interface UserMeetingService extends IService<UserMeeting> {
     void deleteWhiteListed(Long uid, Long mid);
 
     void deleteByMid(Long meeting);
+
+    void quit(Long mid);
 }
