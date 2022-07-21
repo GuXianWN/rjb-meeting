@@ -20,7 +20,7 @@ public interface OssService {
     void deleteObject(String filename);
 
 
-    File downloadObject(String filename);
+    InputStream downloadObject(String filename);
 
     Boolean hasObject(String filename);
 

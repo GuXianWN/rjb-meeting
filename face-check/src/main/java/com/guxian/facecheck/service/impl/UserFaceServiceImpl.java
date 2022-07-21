@@ -8,6 +8,7 @@ import com.guxian.common.utils.SomeUtils;
 import com.guxian.facecheck.repo.UserFaceRepo;
 import com.guxian.facecheck.service.CheckFaceExistService;
 import com.guxian.facecheck.service.FaceCompareService;
+import com.guxian.facecheck.service.OSSForFaceService;
 import com.guxian.facecheck.service.UserFaceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,62 +16,76 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.UUID;
 
 @Service
 @Slf4j
 public class UserFaceServiceImpl implements UserFaceService {
-    @Resource
-    private UserFaceRepo userFaceRepo;
-    @Resource
-    private FaceCompareService faceCompareService;
-    @Resource
-    private CheckFaceExistService checkFaceExistService;
+    private final UserFaceRepo userFaceRepo;
+
+    private final FaceCompareService faceCompareService;
+
+    private final CheckFaceExistService checkFaceExistService;
+
+    private final OSSForFaceService ossForFaceService;
 
     @Value("${oss.face-filename-suffix}")
     private String faceFilenameSuffix = ".jpg";
 
+    public UserFaceServiceImpl(UserFaceRepo userFaceRepo, FaceCompareService faceCompareService, CheckFaceExistService checkFaceExistService, OSSForFaceService ossForFaceService) {
+        this.userFaceRepo = userFaceRepo;
+        this.faceCompareService = faceCompareService;
+        this.checkFaceExistService = checkFaceExistService;
+        this.ossForFaceService = ossForFaceService;
+    }
+
     @Override
     public double compareFace(MultipartFile file) {
         log.info("人脸比对开始");
+
         //检查上传的是不是人
         var fileCacheUtils = new FileCacheUtils();
-        File paramFaceImg = fileCacheUtils.saveFile(file, SomeUtils.buildFaceFileUUName());
-        if (!checkFaceExistService.hasFace(paramFaceImg)){
-            log.info("face delete {}",paramFaceImg.getName());
+
+        //存储临时文件（用户上传的人脸）
+        var paramFaceImg = fileCacheUtils.saveFaceFile(file, SomeUtils.buildFaceFileUUName());
+
+        //用于对比的远程人脸（或者从本地缓存获取）
+        File userFaceImg;
+
+        if (!checkFaceExistService.hasFace(paramFaceImg)) {
+            log.info("face delete {}", paramFaceImg.getName());
             paramFaceImg.delete();
             throw new ServiceException(BizCodeEnum.NO_FACE_WAS_DETECTED);
         }
         //是人的话 检查本地有无用户的人脸
-        var user = userFaceRepo.findByUserId(CurrentUserSession.getUserSession().getUserId());
-        var faceUrl = user.orElseThrow(() -> new ServiceException(BizCodeEnum.USER_FACE_NOT_EXIST))
-                .getFaceUrl();
-        if (!StringUtils.hasText(faceUrl)) {
-            throw new ServiceException(BizCodeEnum.USER_FACE_NOT_EXIST);
-        }
-        String ossFaceName = SomeUtils.getFileNameFromOssUrl(faceUrl);
-        File remoteUserFaceImg = fileCacheUtils.getFaceFile(ossFaceName);
-        if (!remoteUserFaceImg.canRead()){
+
+        var fileName = SomeUtils.buildFaceFileName(CurrentUserSession.getUserSession().getUserId());
+
+        userFaceImg = fileCacheUtils.getFaceFile(fileName);
+
+        //本地文件无法读取成功，尝试远程拉取
+
+        if (!userFaceImg.canRead()) {
             log.info("本地无用户人脸");
-            try {
-                URL url = new URL(faceUrl);
-                fileCacheUtils.saveFileFromRemote(url,ossFaceName);
-            } catch (Exception e) {
+            var user = userFaceRepo.findByUserId(CurrentUserSession.getUserSession().getUserId());
+            var remoteFaceUrl = user.orElseThrow(() -> new ServiceException(BizCodeEnum.USER_FACE_NOT_EXIST))
+                    .getFaceUrl();
+            //无远程URL，该用户未上传FACE！
+            if (!StringUtils.hasText(remoteFaceUrl)) {
                 throw new ServiceException(BizCodeEnum.USER_FACE_NOT_EXIST);
             }
+
+            //下载
+            userFaceImg = ossForFaceService.downloadFace(CurrentUserSession.getUserSession().getUserId());
         }
 
         var rate = faceCompareService
-                .checkFaceSimilarRate(remoteUserFaceImg, paramFaceImg);
+                .checkFaceSimilarRate(userFaceImg, paramFaceImg);
         log.warn("current rate is {}=======", rate);
 
         paramFaceImg.delete();
-        log.info("face delete {}",paramFaceImg.getName());
+
+        log.info("face delete {}", paramFaceImg.getName());
         return rate;
     }
 }

@@ -30,7 +30,7 @@ public class UserFaceController {
     ResponseData getFaces(@PathVariable(name = "page") Integer page, @PathVariable(name = "size") Integer size) {
         page = (page <= 0 ? 0 : page - 1);
         var userFace = faceRepo.findAll(PageRequest.of(page, size));
-        var pageData = new PageData(Long.valueOf(page), Long.valueOf(size), Long.valueOf(userFace.getTotalPages()), userFace.getContent());
+        var pageData = new PageData(Long.valueOf(page), Long.valueOf(size), (long) userFace.getTotalPages(), userFace.getContent());
         log.info("pageData :{}", pageData);
         return ResponseData.success().data(pageData);
     }
