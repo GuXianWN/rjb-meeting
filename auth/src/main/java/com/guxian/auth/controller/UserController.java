@@ -47,10 +47,16 @@ public class UserController {
         return ResponseData.success();
     }
 
+    /**
+     *
+     * @return 获取当前用户的个人信息
+     */
     @GetMapping
     public ResponseData whoAmI() {
-        var byId = Optional.ofNullable(userService.getById(CurrentUserSession.getUserSession().getUserId()))
-                .orElseThrow(() -> new ServiceException(BizCodeEnum.NOT_LOGGED_IN));
+        var byId =
+                Optional.ofNullable(
+                userService.getById(CurrentUserSession.getUserSession().getUserId())).orElseThrow(
+                        () -> new ServiceException(BizCodeEnum.NOT_LOGGED_IN));
         return ResponseData.success().data(UserDTO.form(byId));
     }
 

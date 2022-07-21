@@ -3,11 +3,6 @@ package com.guxian.facecheck.controller;
 import com.guxian.common.entity.ResponseData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
-import com.guxian.common.utils.CurrentUserSession;
-import com.guxian.common.utils.FileCacheUtils;
-import com.guxian.common.utils.SomeUtils;
-import com.guxian.facecheck.entity.UserFace;
-import com.guxian.facecheck.repo.UserFaceRepo;
 import com.guxian.facecheck.service.FaceCompareService;
 import com.guxian.facecheck.service.OSSForFaceService;
 import com.guxian.facecheck.service.UserFaceService;
@@ -18,26 +13,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.text.Normalizer;
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/face")
 @Slf4j
 public class FaceCheckController {
     private final OSSForFaceService faceOss;
     private final FaceCompareService faceCompareService;
-    @Resource
-    private UserFaceService userFaceService;
+    private final UserFaceService userFaceService;
 
     @Value("${face-compare.minimum-confidence}")
     private double minimumConfidence = 0.7;
@@ -47,9 +29,11 @@ public class FaceCheckController {
 
     public FaceCheckController(
             OSSForFaceService faceOss,
-            FaceCompareService faceCompareService) {
+            FaceCompareService faceCompareService,
+            UserFaceService userFaceService) {
         this.faceOss = faceOss;
         this.faceCompareService = faceCompareService;
+        this.userFaceService = userFaceService;
     }
 
     @PostMapping("/compare")
@@ -79,6 +63,8 @@ public class FaceCheckController {
         if (!StringUtils.endsWithIgnoreCase(file.getOriginalFilename(), faceFilenameSuffix)) {
             return ResponseData.error("文件格式错误");
         }
+
+        //上传
         String url = faceOss.uploadFace(file.getInputStream());
         return ResponseData.success().data("url", url);
     }

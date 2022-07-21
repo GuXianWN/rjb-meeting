@@ -6,6 +6,7 @@ import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.annotation.Aspect;
 import org.opencv.core.Core;
 import org.opencv.objdetect.CascadeClassifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -23,20 +24,23 @@ import java.io.File;
 @Log4j2
 @ComponentScan("com.guxian.*")
 public class FaceCheckBootStrap {
+
+    @Value("${spring.servlet.multipart.max-request-size}")
+    String size;
     public static void main(String[] args) {
         SpringApplication.run(FaceCheckBootStrap.class, args);
     }
 
     @Bean
     CascadeClassifier cascadeClassifier() {
+        log.info("current max size is {}", size);
         nu.pattern.OpenCV.loadShared();
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-
         String xml= SomeUtils.getPath()+"static/haarcascade_frontalface_alt.xml";
         log.info("xml=========>{}",xml);
         File xmlFile = new File(xml);
         log.info("xml can read=========>{}",xmlFile.canRead());
         log.info("xml can write=========>{}",xmlFile.canWrite());
-        return new CascadeClassifier(xml.toString());
+        return new CascadeClassifier(xml);
     }
 }

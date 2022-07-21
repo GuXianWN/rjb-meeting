@@ -22,7 +22,6 @@ public class CurrentUserSession {
             log.warn("token 为debug 模式，不检查token");
             return new UserSession().setUserId(0L).setUserName("no-token-user");
         }
-        assert CurrentUserSession.userSession != null;
         return CurrentUserSession.userSession.get();
     }
 

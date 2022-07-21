@@ -45,25 +45,22 @@ public class AliFaceOssService implements OSSForFaceService {
     @SneakyThrows
     @Override
     public String uploadFace(InputStream inputStream, Long userId) {
-        String fileName = SomeUtils.buildFaceFileUUName();
+        String fileName = SomeUtils.buildFaceFileName(userId);
         var fileCacheUtils = new FileCacheUtils();
-        var file = fileCacheUtils.saveFile(inputStream, fileName);
-        if (!checkFaceExistService.hasFace(file)) {
-            log.info("{} delete",fileName);
-            file.delete();
+        var tmpFile = fileCacheUtils.saveFaceFile(inputStream, fileName);
+        //检测是否存在人脸，如果不存在，进行删除tmp文件
+        if (!checkFaceExistService.hasFace(tmpFile)) {
+            log.info("{} delete", fileName);
+            tmpFile.deleteOnExit();
             throw new ServiceException(BizCodeEnum.NO_FACE_WAS_DETECTED);
         }
 
-        String url = ossService.uploadObject(new FileInputStream(file), fileName);
         // 从数据库查询是否有该用户的face 信息 ， 如果有 则返回 对应userId ，否则返回 null 的 id （视为没有对应用户的信息）
+        //insert or modify
         var userFace = userFaceRepo.findByUserId(userId).orElse(new UserFace().setId(null));
-        //如果有把本地的删掉
-        if (userFace.getFaceUrl()!=null){
-            String ossUrl = SomeUtils.getFileNameFromOssUrl(userFace.getFaceUrl());
-            File faceFile = fileCacheUtils.getFaceFile(ossUrl);
-            faceFile.delete();
-            log.info("delete face {}",ossUrl);
-        }
+
+        //上传文件
+        String url = ossService.uploadObject(new FileInputStream(tmpFile), fileName);
 
         userFaceRepo.save(new UserFace()
                 .setUserId(userId)
@@ -73,10 +70,15 @@ public class AliFaceOssService implements OSSForFaceService {
         return url;
     }
 
-
     @Override
     public File downloadFace(Long userId) {
-        return ossService.downloadObject(SomeUtils.buildFaceFileName(userId));
+        var inputStream = ossService.downloadObject(SomeUtils.buildFaceFileName(userId));
+        FileCacheUtils fileCacheUtils = new FileCacheUtils();
+        var file = fileCacheUtils.saveFileFromRemote(inputStream, SomeUtils.buildFaceFileName(userId));
+        if(file==null||!file.canRead()){
+            throw new ServiceException(BizCodeEnum.USER_FACE_NOT_EXIST);
+        }
+        return file;
     }
 
     @Override

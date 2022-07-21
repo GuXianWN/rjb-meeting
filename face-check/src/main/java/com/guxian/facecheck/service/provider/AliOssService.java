@@ -1,7 +1,9 @@
 package com.guxian.facecheck.service.provider;
 
 import com.aliyun.oss.OSS;
+import com.aliyun.oss.model.DownloadFileRequest;
 import com.aliyun.oss.model.GetObjectRequest;
+import com.guxian.common.utils.FileCacheUtils;
 import com.guxian.facecheck.config.AliServiceObject;
 import com.guxian.facecheck.service.OssService;
 import lombok.Data;
@@ -13,6 +15,7 @@ import com.aliyun.oss.model.PutObjectRequest;
 
 import java.io.File;
 import java.io.InputStream;
+import java.net.URL;
 
 
 @Service
@@ -43,11 +46,12 @@ public class AliOssService implements OssService {
         aliServiceObject.getOss().deleteObject(aliServiceObject.getBucketName(), filename);
     }
 
+    @SneakyThrows
     @Override
-    public File downloadObject(String filename) {
-        var file = new File(aliServiceObject.getDownloadPathPrefix() + filename);
-        aliServiceObject.getOss().getObject(new GetObjectRequest(aliServiceObject.getBucketName(), filename), file);
-        return file;
+    public InputStream downloadObject(String filename) {
+
+        var url = new URL(aliServiceObject.getDownloadPathPrefix() + filename);
+        return url.openStream();
     }
 
     @Override

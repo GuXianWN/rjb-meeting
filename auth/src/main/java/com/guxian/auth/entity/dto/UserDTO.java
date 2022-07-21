@@ -20,7 +20,7 @@ public class UserDTO {
 
     private String username;
 
-    @Null(message = "账号 无法修改！",groups = UpdateGroup.class)
+    @Null(message = "账号无法修改！",groups = UpdateGroup.class)
     private String account;
 
     @Email(message = "email 格式错误",groups = UpdateGroup.class)
