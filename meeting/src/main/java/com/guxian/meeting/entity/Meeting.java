@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.guxian.common.enums.MeetingJoinType;
 import com.guxian.common.enums.MeetingState;
 import lombok.AllArgsConstructor;
@@ -75,6 +76,10 @@ public class Meeting implements Serializable {
      * 会议加入
      */
     private MeetingJoinType joinType;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @TableField(exist = false)
+    private UserMeeting userMeeting;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
