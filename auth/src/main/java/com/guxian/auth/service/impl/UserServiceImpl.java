@@ -107,6 +107,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                 .setCreateTime(Date.from(Instant.now()))
                 .setStatus(UserStatus.NORMAL)
                 .setRoleId(RoleType.ROLE_USER);
+
+        System.out.println(user1);
         this.save(user1);
         return Optional.of(user1);
     }

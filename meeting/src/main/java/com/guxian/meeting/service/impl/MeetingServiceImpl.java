@@ -109,7 +109,9 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
         List<Meeting> meetings = new ArrayList<>();
 
         list.forEach(v -> {
-            meetings.add(getMeetingById(v.getMid()));
+            Meeting meeting = getMeetingById(v.getMid());
+            meeting.setUserMeeting(v);
+            meetings.add(meeting);
         });
 
         //检查状态
