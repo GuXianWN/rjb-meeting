@@ -64,7 +64,6 @@ public class AliFaceOssService implements OSSForFaceService {
             faceFile.delete();
             log.info("delete face {}",ossUrl);
         }
-
         userFaceRepo.save(new UserFace()
                 .setUserId(userId)
                 .setFaceUrl(url)

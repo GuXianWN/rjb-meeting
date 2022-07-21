@@ -21,7 +21,7 @@ public class CountFilter implements GlobalFilter, Ordered {
         new Thread(()->{
             countClient.count();
         }).start();
-
+        System.out.println("----->count ++");
         return chain.filter(exchange);
     }
 
