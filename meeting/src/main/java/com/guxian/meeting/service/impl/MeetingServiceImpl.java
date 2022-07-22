@@ -53,7 +53,14 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
 
     @Override
     public Optional<Meeting> addMeeting(Meeting meeting, Long uid) {
-        meeting.setCreateTime(new Date())
+        Date date = new Date();
+        if (meeting.getBeginTime().before(date)){
+            meeting.setBeginTime(date);
+        }
+        if (meeting.getBeginTime().after(meeting.getEndTime())){
+            throw new ServiceException("开始时间需在结束时间前",114514);
+        }
+        meeting.setCreateTime(date)
                 .setCreateUid(uid)
                 .setJoinType(MeetingJoinType.DEFAULT)
                 .setState(MeetingState.WAIT_TO_START);
