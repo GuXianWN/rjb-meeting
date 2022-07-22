@@ -1,11 +1,16 @@
 package com.guxian.auth.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.guxian.auth.entity.User;
 import com.guxian.auth.entity.dto.UserDTO;
+import com.guxian.auth.entity.dto.UserFaceDTO;
 import com.guxian.auth.service.UserService;
 import com.guxian.common.entity.ResponseData;
+import com.guxian.common.entity.UserFace;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
+import com.guxian.common.openfegin.facecheck.FaceCheckClient;
 import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.common.utils.SomeUtils;
 import com.guxian.common.valid.UpdateGroup;
@@ -15,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.Optional;
 
@@ -22,6 +28,8 @@ import java.util.Optional;
 @RequestMapping("/user") //auth
 public class UserController {
     private final UserService userService;
+    @Resource
+    private FaceCheckClient faceCheckClient;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -57,7 +65,10 @@ public class UserController {
                 Optional.ofNullable(
                 userService.getById(CurrentUserSession.getUserSession().getUserId())).orElseThrow(
                         () -> new ServiceException(BizCodeEnum.NOT_LOGGED_IN));
-        return ResponseData.success().data(UserDTO.form(byId));
+        ResponseData data = faceCheckClient.getFaces(CurrentUserSession.getUserSession().getUserId());
+        String json = JSON.toJSONString(data.getData());
+        UserFace userFace = JSONObject.parseObject(json, UserFace.class);
+        return ResponseData.success().data(UserDTO.form(byId).setFaceUrl(userFace.getFaceUrl()));
     }
 
     @GetMapping("/username/{username}")
