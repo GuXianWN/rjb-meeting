@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.guxian.common.entity.CountVo;
+import com.guxian.common.enums.CheckWay;
 import com.guxian.common.enums.MeetingJoinType;
 import com.guxian.common.enums.MeetingState;
 import com.guxian.common.enums.RoleType;
@@ -12,6 +13,7 @@ import com.guxian.common.entity.PageData;
 import com.guxian.common.entity.UserSession;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
+import com.guxian.common.redis.RedisUtils;
 import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.common.utils.JwtUtils;
 import com.guxian.meeting.clients.UserClient;
@@ -25,8 +27,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.guxian.meeting.service.MeetingService;
 import com.guxian.meeting.mapper.MeetingMapper;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -48,17 +53,19 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     private UserMeetingService userMeetingService;
     @Autowired
     private UserClient userClient;
+    @Resource
+    private RedisTemplate<String, String> redisTemplate;
 
     UserSession user = CurrentUserSession.getUserSession();
 
     @Override
     public Optional<Meeting> addMeeting(Meeting meeting, Long uid) {
         Date date = new Date();
-        if (meeting.getBeginTime().before(date)){
+        if (meeting.getBeginTime().before(date)) {
             meeting.setBeginTime(date);
         }
-        if (meeting.getBeginTime().after(meeting.getEndTime())){
-            throw new ServiceException("开始时间需在结束时间前",114514);
+        if (meeting.getBeginTime().after(meeting.getEndTime())) {
+            throw new ServiceException("开始时间需在结束时间前", 114514);
         }
         meeting.setCreateTime(date)
                 .setCreateUid(uid)
@@ -138,6 +145,22 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
         }
         MeetingInfor meetingInfor = MeetingInfor.from(meeting);
         List<CheckInfor> checkInList = meetingCheckService.getCheckInList(id);
+
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+
+        checkInList.forEach(v -> {
+            MeetingCheck meetingCheck = v.getMeetingCheck();
+            if (meetingCheck.getCheckWay().equals(CheckWay.CODE.getValue())) {
+                String code = null;
+                try {
+                    code = ops.get("meeting_check:check_code:" + meetingCheck.getId()).toString();
+                } catch (Exception e) {
+
+                }
+                meetingCheck.setCode(code);
+            }
+        });
+
         meetingInfor.setOwner(JSON.parseObject(JSON.toJSONString(userClient.infor(meeting.getCreateUid()).getData()), UserVo.class))
                 //获取当前会议所有的签到
                 .setAttendDetail(checkInList);
@@ -230,13 +253,13 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
         List<CountVo> list = new ArrayList<>();
         for (int i = 1; i < 24; i++) {
             LocalDateTime r = LocalDateTime.now().minusDays(i);
-            LocalDateTime l = LocalDateTime.now().minusDays(i-1);
+            LocalDateTime l = LocalDateTime.now().minusDays(i - 1);
             Long count = baseMapper.selectCount(new LambdaQueryWrapper<Meeting>()
                     .le(Meeting::getCreateTime, l)
-                    .ge(Meeting::getCreateTime,r));
-            list.add(new CountVo(l,r,count));
+                    .ge(Meeting::getCreateTime, r));
+            list.add(new CountVo(l, r, count));
         }
-        log.info("{}",now);
+        log.info("{}", now);
         return list;
     }
 }
