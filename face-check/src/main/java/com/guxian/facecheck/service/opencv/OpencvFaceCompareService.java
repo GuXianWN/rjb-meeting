@@ -85,7 +85,7 @@ public class OpencvFaceCompareService implements FaceCompareService {
             face = new Mat(image1, rect);
         }
         if (null == face) {
-            log.info("conv_Mat未识别出该图像中的人脸，img={}", img);
+            log.info("未识别出该图像中的人脸，img={}", img);
             throw new ServiceException(BizCodeEnum.NO_FACE_WAS_DETECTED);
         }
         return face;

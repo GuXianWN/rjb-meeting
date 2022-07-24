@@ -61,14 +61,5 @@ class DefaultCheckInServiceTest {
 
         // Verify the results
         assertThat(result.get().getMeetingId()).isNotNull();
-
-
-        // Run the test
-        final boolean result2 = defaultCheckInServiceUnderTest.checkInUseCode(checkDataVo.setCode(code).setMeetingId(result.get().getMeetingId()));
-
-
-        log.info("result2:{} and checkDataVo code is {}", result2, checkDataVo.getCode());
-        // Verify the results
-        assertThat(result2).isTrue();
     }
 }

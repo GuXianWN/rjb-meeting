@@ -14,9 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 public class LoginController {
     @Autowired
     private UserService userService;
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
-
     @PostMapping("/login")
     public ResponseData login(@RequestBody LoginVo loginVo, HttpServletRequest request) {
         String token = userService.login(loginVo, request);

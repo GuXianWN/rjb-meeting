@@ -2,6 +2,7 @@ package com.guxian.common.exception;
 
 import com.guxian.common.entity.ResponseData;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.Current;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -19,7 +20,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @ControllerAdvice
 public class ExceptionHandle {
-
     @ExceptionHandler(org.springframework.web.HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ResponseData> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         log.error("请求方式出现问题: {},类型: {}", e.getMessage(), e.getClass());
