@@ -41,7 +41,6 @@ class AliOssServiceTest {
 
     @Test
     void testUpload() {
-//        AliServiceBuilder aliServiceBuilder = new AliServiceBuilder(ossProperties, oss);
 //        AliOssService aliOssUploadServiceUnderTest=new AliOssService(mockUserFaceRepo, aliServiceBuilder.aliServiceBean());
 
         // Setup

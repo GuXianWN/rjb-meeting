@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author GuXian
@@ -44,6 +45,7 @@ public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn> i
     @Autowired
     private MeetingCheckService meetingCheckService;
 
+    private CheckDataVo checkDataVo;
 
     /**
      * @param checkDataVo
@@ -54,20 +56,31 @@ public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn> i
 
     @Override
     public boolean checkIn(CheckDataVo checkDataVo) {
-        if (checkDataVo.getCheckWay() == CheckWay.FACE && checkInUseFace(checkDataVo)) {
-            userMeetingService.checkIn(CurrentUserSession.getUserSession().getUserId(),
+        this.checkDataVo = checkDataVo;
+        if (checkDataVo.getCheckWay() == CheckWay.FACE && checkInUseFace()) {
+            userMeetingService.checkIn(checkDataVo.getMeetingId(),
                     checkDataVo.getCheckWay());
         }
 
-        if (checkDataVo.getCheckWay() == CheckWay.CODE && checkInUseCode(checkDataVo)) {
-            userMeetingService.checkIn(CurrentUserSession.getUserSession().getUserId(),
+        if (checkDataVo.getCheckWay() == CheckWay.CODE && checkInUseCode()) {
+            userMeetingService.checkIn(checkDataVo.getMeetingId(),
                     checkDataVo.getCheckWay());
         }
-        return false;
+
+        if (checkDataVo.getCheckWay() == CheckWay.NONE && !hasCheckIn()) {
+            userMeetingService.checkIn(checkDataVo.getMeetingId(),
+                    checkDataVo.getCheckWay());
+        }
+        return true;
+    }
+
+    private boolean hasCheckIn() {
+        var list = meetingCheckService.listByMap(Map.of("meeting_id", checkDataVo.getMeetingId()));
+        return list.size() > 0;
     }
 
 
-    public boolean checkInUseCode(CheckDataVo checkDataVo) {
+    private boolean checkInUseCode() {
         Object getCodeByRedis = RedisUtils.ops.get(MeetingCheck.buildKey(checkDataVo.getMeetingId()));
         if (getCodeByRedis == null) {
             throw new ServiceException(BizCodeEnum.CHECK_IN_CODE_NOT_EXIST);
@@ -83,7 +96,7 @@ public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn> i
         return true;
     }
 
-    public boolean checkInUseFace(CheckDataVo checkDataVo) {
+    private boolean checkInUseFace() {
         var face = checkDataVo.getFace();
         var responseData = faceCheckController.compareFace(face);
         return ResponseData.returnIs(responseData);

@@ -37,9 +37,6 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
 
     @Resource
     private MeetingService meetingService;
-    @Autowired
-    private JwtUtils jwtUtils;
-
 
     @Resource
     private UserMeetingMapper userMeetingMapper;
@@ -56,11 +53,13 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
             throw new ServiceException(BizCodeEnum.CHECK_IN_ALREADY);
         }
 
-        this.save(new UserMeeting()
+        var entity = new UserMeeting()
                 .setType(UserCheckInStatus.JOIN)
                 .setMid(meetingId)
                 .setJoinTime(Date.from(Instant.now()))
-                .setUid(CurrentUserSession.getUserSession().getUserId()));
+                .setUid(CurrentUserSession.getUserSession().getUserId())
+                .setJoinState(MeetingJoinState.Accepted);
+        this.save(entity);
     }
 
     @Override

@@ -118,7 +118,6 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
                     .eq("check_way", (i)));
             map.put(i, tmp);
         }
-
         return map;
     }
 }

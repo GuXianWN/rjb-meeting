@@ -21,6 +21,7 @@ public interface UserMeetingService extends IService<UserMeeting> {
     int removeUserByMeeting(Long mid, Long uid);
 
     List<UserMeeting> getUserByMeeting(Long mid);
+
     PageData getMeetingJoinList(Long uid, Long page, Long size);
 
     UserMeeting selectById(Long umid);
