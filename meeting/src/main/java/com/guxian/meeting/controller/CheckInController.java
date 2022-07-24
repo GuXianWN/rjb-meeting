@@ -36,10 +36,7 @@ public class CheckInController {
     @PostMapping("/reCheck")
     public ResponseData reCheck(@RequestBody ReCheckVo reCheckVo, HttpServletRequest request) {
         Long uid = CurrentUserSession.getUserSession().getUserId();
-
         checkInService.reCheck(reCheckVo, uid);
         return ResponseData.success();
     }
-
-
 }

@@ -63,9 +63,9 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
         meetingCheck.setBeginTime(Date.from(Instant.now()));
 
         //已经存在的会议签到，则删除原有的签到，重新创建新的签到
-        if (baseMapper.selectById(meetingCheck.getMeetingId()) != null) {
-            baseMapper.deleteById(meetingCheck.getMeetingId());
-        }
+//        if (baseMapper.selectById(meetingCheck.getMeetingId()) != null) {
+//            baseMapper.deleteById(meetingCheck.getMeetingId());
+//        }
 
         baseMapper.insert(meetingCheck);
 

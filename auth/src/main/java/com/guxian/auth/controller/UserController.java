@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.guxian.auth.entity.User;
 import com.guxian.auth.entity.dto.UserDTO;
-import com.guxian.auth.entity.dto.UserFaceDTO;
 import com.guxian.auth.service.UserService;
 import com.guxian.common.entity.ResponseData;
 import com.guxian.common.entity.UserFace;

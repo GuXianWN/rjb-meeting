@@ -2,6 +2,8 @@ package com.guxian.meeting.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.guxian.common.entity.ResponseData;
+import com.guxian.common.enums.CheckWay;
+import com.guxian.common.redis.RedisUtils;
 import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.common.utils.JwtUtils;
 import com.guxian.common.utils.SomeUtils;
@@ -40,6 +42,11 @@ public class MeetingCheckController {
     @GetMapping("/{id}")
     public ResponseData getMeetingCheckById(@PathVariable Long id) {
         var byId = meetingCheckService.listByMap(Map.of("meeting_id", id));
+        byId.forEach(v->{
+            if (v.getCheckWay().equals(CheckWay.CODE.getValue())){
+                v.setCode(RedisUtils.ops.get("meeting_check:check_code:"+v.getId()).toString());
+            }
+        });
         return ResponseData.success(byId);
     }
 

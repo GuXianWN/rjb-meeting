@@ -47,23 +47,4 @@ class MeetingCheckServiceImplTest {
         RedisUtils.ops = new RedisTemplateConfigurer().redisTemplateForStringObject(this.redisConnectionFactory).opsForValue();
         meetingCheckService = spy(meetingCheckService);
     }
-
-
-    @Test
-    @Transactional
-    void testAddCheckType() {
-        Instant beginTime = Instant.now();
-        Instant endTime = Instant.now().plusSeconds(1000);
-        // Setup
-        final MeetingCheck meetingCheck = new MeetingCheck(null, 0L, 0,
-                Date.from(beginTime),
-                endTime.getNano());
-
-        // Run the test
-        final Optional<MeetingCheck> result = meetingCheckService.createMeetingCheck(meetingCheck,"code",1L);
-
-        // Verify the results
-        assertThat(result.get().getMeetingId()).isNotNull();
-
-    }
 }
