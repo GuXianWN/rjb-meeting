@@ -17,7 +17,6 @@ public interface MeetingCheckService extends IService<MeetingCheck> {
 
     Optional<MeetingCheck> createMeetingCheck(MeetingCheck toMeetingCheck, String data,Long uid);
 
-
     List<CheckInfor> getCheckInList(Long id);
 
     MeetingCheck getCheckById(Long checkId);

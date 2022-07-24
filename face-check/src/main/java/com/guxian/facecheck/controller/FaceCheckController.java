@@ -37,7 +37,6 @@ public class FaceCheckController {
     }
 
     @PostMapping("/compare")
-    //todo 文件夹中保存的文件命名为ULR 相关参数，减少从服务器的下载。
     public ResponseData compareFace(@RequestPart(name = "file") MultipartFile file) {
         if (file.isEmpty()) {
             throw new ServiceException(BizCodeEnum.NUMBER_OF_UPLOADED_FILE_NOT_ONE);

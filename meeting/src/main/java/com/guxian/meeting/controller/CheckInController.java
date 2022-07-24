@@ -1,6 +1,7 @@
 package com.guxian.meeting.controller;
 
 import com.guxian.common.entity.ResponseData;
+import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.common.utils.JwtUtils;
 import com.guxian.meeting.entity.vo.CheckDataVo;
@@ -20,21 +21,27 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/meeting/check-in")
 public class CheckInController {
     private final CheckInService checkInService;
-    private final JwtUtils jwtUtils;
 
-    public CheckInController(CheckInService checkInService, JwtUtils jwtUtils) {
+    public CheckInController(CheckInService checkInService) {
         this.checkInService = checkInService;
-        this.jwtUtils = jwtUtils;
     }
 
+    /**
+     *
+     * @param checkDataVo 签到对象
+     * @return 签到结果
+     */
     @PostMapping
     public ResponseData check(
             @Validated CheckDataVo checkDataVo) {
-        return ResponseData.is(checkInService.checkIn(checkDataVo));
+        if(checkInService.checkIn(checkDataVo)){
+            return ResponseData.success();
+        }
+        return ResponseData.error(BizCodeEnum.CHECK_IN_FAIL);
     }
 
     @PostMapping("/reCheck")
-    public ResponseData reCheck(@RequestBody ReCheckVo reCheckVo, HttpServletRequest request) {
+    public ResponseData reCheck(@RequestBody ReCheckVo reCheckVo) {
         Long uid = CurrentUserSession.getUserSession().getUserId();
         checkInService.reCheck(reCheckVo, uid);
         return ResponseData.success();
