@@ -8,6 +8,7 @@ spring:
       discovery:
         server-addr: 101.34.229.217:8848 # Nacos地址
         namespace: rjb_G
+        ip: ${ip}
       config:
         server-addr: 101.34.229.217:8848 # Nacos地址
         namespace: rjb_G
