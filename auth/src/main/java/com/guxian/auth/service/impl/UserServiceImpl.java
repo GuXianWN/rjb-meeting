@@ -25,6 +25,9 @@ import com.guxian.common.utils.JwtUtils;
 import com.guxian.common.utils.SomeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,6 +44,7 @@ import java.util.stream.Collectors;
  *
  */
 @Service
+@CacheConfig(cacheNames = "user_cache")
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         implements UserService {
     @Autowired
@@ -114,12 +118,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
+    @Cacheable(key = "#p0")
     public Optional<User> getByUsername(String username) {
         return Optional.ofNullable(this.getOne(new QueryWrapper<User>()
                 .eq("username", username)));
     }
 
     @Override
+    @CachePut(key = "#p0.id")
     public void modifyUserById(User user) {
         var byId = this.getById(user.getId());
         if (byId == null || // Id don't exist or update return false
