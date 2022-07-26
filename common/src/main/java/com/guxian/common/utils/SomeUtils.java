@@ -2,6 +2,8 @@ package com.guxian.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.io.InputStream;
 import java.util.Random;

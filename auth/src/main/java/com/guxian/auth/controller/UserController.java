@@ -14,6 +14,9 @@ import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.common.utils.SomeUtils;
 import com.guxian.common.valid.UpdateGroup;
 import lombok.SneakyThrows;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +28,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/user") //auth
+@CacheConfig(cacheNames = "user_cache")
 public class UserController {
     private final UserService userService;
     @Resource
@@ -41,7 +45,7 @@ public class UserController {
     }
 
     @GetMapping("/infor/{id}")
-    @Cacheable(value = {"userInfor"}, key = "#id", sync = true)
+    @Cacheable(key = "#id", sync = true)
     public ResponseData infor(@PathVariable("id") Long id) {
         User user = userService.getById(id);
         return ResponseData.success("查询成功")
@@ -49,6 +53,7 @@ public class UserController {
     }
 
     @PatchMapping
+    @CachePut(key = "#p0.id")
     public ResponseData updateUser(@Validated(UpdateGroup.class) @Valid @RequestBody UserDTO userDTO) {
         userService.modifyUserById(UserDTO.toUser(userDTO));
         return ResponseData.success();

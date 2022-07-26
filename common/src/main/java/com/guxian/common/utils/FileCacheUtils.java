@@ -5,6 +5,8 @@ import com.guxian.common.exception.ServiceException;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -16,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Log4j2
+@CacheConfig(cacheNames = "fileUtils_cache")
 public class FileCacheUtils {
     @SneakyThrows
     public File saveFaceFile(MultipartFile file, String fileName) {
@@ -46,6 +49,7 @@ public class FileCacheUtils {
         return targetFile;
     }
 
+    @Cacheable(key = "#p0")
     public File getFaceFile(String fileName) {
         return new File(SomeUtils.getPath() + "ph/" + fileName, "");
     }
