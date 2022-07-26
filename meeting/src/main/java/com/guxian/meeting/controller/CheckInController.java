@@ -46,6 +46,4 @@ public class CheckInController {
         checkInService.reCheck(reCheckVo, uid);
         return ResponseData.success();
     }
-
-
 }

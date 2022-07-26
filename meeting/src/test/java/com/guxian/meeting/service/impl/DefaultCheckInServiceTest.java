@@ -36,30 +36,4 @@ class DefaultCheckInServiceTest {
 //        defaultCheckInServiceUnderTest = new DefaultCheckInService(userMeetingService);
         RedisUtils.ops = new RedisTemplateConfigurer().redisTemplateForStringObject(this.redisConnectionFactory).opsForValue();
     }
-
-
-    @Test
-    @Transactional
-    void testCheckInUseCodeWillReturnTrue() {
-
-        var code = SomeUtils.randomString(6);
-
-        // Setup
-        final CheckDataVo checkDataVo = new CheckDataVo();
-
-
-        //add code to redis
-        Instant beginTime = Instant.now();
-        Instant endTime = Instant.now().plusSeconds(1000);
-
-        final MeetingCheck meetingCheck = new MeetingCheck(0L, 0L, 0,
-                Date.from(beginTime),
-                endTime.getNano());
-
-        // Run the test
-        final Optional<MeetingCheck> result = meetingCheckService.createMeetingCheckUseCode(meetingCheck, code);
-
-        // Verify the results
-        assertThat(result.get().getMeetingId()).isNotNull();
-    }
 }

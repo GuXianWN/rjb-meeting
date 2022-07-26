@@ -40,7 +40,6 @@ public class MeetingVo {
     private Date createTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @FutureOrPresent(message = "开始时间必须大于当前时间并且小于结束时间", groups = {AddGroup.class})
     private Date beginTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

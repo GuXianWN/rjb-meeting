@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.guxian.common.config.RedisPrefix;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -55,6 +56,10 @@ public class MeetingCheck implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
+    @TableField(exist = false)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private String code;
 
     public static String buildKey(Long meetingId) {
         return RedisPrefix.CHECK_IN_CODE_PREFIX  + meetingId;
