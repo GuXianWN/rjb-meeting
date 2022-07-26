@@ -86,6 +86,6 @@ public class OpencvUtils {
     }
 
     public MatOfInt getHitSizeMat() {
-        return new MatOfInt(100000);
+        return new MatOfInt(50000);
     }
 }
