@@ -4,6 +4,9 @@ import com.alibaba.cloud.commons.lang.StringUtils;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.facecheck.service.FaceCompareService;
+import com.guxian.facecheck.service.opencv.OpencvCacheService.OpencvUtils;
+import com.guxian.facecheck.service.opencv.OpencvCacheService.ReturnData;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -12,7 +15,10 @@ import org.opencv.objdetect.CascadeClassifier;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * 比对2张图的人脸相似度 （越接近1越相似）
@@ -20,40 +26,65 @@ import java.util.List;
 @Log4j2
 @Service
 public class OpencvFaceCompareService implements FaceCompareService {
+
+    private final OpencvUtils utils;
     private final CascadeClassifier faceDetector;
 
     public OpencvFaceCompareService(CascadeClassifier cascadeClassifier) {
+        this.utils = new OpencvUtils(cascadeClassifier);
         this.faceDetector = cascadeClassifier;
     }
 
+    @SneakyThrows
     @Override
     public double checkFaceSimilarRate(File faceFileA, File faceFileB) {
-        Mat mat1 = convMat(faceFileA.getAbsolutePath());
-        Mat mat2 = convMat(faceFileB.getAbsolutePath());
+        var begin = Instant.now();
+        AtomicReference<Mat> faceFileMatA = new AtomicReference<>();
+        AtomicReference<Mat> faceFileMatB = new AtomicReference<>();
+
+        faceFileMatA.set(convMat(faceFileA.getAbsolutePath()));
+
+        faceFileMatB.set(convMat(faceFileB.getAbsolutePath()));
+
+
         Mat hist1 = new Mat();
         Mat hist2 = new Mat();
 
         //颜色范围
-        MatOfFloat ranges = new MatOfFloat(0f, 256f);
-        //直方图大小， 越大匹配越精确 (越慢)
-        MatOfInt histSize = new MatOfInt(100000);
+//        MatOfFloat ranges = utils.getRange();
 
-        Imgproc.calcHist(List.of(mat1), new MatOfInt(0), new Mat(), hist1, histSize, ranges);
-        Imgproc.calcHist(List.of(mat2), new MatOfInt(0), new Mat(), hist2, histSize, ranges);
+        //直方图大小， 越大匹配越精确 (越慢)
+//        MatOfInt histSize = new MatOfInt(100000);
+
+        AtomicReference<ReturnData> data1 = new AtomicReference<>();
+        AtomicReference<ReturnData> data2 = new AtomicReference<>();
+        var d = new Thread(() -> {
+            log.info("data 1 running ...");
+            data1.set(utils.calcHist(faceFileA.getAbsolutePath(), List.of(faceFileMatA.get()), hist1));
+            log.info("data 1 over ...");
+        });
+        d.start();
+        var d1 = new Thread(() -> {
+            log.info("data 2 running ...");
+            data2.set(utils.calcHist(faceFileB.getAbsolutePath(), List.of(faceFileMatB.get()), hist2));
+            log.info("data 2 over ...");
+        });
+        d1.start();
+        d.join();
+        d1.join();
+
+//        Imgproc.calcHist(List.of(faceFileMatA), new MatOfInt(0), new Mat(), hist1, histSize, ranges);
+//        Imgproc.calcHist(List.of(faceFileMatB), new MatOfInt(0), new Mat(), hist2, histSize, ranges);
 
         // CORREL 相关系数
-        double res = Imgproc.compareHist(hist1, hist2, Imgproc.CV_COMP_CORREL);
+        double res = Imgproc.compareHist(data1.get().getHist(), data2.get().getHist(), Imgproc.CV_COMP_CORREL);
         log.info("当前比较的结果系数为： {}", res);
+        log.info("总耗时-----{}", Date.from(Instant.now()).getSeconds() - Date.from(begin).getSeconds());
         return res;
     }
 
-    /**
-     * 灰度化人脸
-     *
-     * @param img
-     * @return
-     */
     public Mat convMat(String img) {
+        log.info("进入convMat 方法");
         if (StringUtils.isBlank(img)) {
             return null;
         }
@@ -90,4 +121,5 @@ public class OpencvFaceCompareService implements FaceCompareService {
         }
         return face;
     }
+
 }

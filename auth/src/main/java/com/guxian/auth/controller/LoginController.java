@@ -3,8 +3,9 @@ package com.guxian.auth.controller;
 import com.guxian.auth.entity.vo.LoginVo;
 import com.guxian.auth.service.UserService;
 import com.guxian.common.entity.ResponseData;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,14 +13,19 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/auth")
 public class LoginController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public LoginController(UserService userService) {
+        this.userService = userService;
+    }
+
     @PostMapping("/login")
     public ResponseData login(@RequestBody LoginVo loginVo, HttpServletRequest request) {
         String token = userService.login(loginVo, request);
         return ResponseData.success("登录成功")
                 .data("token", token);
     }
+
 
     @PostMapping("/logout")
     public ResponseData logout(HttpServletRequest request) {
