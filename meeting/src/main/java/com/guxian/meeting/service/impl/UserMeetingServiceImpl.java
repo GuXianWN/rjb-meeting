@@ -206,7 +206,7 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
     public List<UserMeeting> whiteListedList(Long mid) {
         return baseMapper.selectList(new LambdaQueryWrapper<UserMeeting>()
                 .eq(UserMeeting::getMid,mid)
-                .eq(UserMeeting::getType,MeetingJoinState.WHITELIST));
+                .eq(UserMeeting::getJoinState,MeetingJoinState.WHITELIST));
     }
 }
 
