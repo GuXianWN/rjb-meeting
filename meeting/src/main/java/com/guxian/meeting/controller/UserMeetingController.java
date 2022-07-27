@@ -87,4 +87,9 @@ public class UserMeetingController {
         userMeetingService.deleteWhiteListed(uid,mid);
         return  ResponseData.success();
     }
+
+    @GetMapping("/whiteListed/{mid}")
+    public ResponseData whiteListedList(@PathVariable Long mid){
+        return ResponseData.success().data(userMeetingService.whiteListedList(mid));
+    }
 }

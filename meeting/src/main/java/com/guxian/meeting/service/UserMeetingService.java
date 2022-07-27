@@ -2,7 +2,6 @@ package com.guxian.meeting.service;
 
 import com.guxian.common.enums.CheckWay;
 import com.guxian.common.entity.PageData;
-import com.guxian.meeting.entity.Meeting;
 import com.guxian.meeting.entity.MeetingCheck;
 import com.guxian.meeting.entity.UserMeeting;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -43,4 +42,6 @@ public interface UserMeetingService extends IService<UserMeeting> {
     void deleteByMid(Long meeting);
 
     void quit(Long mid);
+
+    List<UserMeeting> whiteListedList(Long mid);
 }

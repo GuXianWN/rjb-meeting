@@ -1,6 +1,7 @@
 package com.guxian.meeting.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.guxian.common.enums.MeetingJoinType;
 import com.guxian.common.enums.MeetingState;
 import com.guxian.meeting.entity.vo.UserVo;
 import lombok.AllArgsConstructor;
@@ -35,11 +36,13 @@ public class MeetingInfor {
     MeetingState status;
     //会议签到码
     String signinCode;
+    MeetingJoinType joinType;
 
     public static MeetingInfor from(Meeting meeting) {
         MeetingInfor meetingInfor = new MeetingInfor();
         meetingInfor.setId(meeting.getId())
                 .setName(meeting.getName())
+                .setJoinType(meeting.getJoinType())
                 .setExplain(meeting.getInstruction())
                 .setOwner(UserVo.from(meeting.getCreateUid()))
                 .setBeginTime(meeting.getBeginTime())
