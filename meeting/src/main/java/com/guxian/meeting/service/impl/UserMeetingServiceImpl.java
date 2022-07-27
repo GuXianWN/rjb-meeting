@@ -12,14 +12,12 @@ import com.guxian.common.entity.PageData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.utils.CurrentUserSession;
-import com.guxian.common.utils.JwtUtils;
 import com.guxian.meeting.entity.Meeting;
 import com.guxian.meeting.entity.MeetingCheck;
 import com.guxian.meeting.entity.UserMeeting;
 import com.guxian.meeting.service.MeetingService;
 import com.guxian.meeting.service.UserMeetingService;
 import com.guxian.meeting.mapper.UserMeetingMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -202,6 +200,13 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
         baseMapper.delete(new LambdaQueryWrapper<UserMeeting>()
                 .eq(UserMeeting::getMid, mid)
                 .eq(UserMeeting::getUid, CurrentUserSession.getUserSession().getUserId()));
+    }
+
+    @Override
+    public List<UserMeeting> whiteListedList(Long mid) {
+        return baseMapper.selectList(new LambdaQueryWrapper<UserMeeting>()
+                .eq(UserMeeting::getMid,mid)
+                .eq(UserMeeting::getType,MeetingJoinState.WHITELIST));
     }
 }
 
