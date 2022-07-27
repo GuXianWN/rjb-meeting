@@ -45,9 +45,17 @@ public class AliFaceOssService implements OSSForFaceService {
     @SneakyThrows
     @Override
     public String uploadFace(InputStream inputStream, Long userId) {
+        // 从数据库查询是否有该用户的face 信息 ， 如果有 则返回 对应userId ，否则返回 null 的 id （视为没有对应用户的信息）
+        //insert or modify
+        var userFace = userFaceRepo.findByUserId(userId).orElse(new UserFace().setId(null));
+
+        //如果被锁住，则禁止修改
+        if (Boolean.TRUE.equals(userFace.getLocked())) {
+            throw new ServiceException(BizCodeEnum.USER_FACE_LOCKED);
+        }
+
         String fileName = SomeUtils.buildFaceFileName(userId);
-        var fileCacheUtils = new FileCacheUtils();
-        var tmpFile = fileCacheUtils.saveFaceFile(inputStream, fileName);
+        var tmpFile = FileCacheUtils.saveFaceFile(inputStream, fileName);
         //检测是否存在人脸，如果不存在，进行删除tmp文件
         if (!checkFaceExistService.hasFace(tmpFile)) {
             log.info("{} delete", fileName);
@@ -55,9 +63,6 @@ public class AliFaceOssService implements OSSForFaceService {
             throw new ServiceException(BizCodeEnum.NO_FACE_WAS_DETECTED);
         }
 
-        // 从数据库查询是否有该用户的face 信息 ， 如果有 则返回 对应userId ，否则返回 null 的 id （视为没有对应用户的信息）
-        //insert or modify
-        var userFace = userFaceRepo.findByUserId(userId).orElse(new UserFace().setId(null));
 
         //上传文件
         String url = ossService.uploadObject(new FileInputStream(tmpFile), fileName);
@@ -75,7 +80,7 @@ public class AliFaceOssService implements OSSForFaceService {
         var inputStream = ossService.downloadObject(SomeUtils.buildFaceFileName(userId));
         FileCacheUtils fileCacheUtils = new FileCacheUtils();
         var file = fileCacheUtils.saveFileFromRemote(inputStream, SomeUtils.buildFaceFileName(userId));
-        if(file==null||!file.canRead()){
+        if (file == null || !file.canRead()) {
             throw new ServiceException(BizCodeEnum.USER_FACE_NOT_EXIST);
         }
         return file;

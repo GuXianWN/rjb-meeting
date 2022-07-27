@@ -46,7 +46,7 @@ public enum BizCodeEnum {
     FACE_CONTRAST_INCONSISTENT(15012, "脸部和数据库中不一致！尝试变化角度再试一次！"),
     NUMBER_OF_UPLOADED_FILE_NOT_ONE(15013, "文件上传为空或大于1"),
 
-    ;
+    USER_FACE_LOCKED(15014, "人脸图片已被锁定，禁止修改！");
 
 
     private int code;

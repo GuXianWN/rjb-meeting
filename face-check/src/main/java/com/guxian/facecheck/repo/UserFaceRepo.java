@@ -13,4 +13,6 @@ import java.util.Optional;
 public interface UserFaceRepo extends PagingAndSortingRepository<UserFace, Integer> {
 
     Optional<UserFace> findByUserId(Long userId);
+
+
 }

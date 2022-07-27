@@ -5,6 +5,7 @@ import com.guxian.common.exception.ServiceException;
 import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.common.utils.FileCacheUtils;
 import com.guxian.common.utils.SomeUtils;
+import com.guxian.facecheck.entity.UserFace;
 import com.guxian.facecheck.repo.UserFaceRepo;
 import com.guxian.facecheck.service.CheckFaceExistService;
 import com.guxian.facecheck.service.FaceCompareService;
@@ -12,11 +13,15 @@ import com.guxian.facecheck.service.OSSForFaceService;
 import com.guxian.facecheck.service.UserFaceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -87,5 +92,22 @@ public class UserFaceServiceImpl implements UserFaceService {
 
         log.info("face delete {}", paramFaceImg.getName());
         return rate;
+    }
+
+    @Override
+    public Page<UserFace> findAll(PageRequest of) {
+        return userFaceRepo.findAll(of);
+    }
+
+    @Override
+    public Optional<UserFace> findByUserId(Long uid) {
+        return userFaceRepo.findByUserId(uid);
+    }
+
+    @Override
+    public boolean setUserFaceLockStatus(Long uid, boolean isLocked) {
+        var userFace = userFaceRepo.findByUserId(uid).orElseThrow(() -> new ServiceException(BizCodeEnum.USER_FACE_NOT_EXIST));
+        userFaceRepo.save(userFace.setLocked(isLocked));
+        return true;
     }
 }
