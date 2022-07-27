@@ -52,21 +52,7 @@ public class FaceCheckController {
                 , BizCodeEnum.FACE_CONTRAST_INCONSISTENT).data(rate);
     }
 
-    @PostMapping("/upload")
-    @SneakyThrows
-    public ResponseData upload(@RequestPart(value = "file") MultipartFile file) {
-        if (file.isEmpty()) {
-            throw new ServiceException(BizCodeEnum.NUMBER_OF_UPLOADED_FILE_NOT_ONE);
-        }
-        //校验格式
-        if (!StringUtils.endsWithIgnoreCase(file.getOriginalFilename(), faceFilenameSuffix)) {
-            return ResponseData.error("文件格式错误");
-        }
 
-        //上传
-        String url = faceOss.uploadFace(file.getInputStream());
-        return ResponseData.success().data("url", url);
-    }
 
     @GetMapping("/is/{id}")
     public ResponseData hasFace(@PathVariable Long id) {

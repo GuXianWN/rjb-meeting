@@ -45,4 +45,8 @@ public class UserFace implements Serializable {
     @Column(name = "create_time")
     private Date createTime;
 
+
+    @Column(name = "locked",columnDefinition = "boolean default false")
+    private Boolean locked;
+
 }
