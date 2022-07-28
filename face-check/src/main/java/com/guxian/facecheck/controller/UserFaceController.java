@@ -71,4 +71,9 @@ public class UserFaceController {
     public ResponseData unlockUserFace(@PathVariable Long uid) {
         return ResponseData.is(userFaceService.setUserFaceLockStatus(uid, false));
     }
+
+    @GetMapping("/is-locked/{uid}")
+    public ResponseData lockStatus(@PathVariable Long uid){
+        return ResponseData.is(userFaceService.getUserFaceLockStatus(uid));
+    }
 }

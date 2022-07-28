@@ -16,4 +16,6 @@ public interface UserFaceService {
     Optional<UserFace> findByUserId(Long uid);
 
     boolean setUserFaceLockStatus(Long uid, boolean isLock);
+
+    boolean getUserFaceLockStatus(Long uid);
 }
