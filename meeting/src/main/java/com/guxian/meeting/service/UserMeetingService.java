@@ -5,6 +5,7 @@ import com.guxian.common.entity.PageData;
 import com.guxian.meeting.entity.MeetingCheck;
 import com.guxian.meeting.entity.UserMeeting;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.guxian.meeting.entity.vo.UserMeetingVo;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,5 +44,5 @@ public interface UserMeetingService extends IService<UserMeeting> {
 
     void quit(Long mid);
 
-    List<UserMeeting> whiteListedList(Long mid);
+    List<UserMeetingVo> whiteListedList(Long mid);
 }

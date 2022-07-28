@@ -1,5 +1,6 @@
 package com.guxian.meeting.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -12,9 +13,12 @@ import com.guxian.common.entity.PageData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.utils.CurrentUserSession;
+import com.guxian.meeting.clients.UserClient;
 import com.guxian.meeting.entity.Meeting;
 import com.guxian.meeting.entity.MeetingCheck;
 import com.guxian.meeting.entity.UserMeeting;
+import com.guxian.meeting.entity.vo.UserMeetingVo;
+import com.guxian.meeting.entity.vo.UserVo;
 import com.guxian.meeting.service.MeetingService;
 import com.guxian.meeting.service.UserMeetingService;
 import com.guxian.meeting.mapper.UserMeetingMapper;
@@ -25,6 +29,7 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -38,6 +43,9 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
 
     @Resource
     private UserMeetingMapper userMeetingMapper;
+
+    @Resource
+    private UserClient userClient;
 
     @Override
     public Optional<MeetingCheck> addCheckType(MeetingCheck meetingCheck, String code) {
@@ -203,10 +211,15 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
     }
 
     @Override
-    public List<UserMeeting> whiteListedList(Long mid) {
-        return baseMapper.selectList(new LambdaQueryWrapper<UserMeeting>()
-                .eq(UserMeeting::getMid,mid)
-                .eq(UserMeeting::getJoinState,MeetingJoinState.WHITELIST));
+    public List<UserMeetingVo> whiteListedList(Long mid) {
+        List<UserMeeting> list = baseMapper.selectList(new LambdaQueryWrapper<UserMeeting>()
+                .eq(UserMeeting::getMid, mid)
+                .eq(UserMeeting::getJoinState, MeetingJoinState.WHITELIST));
+       return list.stream().map(v->{
+            UserMeetingVo vo = UserMeetingVo.foUserMeeting(v);
+            vo.setUser(JSON.parseObject(JSON.toJSONString(userClient.infor(v.getUid()).getData()), UserVo.class));
+            return vo;
+        }).collect(Collectors.toList());
     }
 }
 
