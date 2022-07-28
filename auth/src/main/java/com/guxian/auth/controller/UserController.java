@@ -24,7 +24,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user") //auth
@@ -50,6 +52,17 @@ public class UserController {
         User user = userService.getById(id);
         return ResponseData.success("查询成功")
                 .data(UserDTO.form(user));
+    }
+
+    @GetMapping("/infor/account/{account}")
+    public ResponseData getByAccount(@PathVariable String account) {
+        List<User> list = userService.getByAccount(account);
+        List<UserDTO> list1 = list.stream().map(v -> {
+            v.setPassword("");
+            return UserDTO.form(v);
+        }).collect(Collectors.toList());
+        return ResponseData.success("查询成功")
+                .data(list1);
     }
 
     @PatchMapping

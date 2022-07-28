@@ -7,11 +7,14 @@ import com.guxian.common.entity.ResponseData;
 import com.guxian.common.enums.MeetingState;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
+import com.guxian.common.redis.RedisUtils;
 import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.common.utils.JwtUtils;
+import com.guxian.common.utils.PageUtils;
 import com.guxian.common.valid.AddGroup;
 import com.guxian.common.valid.UpdateGroup;
 import com.guxian.meeting.entity.Meeting;
+import com.guxian.meeting.entity.MeetingInfor;
 import com.guxian.meeting.entity.UserMeeting;
 import com.guxian.meeting.entity.vo.MeetingVo;
 import com.guxian.meeting.service.MeetingService;
@@ -121,8 +124,9 @@ public class MeetingController {
      */
     @GetMapping("/infor/{id}")
     public ResponseData getMeetingInfo(@PathVariable("id") Long id) {
+        MeetingInfor info = meetingService.getMeetingInfo(id);
         return ResponseData.success()
-                .data(meetingService.getMeetingInfo(id));
+                .data(info);
     }
 
 
@@ -133,9 +137,9 @@ public class MeetingController {
     }
 
     @GetMapping("/list")
-    public ResponseData getMeetingList(Long page, Long size) {
+    public ResponseData getMeetingList(PageUtils pageUtils) {
         return ResponseData.success()
-                .data(meetingService.getAll(page, size));
+                .data(meetingService.getAll(pageUtils));
     }
 
     @GetMapping("/list/join")

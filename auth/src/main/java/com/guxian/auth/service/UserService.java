@@ -9,6 +9,7 @@ import com.guxian.common.entity.ResponseData;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -31,4 +32,6 @@ public interface UserService extends IService<User> {
     PageData getUserList(Integer page, Integer size);
 
     ResponseData uploadPortrait(MultipartFile file, String buildPortrait);
+
+    List<User> getByAccount(String account);
 }

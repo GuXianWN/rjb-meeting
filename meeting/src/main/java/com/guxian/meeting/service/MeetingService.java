@@ -3,6 +3,7 @@ package com.guxian.meeting.service;
 import com.guxian.common.entity.CountVo;
 import com.guxian.common.entity.PageData;
 import com.guxian.common.enums.MeetingState;
+import com.guxian.common.utils.PageUtils;
 import com.guxian.meeting.entity.Meeting;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.guxian.meeting.entity.MeetingInfor;
@@ -25,7 +26,7 @@ public interface MeetingService extends IService<Meeting> {
 
     Meeting getMeetingById(Long id);
 
-    PageData getAll(Long page, Long size); // 获取所有会议
+    PageData getAll(PageUtils pageUtils); // 获取所有会议
 
     PageData getMeetingJoinList(Long page, Long size, Long uid); // 获取我参加的会议
 

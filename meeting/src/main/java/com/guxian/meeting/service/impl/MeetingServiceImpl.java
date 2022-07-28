@@ -5,17 +5,18 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.guxian.common.entity.CountVo;
+import com.guxian.common.entity.PageData;
 import com.guxian.common.enums.CheckWay;
 import com.guxian.common.enums.MeetingJoinType;
 import com.guxian.common.enums.MeetingState;
 import com.guxian.common.enums.RoleType;
-import com.guxian.common.entity.PageData;
 import com.guxian.common.entity.UserSession;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
 import com.guxian.common.redis.RedisUtils;
 import com.guxian.common.utils.CurrentUserSession;
 import com.guxian.common.utils.JwtUtils;
+import com.guxian.common.utils.PageUtils;
 import com.guxian.meeting.clients.UserClient;
 import com.guxian.meeting.entity.*;
 import com.guxian.meeting.entity.vo.UserVo;
@@ -106,14 +107,14 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     }
 
     @Override
-    public PageData getAll(Long page, Long size) {
-        Page<Meeting> meetingPage = new Page<>(page, size);
-        IPage<Meeting> iPage = baseMapper.selectPage(meetingPage, new QueryWrapper<Meeting>());
+    public PageData getAll(PageUtils pageUtils) {
+        Page<Meeting> iPage = baseMapper.selectPage(pageUtils.toPage(Meeting.class), new QueryWrapper<>());
+
         //检查状态
         List<Meeting> meetingList = iPage.getRecords();
         meetingList.forEach(this::checkMeetingState);
 
-        return new PageData(page, size, iPage.getTotal(), meetingList);
+        return new PageData(pageUtils.getPage(),pageUtils.getSize(), iPage.getTotal(), meetingList);
     }
 
     @Override
@@ -222,16 +223,15 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     @Override
     public Long countMeetingStatus(MeetingState over) {
         return baseMapper.selectCount(new LambdaQueryWrapper<Meeting>()
-                .eq(Meeting::getCreateUid, CurrentUserSession.getUserSession().getUserId())
                 .eq(Meeting::getState, over));
     }
 
     @Override
     public void deleteMeeting(Long mid) {
-        Meeting meeting = baseMapper.selectById(mid);
-        if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())) {
-            throw new ServiceException(BizCodeEnum.NO_ACCESS);
-        }
+//        Meeting meeting = baseMapper.selectById(mid);
+//        if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())) {
+//            throw new ServiceException(BizCodeEnum.NO_ACCESS);
+//        }
         userMeetingService.deleteByMid(mid);
         baseMapper.deleteById(mid);
     }

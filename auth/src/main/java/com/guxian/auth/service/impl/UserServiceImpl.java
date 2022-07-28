@@ -157,6 +157,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
         return ResponseData.success().data(json);
     }
+
+    @Override
+    public List<User> getByAccount(String account) {
+        return baseMapper.selectList(new LambdaQueryWrapper<User>()
+                .like(User::getAccount,account));
+    }
 }
 
 
