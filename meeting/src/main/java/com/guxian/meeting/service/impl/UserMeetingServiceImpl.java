@@ -154,12 +154,10 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
         if (!meeting.getCreateUid().equals(CurrentUserSession.getUserSession().getUserId())) {
             throw new ServiceException(BizCodeEnum.NO_ACCESS);
         }
-
         list.forEach(v -> {
             UserMeeting userMeeting = baseMapper.selectOne(new LambdaQueryWrapper<UserMeeting>()
                     .eq(UserMeeting::getUid, v)
                     .eq(UserMeeting::getMid, mid));
-
             if (userMeeting == null) {
                 baseMapper.insert(new UserMeeting()
                         .setJoinState(MeetingJoinState.WHITELIST)

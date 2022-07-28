@@ -110,4 +110,11 @@ public class UserFaceServiceImpl implements UserFaceService {
         userFaceRepo.save(userFace.setLocked(isLocked));
         return true;
     }
+
+    @Override
+    public boolean getUserFaceLockStatus(Long uid) {
+        return userFaceRepo.findByUserId(uid)
+                .orElseThrow(() -> new ServiceException(BizCodeEnum.USER_NOT_EXIST))
+                .getLocked();
+    }
 }
