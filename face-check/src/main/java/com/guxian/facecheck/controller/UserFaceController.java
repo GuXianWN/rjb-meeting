@@ -61,6 +61,23 @@ public class UserFaceController {
         return ResponseData.success().data("url", url);
     }
 
+
+
+    @PostMapping("/upload/{uid}")
+    @SneakyThrows
+    public ResponseData uploadById(@RequestPart(value = "file") MultipartFile file, @PathVariable Long uid) {
+        if (file.isEmpty()) {
+            throw new ServiceException(BizCodeEnum.NUMBER_OF_UPLOADED_FILE_NOT_ONE);
+        }
+        //校验格式
+        if (!StringUtils.endsWithIgnoreCase(file.getOriginalFilename(), faceFilenameSuffix)) {
+            return ResponseData.error("文件格式错误");
+        }
+        //上传
+        String url = faceOss.uploadFace(file.getInputStream(),uid);
+        return ResponseData.success().data("url", url);
+    }
+
     @PostMapping("/lock/{uid}")
     public ResponseData lockUserFace(@PathVariable Long uid) {
         return ResponseData.is(userFaceService.setUserFaceLockStatus(uid, true));
