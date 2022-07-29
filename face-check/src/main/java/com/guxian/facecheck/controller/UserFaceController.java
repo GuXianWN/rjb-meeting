@@ -56,7 +56,6 @@ public class UserFaceController {
         if (!StringUtils.endsWithIgnoreCase(file.getOriginalFilename(), faceFilenameSuffix)) {
             return ResponseData.error("文件格式错误");
         }
-
         //上传
         String url = faceOss.uploadFace(file.getInputStream());
         return ResponseData.success().data("url", url);
@@ -70,10 +69,5 @@ public class UserFaceController {
     @PostMapping("/unlock/{uid}")
     public ResponseData unlockUserFace(@PathVariable Long uid) {
         return ResponseData.is(userFaceService.setUserFaceLockStatus(uid, false));
-    }
-
-    @GetMapping("/is-locked/{uid}")
-    public ResponseData lockStatus(@PathVariable Long uid){
-        return ResponseData.is(userFaceService.getUserFaceLockStatus(uid));
     }
 }

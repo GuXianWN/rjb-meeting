@@ -40,8 +40,8 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
     private UserMeetingService userMeetingService;
 
 
-    public Optional<MeetingCheck> createMeetingCheckUseCode(MeetingCheck meetingCheck,@NotNull(message = "code 不能为空") String data) {
-        RedisUtils.ops.set("meeting_check:check_code:" + meetingCheck.getId(), data ,
+    public Optional<MeetingCheck> createMeetingCheckUseCode(MeetingCheck meetingCheck, @NotNull(message = "code 不能为空") String data) {
+        RedisUtils.ops.set("meeting_check:check_code:" + meetingCheck.getId(), data,
                 meetingCheck.getDuration(), TimeUnit.MINUTES);
         return Optional.of(meetingCheck);
     }
@@ -75,10 +75,16 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
          */
         if (meetingCheck.getCheckWay() == CheckWay.CODE.getValue()) {
             return createMeetingCheckUseCode(meetingCheck, data);
-        } else {
+        }
+        else if (meetingCheck.getCheckWay() == CheckWay.FACE.getValue()) {
             return createMeetingCheckUseFace(meetingCheck, data);
         }
+
+        //如果没有设置创建方式或者为空，则直接插入
+        baseMapper.insert(meetingCheck);
+        return Optional.of(meetingCheck);
     }
+
 
     @Override
     public List<CheckInfor> getCheckInList(Long id) {
@@ -109,10 +115,10 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
     }
 
     @Override
-    public Map<Integer,Long> getMeetingTypeList() {
+    public Map<Integer, Long> getMeetingTypeList() {
 
         var length = CheckWay.values().length;
-        var map = new HashMap<Integer,Long>();
+        var map = new HashMap<Integer, Long>();
         for (int i = 0; i < length; i++) {
             var tmp = baseMapper.selectCount(new QueryWrapper<>(new MeetingCheck())
                     .eq("check_way", (i)));
