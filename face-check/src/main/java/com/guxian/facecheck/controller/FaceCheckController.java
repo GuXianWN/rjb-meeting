@@ -9,9 +9,13 @@ import com.guxian.facecheck.service.UserFaceService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.TimeoutUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/face")
@@ -38,6 +42,7 @@ public class FaceCheckController {
 
     @PostMapping("/compare")
     public ResponseData compareFace(@RequestPart(name = "file") MultipartFile file) {
+        long l = new Date().getTime();
         if (file.isEmpty()) {
             throw new ServiceException(BizCodeEnum.NUMBER_OF_UPLOADED_FILE_NOT_ONE);
         }
@@ -48,10 +53,11 @@ public class FaceCheckController {
 
         double rate = userFaceService.compareFace(file);
 
+        long r = new Date().getTime();
+        log.info("----->人脸对比耗时{}", r - l);
         return ResponseData.is(rate >= minimumConfidence
                 , BizCodeEnum.FACE_CONTRAST_INCONSISTENT).data(rate);
     }
-
 
 
     @GetMapping("/is/{id}")

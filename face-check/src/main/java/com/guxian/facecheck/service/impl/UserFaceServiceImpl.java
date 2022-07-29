@@ -21,6 +21,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -46,22 +47,26 @@ public class UserFaceServiceImpl implements UserFaceService {
 
     @Override
     public double compareFace(MultipartFile file) {
-        log.info("人脸比对开始");
+        log.info("----->人脸比对开始");
 
-        //检查上传的是不是人
         var fileCacheUtils = new FileCacheUtils();
 
+        long l = new Date().getTime();
         //存储临时文件（用户上传的人脸）
         var paramFaceImg = fileCacheUtils.saveFaceFile(file, SomeUtils.buildFaceFileUUName());
+        long r = new Date().getTime();
+        log.info("存储临时文件{}", r - l);
 
         //用于对比的远程人脸（或者从本地缓存获取）
         File userFaceImg;
-
+        l = new Date().getTime();
         if (!checkFaceExistService.hasFace(paramFaceImg)) {
             log.info("face delete {}", paramFaceImg.getName());
             paramFaceImg.delete();
             throw new ServiceException(BizCodeEnum.NO_FACE_WAS_DETECTED);
         }
+        r = new Date().getTime();
+        log.info("检查人脸{}", r - l);
         //是人的话 检查本地有无用户的人脸
 
         var fileName = SomeUtils.buildFaceFileName(CurrentUserSession.getUserSession().getUserId());
@@ -71,6 +76,7 @@ public class UserFaceServiceImpl implements UserFaceService {
         //本地文件无法读取成功，尝试远程拉取
 
         if (!userFaceImg.canRead()) {
+            l = new Date().getTime();
             log.info("本地无用户人脸");
             var user = userFaceRepo.findByUserId(CurrentUserSession.getUserSession().getUserId());
             var remoteFaceUrl = user.orElseThrow(() -> new ServiceException(BizCodeEnum.USER_FACE_NOT_EXIST))
@@ -82,10 +88,14 @@ public class UserFaceServiceImpl implements UserFaceService {
 
             //下载
             userFaceImg = ossForFaceService.downloadFace(CurrentUserSession.getUserSession().getUserId());
+            r = new Date().getTime();
+            log.info("下载人脸{}", r - l);
         }
-
+        l = new Date().getTime();
         var rate = faceCompareService
                 .checkFaceSimilarRate(userFaceImg, paramFaceImg);
+        r = new Date().getTime();
+        log.info("对比{}", r - l);
         log.warn("current rate is {}=======", rate);
 
         paramFaceImg.delete();

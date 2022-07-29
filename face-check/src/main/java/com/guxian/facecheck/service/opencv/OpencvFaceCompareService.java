@@ -59,15 +59,11 @@ public class OpencvFaceCompareService implements FaceCompareService {
         AtomicReference<ReturnData> data1 = new AtomicReference<>();
         AtomicReference<ReturnData> data2 = new AtomicReference<>();
         var d = new Thread(() -> {
-            log.info("data 1 running ...");
             data1.set(utils.calcHist(faceFileA.getAbsolutePath(), List.of(faceFileMatA.get()), hist1));
-            log.info("data 1 over ...");
         });
         d.start();
         var d1 = new Thread(() -> {
-            log.info("data 2 running ...");
             data2.set(utils.calcHist(faceFileB.getAbsolutePath(), List.of(faceFileMatB.get()), hist2));
-            log.info("data 2 over ...");
         });
         d1.start();
         d.join();
@@ -77,14 +73,10 @@ public class OpencvFaceCompareService implements FaceCompareService {
 //        Imgproc.calcHist(List.of(faceFileMatB), new MatOfInt(0), new Mat(), hist2, histSize, ranges);
 
         // CORREL 相关系数
-        double res = Imgproc.compareHist(data1.get().getHist(), data2.get().getHist(), Imgproc.CV_COMP_CORREL);
-        log.info("当前比较的结果系数为： {}", res);
-        log.info("总耗时-----{}", Date.from(Instant.now()).getSeconds() - Date.from(begin).getSeconds());
-        return res;
+        return Imgproc.compareHist(data1.get().getHist(), data2.get().getHist(), Imgproc.CV_COMP_CORREL);
     }
 
     public Mat convMat(String img) {
-        log.info("进入convMat 方法");
         if (StringUtils.isBlank(img)) {
             return null;
         }
