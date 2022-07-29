@@ -76,7 +76,7 @@ public class DefaultCheckInService extends ServiceImpl<CheckInMapper, CheckIn> i
 
     private boolean hasCheckIn() {
         var list = meetingCheckService.listByMap(Map.of("meeting_id", checkDataVo.getMeetingId()));
-        return list.size() > 0;
+        return list.isEmpty()||list.stream().anyMatch(p -> p.getCheckWay() == CheckWay.NONE.getValue());
     }
 
 
