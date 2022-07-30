@@ -88,6 +88,12 @@ public class UserMeetingController {
         return  ResponseData.success();
     }
 
+    @DeleteMapping("/whiteListed/cover/{mid}")
+    public ResponseData cover(@RequestBody List<Long> list,@PathVariable Long mid){
+        userMeetingService.cover(list,mid);
+        return ResponseData.success();
+    }
+
     @GetMapping("/whiteListed/{mid}")
     public ResponseData whiteListedList(@PathVariable Long mid){
         return ResponseData.success().data(userMeetingService.whiteListedList(mid));

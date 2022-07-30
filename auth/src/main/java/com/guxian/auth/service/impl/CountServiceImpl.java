@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 public class CountServiceImpl extends ServiceImpl<CountMapper, Count> implements CountService {
     @Override
-    public Object countTime() {
+    public List<CountVo> countTime() {
         LocalDateTime now = LocalDateTime.now();
         List<CountVo> list = new ArrayList<>();
         for (int i = 1; i < 24; i++) {

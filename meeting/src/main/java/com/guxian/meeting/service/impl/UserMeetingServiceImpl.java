@@ -23,6 +23,7 @@ import com.guxian.meeting.service.MeetingService;
 import com.guxian.meeting.service.UserMeetingService;
 import com.guxian.meeting.mapper.UserMeetingMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.Instant;
@@ -218,6 +219,17 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
             vo.setUser(JSON.parseObject(JSON.toJSONString(userClient.infor(v.getUid()).getData()), UserVo.class));
             return vo;
         }).collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Override
+    public void cover(List<Long> list, Long mid) {
+        baseMapper.delete(new LambdaQueryWrapper<UserMeeting>()
+                .eq(UserMeeting::getMid,mid));
+        List<UserMeeting> list1 = list.stream().map(v -> {
+            return new UserMeeting(null, v, mid, null, new Date(), null, MeetingJoinState.WHITELIST);
+        }).collect(Collectors.toList());
+        this.saveBatch(list1);
     }
 }
 

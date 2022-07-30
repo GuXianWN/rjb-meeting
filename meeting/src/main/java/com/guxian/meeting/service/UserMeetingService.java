@@ -45,4 +45,6 @@ public interface UserMeetingService extends IService<UserMeeting> {
     void quit(Long mid);
 
     List<UserMeetingVo> whiteListedList(Long mid);
+
+    void cover(List<Long> list, Long mid);
 }

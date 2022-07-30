@@ -3,7 +3,10 @@ package com.guxian.facecheck.controller;
 import com.guxian.common.entity.ResponseData;
 import com.guxian.common.exception.BizCodeEnum;
 import com.guxian.common.exception.ServiceException;
+import com.guxian.facecheck.entity.FaceCount;
+import com.guxian.facecheck.repo.FaceCountRepo;
 import com.guxian.facecheck.service.FaceCompareService;
+import com.guxian.facecheck.service.FaceCountService;
 import com.guxian.facecheck.service.OSSForFaceService;
 import com.guxian.facecheck.service.UserFaceService;
 import lombok.SneakyThrows;
@@ -14,6 +17,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -24,6 +28,9 @@ public class FaceCheckController {
     private final OSSForFaceService faceOss;
     private final FaceCompareService faceCompareService;
     private final UserFaceService userFaceService;
+
+    @Resource
+    private FaceCountRepo faceCountRepo;
 
     @Value("${face-compare.minimum-confidence}")
     private double minimumConfidence = 0.7;
@@ -55,6 +62,8 @@ public class FaceCheckController {
 
         long r = new Date().getTime();
         log.info("----->人脸对比耗时{}", r - l);
+
+        faceCountRepo.save(new FaceCount().setRale(rate).setTime(LocalDateTime.now()));
         return ResponseData.is(rate >= minimumConfidence
                 , BizCodeEnum.FACE_CONTRAST_INCONSISTENT).data(rate);
     }
