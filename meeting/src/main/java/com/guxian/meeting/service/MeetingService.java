@@ -45,4 +45,6 @@ public interface MeetingService extends IService<Meeting> {
     void end(Long mid);
 
     List<CountVo> countTime();
+
+    PageData getListInfor(Long page, Long size);
 }

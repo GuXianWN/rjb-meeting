@@ -186,6 +186,22 @@ public class MeetingServiceImpl extends ServiceImpl<MeetingMapper, Meeting>
     }
 
     @Override
+    public PageData getListInfor(Long page, Long size) {
+        Page<Meeting> page1 = new Page<>(page, size);
+        IPage<Meeting> iPage = baseMapper.selectPage(page1, new LambdaQueryWrapper<Meeting>());
+        List<MeetingInfor> list = new ArrayList<>();
+        List<Meeting> meetingList = iPage.getRecords();
+
+        //检查状态
+        meetingList.forEach(this::checkMeetingState);
+
+        meetingList.forEach(v -> {
+            list.add(getMeetingInfo(v.getId()));
+        });
+        return new PageData(page, size, iPage.getTotal(), list);
+    }
+
+    @Override
     public void checkMeetingState(Meeting meeting) {
         Date date = new Date();
         //会议还没开始

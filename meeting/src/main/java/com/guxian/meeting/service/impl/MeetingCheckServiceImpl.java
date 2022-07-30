@@ -67,8 +67,6 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
 //            baseMapper.deleteById(meetingCheck.getMeetingId());
 //        }
 
-        baseMapper.insert(meetingCheck);
-
 
         /**
          * 创建签到 ,不同的签到方式，创建的签到不同

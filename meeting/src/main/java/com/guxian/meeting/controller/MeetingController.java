@@ -107,6 +107,15 @@ public class MeetingController {
                 .data(meetingService.getMeetingListInfo(CurrentUserSession.getUserSession().getUserId(), page, size));
     }
 
+    /**
+     * 全部会议的详情
+     */
+    @GetMapping("/list/info")
+    public ResponseData getListInfor(Long page, Long size){
+        return ResponseData.success()
+                .data(meetingService.getListInfor(page, size));
+    }
+
     @GetMapping("/{id}")
     public ResponseData getMeeting(@PathVariable("id") Long id) {
         //todo 修改获取会议的加入人数的方式 ，并且把这个加入人数的方式放到service层
