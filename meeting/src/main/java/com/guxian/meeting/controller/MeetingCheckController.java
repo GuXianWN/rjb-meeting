@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 对会议签到进行操作
@@ -42,12 +43,21 @@ public class MeetingCheckController {
     @GetMapping("/{id}")
     public ResponseData getMeetingCheckById(@PathVariable Long id) {
         var byId = meetingCheckService.listByMap(Map.of("meeting_id", id));
-        byId.forEach(v->{
-            if (v.getCheckWay().equals(CheckWay.CODE.getValue())){
-                v.setCode(RedisUtils.ops.get("meeting_check:check_code:"+v.getId()).toString());
+        byId.forEach(v -> {
+            if (v.getCheckWay().equals(CheckWay.CODE.getValue())) {
+                v.setCode(RedisUtils.ops.get("meeting_check:check_code:" + v.getId()).toString());
             }
         });
         return ResponseData.success(byId);
+    }
+
+    @GetMapping("/byId/{id}")
+    public ResponseData getById(@PathVariable long id){
+        MeetingCheck check = meetingCheckService.getCheckById(id);
+        if (check.getCheckWay().equals(CheckWay.CODE.getValue())) {
+            check.setCode(RedisUtils.ops.get("meeting_check:check_code:" + check.getId()).toString());
+        }
+        return ResponseData.success().data(check);
     }
 
     /**
@@ -64,10 +74,10 @@ public class MeetingCheckController {
         if (meetingCheck.getCode() == null) {
             meetingCheck.setCode(SomeUtils.randomString(4));
         }
-        meetingCheckService
+        Optional<MeetingCheck> data = meetingCheckService
                 .createMeetingCheck(meetingCheck.toMeetingCheck(), meetingCheck.getCode(), uid);
         return ResponseData.success()
-                .data(meetingCheck);
+                .data(data);
     }
 
     /**

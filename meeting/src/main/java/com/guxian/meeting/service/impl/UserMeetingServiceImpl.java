@@ -101,7 +101,8 @@ public class UserMeetingServiceImpl extends ServiceImpl<UserMeetingMapper, UserM
     public PageData list(Long page, Long size) {
         Page<UserMeeting> page1 = new Page<>(page, size);
         Page<UserMeeting> page2 = baseMapper.selectPage(page1, new LambdaQueryWrapper<UserMeeting>()
-                .eq(UserMeeting::getUid, CurrentUserSession.getUserSession().getUserId()));
+                .eq(UserMeeting::getUid, CurrentUserSession.getUserSession().getUserId())
+                .eq(UserMeeting::getJoinState,MeetingJoinState.Accepted));
         return new PageData(page, size, page2.getTotal(), page2.getRecords());
     }
 

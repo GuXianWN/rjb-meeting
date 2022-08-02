@@ -35,9 +35,6 @@ public class UserMeetingController {
     public ResponseData removeUserByMeeting(@PathVariable("mid") Long mid, @PathVariable("uid") Long uid, HttpServletRequest request) {
         Long cuid = jwtUtils.getUid(request);
         Meeting meeting = meetingService.getMeetingById(mid);
-        if (!meeting.getCreateUid().equals(cuid)) {
-            throw new ServiceException(BizCodeEnum.NO_ACCESS);
-        }
         int i = userMeetingService.removeUserByMeeting(mid, uid);
         if (i == 0) {
             return ResponseData.error("删除失败");

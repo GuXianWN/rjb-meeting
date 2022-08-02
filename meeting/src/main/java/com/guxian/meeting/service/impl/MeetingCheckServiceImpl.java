@@ -42,7 +42,7 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
 
     public Optional<MeetingCheck> createMeetingCheckUseCode(MeetingCheck meetingCheck, @NotNull(message = "code 不能为空") String data) {
         RedisUtils.ops.set("meeting_check:check_code:" + meetingCheck.getId(), data,
-                meetingCheck.getDuration(), TimeUnit.MINUTES);
+                meetingCheck.getDuration(), TimeUnit.DAYS);
         return Optional.of(meetingCheck);
     }
 
@@ -56,10 +56,6 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
     @Override
     public Optional<MeetingCheck> createMeetingCheck(MeetingCheck meetingCheck, String data, Long uid) {
         Meeting meeting = meetingService.getMeetingById(meetingCheck.getMeetingId());
-        if (!meeting.getCreateUid().equals(uid)) {
-            throw new ServiceException(BizCodeEnum.NO_ACCESS);
-        }
-
         meetingCheck.setBeginTime(Date.from(Instant.now()));
 
         //已经存在的会议签到，则删除原有的签到，重新创建新的签到
@@ -71,6 +67,7 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
         /**
          * 创建签到 ,不同的签到方式，创建的签到不同
          */
+        baseMapper.insert(meetingCheck);
         if (meetingCheck.getCheckWay() == CheckWay.CODE.getValue()) {
             return createMeetingCheckUseCode(meetingCheck, data);
         }
@@ -79,7 +76,6 @@ public class MeetingCheckServiceImpl extends ServiceImpl<MeetingCheckMapper, Mee
         }
 
         //如果没有设置创建方式或者为空，则直接插入
-        baseMapper.insert(meetingCheck);
         return Optional.of(meetingCheck);
     }
 
